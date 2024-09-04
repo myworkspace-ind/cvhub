@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+    <title>Kết quả tìm kiếm</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+	<nav class="navbar" th:fragment="result">
+    <div class="container">
+        <h1>Kết quả tìm kiếm</h1>
+
+        <p>Từ khóa: <span th:text="${keyword}"></span></p>
+        <p>Tỉnh/Thành phố: <span th:text="${location}"></span></p> 
+        <p>Ngành nghề: <span th:text="${industry}"></span></p>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Tiêu đề</th>
+                    <th>Ngành nghề</th>
+                    <th>Tỉnh/Thành phố</th> 
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="job, i : ${searchResults}">
+                    <td th:text="${i.index + 1}"></td>
+                    <td th:text="${job.title}"></td>
+                    <td th:text="${job.industry}"></td>
+                    <td th:text="${job.location.name}"></td> 
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </nav>
+</body>
+</html>

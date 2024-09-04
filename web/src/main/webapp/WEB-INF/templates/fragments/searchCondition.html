@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" th:href="@{/resources/searchCondition/style.css}" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="path/to/fetchLocations.js"></script> <!-- Thay thế bằng đường dẫn thật -->
+<script type="text/javascript" src="../../../resources/searchCondition/searchProvince.js" ></script> 
+</head>
+<body>
+    <nav class="navbar" th:fragment="search">
+		<div class="container">
+        <h1>Tìm việc làm nhanh 24h, việc làm mới nhất trên toàn quốc.</h1>
+        <p class="subtitle">Tiếp cận 40,000+ tin tuyển dụng việc làm mới ngày từ hàng nghìn doanh nghiệp uy tín tại Việt Nam</p>
+        <form class="search-form" action="search" method="GET">
+            <input type="text" name="keyword" placeholder="Software Developer" required>
+            <div class="select-wrapper">
+                    
+                    <select name="location" id="locationSelect">
+                        <option value="">Tất cả tỉnh/thành phố</option>
+                    </select>
+                </div>
+            <select name="industry">
+                    <option value="">Tất cả ngành nghề</option>
+                    <option value="IT">Công nghệ thông tin</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Finance">Tài chính</option>
+                    <option value="Healthcare">Y tế</option>
+                    <option value="Education">Giáo dục</option>
+                    <option value="Construction">Xây dựng</option>
+                    <!-- Thêm các ngành nghề khác ở đây -->
+                </select>
+            <button type="submit">Tìm kiếm</button>
+        </form>
+    </div>
+	</nav>
+	//<script type="text/javascript" th:src="@{/resources/searchCondition/searchProvince.js}" ></script> 
+</body>
+</html>
