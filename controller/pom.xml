@@ -95,6 +95,11 @@
         </dependency>
 
 
+		<dependency>
+			<groupId>mks.myworkspace.cvhub</groupId>
+			<artifactId>cvhub-jpa</artifactId>
+			<version>23.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<!-- configure the build to use the standard maven structure -->
