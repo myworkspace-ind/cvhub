@@ -29,6 +29,11 @@
 <!--             <version>${module.version}</version> -->
         </dependency>
 		<dependency>
+            <groupId>mks.myworkspace.cvhub</groupId>
+            <artifactId>cvhub-biz</artifactId>
+             <version>${module.version}</version> 
+        </dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
@@ -56,7 +61,16 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
         </dependency>
-		
+        
+        <!-- Support JPA -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-commons</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+		</dependency>
 		<!-- Gson -->
 <!--         <dependency> -->
 <!--             <groupId>com.google.code.gson</groupId> -->

@@ -21,7 +21,6 @@ package mks.myworkspace.cvhub.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,9 +38,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
+
 import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
-import mks.myworkspace.cvhub.entity.repo.JobRoleRepository;
+import mks.myworkspace.cvhub.service.JobRoleService;
 
 /**
  * Handles requests for the application home page.
@@ -49,13 +49,11 @@ import mks.myworkspace.cvhub.entity.repo.JobRoleRepository;
 @Controller
 
 public class HomeController extends BaseController {
-	private final JobRoleRepository jobRoleRepo;
+	
 	@Autowired
-    public HomeController(JobRoleRepository jobRoleRepo) {
-        this.jobRoleRepo = jobRoleRepo;
-    }
- 
-	   /**
+	JobRoleService jobRoleService;
+	
+	/**
      * This method is called when binding the HTTP parameter to bean (or model).
      * 
      * @param binder
@@ -102,7 +100,8 @@ public class HomeController extends BaseController {
             new JobRole(11L,"Teacher", locations.get(0), "Education"),
             new JobRole(12L,"Physician", locations.get(0), "Healthcare")
         );
-        jobRoleRepo.saveAll(jobRoles);
+        jobRoleService.getRepo().saveAll(jobRoles);
+
         return mav;
     }
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
@@ -116,7 +115,7 @@ public class HomeController extends BaseController {
 	    ModelAndView mav = new ModelAndView("searchResult");
 
 	    // 1. Trước tiên, lọc theo ngành
-	    List<JobRole> jobs = jobRoleRepo.findByIndustry(industry);
+	    List<JobRole> jobs = jobRoleService.getRepo().findByIndustry(industry);
 
 	    // 2. Tiếp tục lọc kết quả dựa trên các tiêu chí khác
 	    List<JobRole> searchResults = jobs.stream()

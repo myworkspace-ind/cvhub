@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.Getter;
-import mks.myworkspace.cvhub.entity.repo.JobRoleRepository;
+import mks.myworkspace.cvhub.repo.JobRoleRepository;
 import mks.myworkspace.cvhub.service.JobRoleService;
 
 @Service
