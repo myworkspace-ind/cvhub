@@ -30,6 +30,7 @@ public class JobRole {
     @JoinColumn(name = "cvhub_location")
     private Location location;
     private String industry;
+    
 	public JobRole(Long id, String title, Location location, String industry) {
 		super();
 		this.id = id;
@@ -39,7 +40,11 @@ public class JobRole {
 	}
     // Business fields here
     
-    @CreationTimestamp
+    public JobRole() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	@CreationTimestamp
     @Column(name="created_dte")
     Date createdDate;
     

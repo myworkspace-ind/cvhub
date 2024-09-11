@@ -18,8 +18,6 @@
  */
 
 package mks.myworkspace.cvhub.controller;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,20 +26,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
 import mks.myworkspace.cvhub.service.JobRoleService;
+import mks.myworkspace.cvhub.service.LocationService;
 
 /**
  * Handles requests for the application home page.
@@ -52,6 +48,8 @@ public class HomeController extends BaseController {
 	
 	@Autowired
 	JobRoleService jobRoleService;
+	@Autowired
+	LocationService locationService;
 	
 	/**
      * This method is called when binding the HTTP parameter to bean (or model).
@@ -85,8 +83,8 @@ public class HomeController extends BaseController {
 	@RequestMapping(value = {"/add"}, method = RequestMethod.GET)
     public ModelAndView addJobRoles() {
 		 ModelAndView mav = new ModelAndView("searchResult");
-		List<Location> locations = fetchLocationsFromAPI();
-        List<JobRole> jobRoles = Arrays.asList(
+		List<Location> locations=locationService.getRepo().findAll();
+		List<JobRole> jobRoles = Arrays.asList(
             new JobRole(1L,"Java Developer", locations.get(0), "IT"),
             new JobRole(2L,"Marketing Specialist",locations.get(0), "Marketing"),
             new JobRole(3L,"Financial Analyst", locations.get(0), "Finance"),
@@ -101,6 +99,15 @@ public class HomeController extends BaseController {
             new JobRole(12L,"Physician", locations.get(0), "Healthcare")
         );
         jobRoleService.getRepo().saveAll(jobRoles);
+
+        return mav;
+    }
+	@RequestMapping(value = {"/addLocation"}, method = RequestMethod.GET)
+    public ModelAndView addLocation() {
+		 ModelAndView mav = new ModelAndView("searchResult");
+		List<Location> locations = locationService.fetchLocationsFromAPI();
+        
+        locationService.getRepo().saveAll(locations);
 
         return mav;
     }
@@ -132,33 +139,5 @@ public class HomeController extends BaseController {
 
 	    return mav;
 	}
-	
-	 private List<Location> fetchLocationsFromAPI() {
-		    try {
-		        // 1. Tạo RestTemplate
-		        RestTemplate restTemplate = new RestTemplate();
-		        String apiUrl = "https://provinces.open-api.vn/api/?depth=1"; 
-		        // 3. Gọi API
-		        ResponseEntity<Location[]> response = restTemplate.exchange(
-		            apiUrl, 
-		            HttpMethod.GET, 
-		            null, 
-		            Location[].class
-		        );
-
-		        // 4. Kiểm tra response và trả về danh sách Location
-		        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-		            return Arrays.asList(response.getBody());
-		        } else {
-		            // Xử lý lỗi, ví dụ: log lỗi và trả về danh sách rỗng
-		            System.err.println("Lỗi khi gọi API: " + response.getStatusCode());
-		            return new ArrayList<>(); 
-		        }
-		    } catch (Exception e) {
-		        // Xử lý ngoại lệ, ví dụ: log lỗi và trả về danh sách rỗng
-		        System.err.println("Lỗi khi gọi API: " + e.getMessage());
-		        return new ArrayList<>();
-		    }
-		}
 }
 	

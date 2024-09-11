@@ -27,6 +27,12 @@ public class Location {
 		this.code = code;
 		this.division_type = division_type;
 	}
+	
+	public Location() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getName() {
 		return name;
 	}
