@@ -1,9 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 </head>
 <body>
-    <nav class="navbar" th:fragment="header">Header</nav>
+	<header>
+		<nav class="navbar" th:fragment="header">
+			<div class="logo">CVHub</div>
+			<ul class="nav-links">
+				<li><a href="#">Việc làm</a></li>
+				<li><a href="#">Công ty</a></li>
+				<li><a href="#">Tạo CV</a></li>
+				<li><a href="#">Blog</a></li>
+			</ul>
+			<div class="auth-buttons">
+				<button class="login">Đăng nhập</button>
+				<button class="signup">Đăng ký</button>
+			</div>
+		</nav>
+	</header>
+
 </body>
 </html>
