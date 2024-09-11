@@ -119,5 +119,6 @@
 <!--     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"> -->
 <!--         <property name="entityManagerFactory" ref="entityManagerFactory" /> -->
 <!--     </bean> -->
+	<jpa:repositories base-package="mks.myworkspace.cvhub.repository" />
 	<import resource="jpa.xml"/>
 </beans>

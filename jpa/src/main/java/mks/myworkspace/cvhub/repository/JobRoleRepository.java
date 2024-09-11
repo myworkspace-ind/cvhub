@@ -1,4 +1,4 @@
-package mks.myworkspace.cvhub.repo;
+package mks.myworkspace.cvhub.repository;
 
 import java.util.List;
 
