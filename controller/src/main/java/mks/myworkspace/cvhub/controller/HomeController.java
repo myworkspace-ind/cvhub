@@ -78,6 +78,8 @@ public class HomeController extends BaseController {
 		
 		mav.addObject("currentSiteId", getCurrentSiteId());
 		mav.addObject("userDisplayName", getCurrentUserDisplayName());
+		List<Location> locations = locationService.getRepo().findAll();
+        mav.addObject("locations", locations);
 		return mav;
 	}
 	@RequestMapping(value = {"/add"}, method = RequestMethod.GET)
@@ -85,18 +87,19 @@ public class HomeController extends BaseController {
 		 ModelAndView mav = new ModelAndView("searchResult");
 		List<Location> locations=locationService.getRepo().findAll();
 		List<JobRole> jobRoles = Arrays.asList(
-            new JobRole(1L,"Java Developer", locations.get(0), "IT"),
-            new JobRole(2L,"Marketing Specialist",locations.get(0), "Marketing"),
-            new JobRole(3L,"Financial Analyst", locations.get(0), "Finance"),
-            new JobRole(4L,"Registered Nurse", locations.get(0), "Healthcare"),
-            new JobRole(5L,"Civil Engineer", locations.get(0), "Construction"),
-            new JobRole(6L,"Software Engineer", locations.get(0), "IT"),
-            new JobRole(7L,"Data Scientist", locations.get(0), "IT"),
-            new JobRole(8L,"Project Manager",locations.get(0), "Construction"),
-            new JobRole(9L,"Marketing Manager",locations.get(0), "Marketing"),
-            new JobRole(10L,"Accountant", locations.get(0), "Finance"),
-            new JobRole(11L,"Teacher", locations.get(0), "Education"),
-            new JobRole(12L,"Physician", locations.get(0), "Healthcare")
+            new JobRole(1L,"Java Developer", locations.get(0), "IT",1,100),
+            new JobRole(2L,"Marketing Specialist",locations.get(0), "Marketing",2,200),
+            new JobRole(3L,"Financial Analyst", locations.get(0), "Finance",3,300),
+            new JobRole(4L,"Registered Nurse", locations.get(0), "Healthcare",4,100),
+            new JobRole(5L,"Civil Engineer", locations.get(0), "Construction",5,200),
+            new JobRole(6L,"Software Engineer", locations.get(0), "IT",6,300),
+            new JobRole(7L,"Data Scientist", locations.get(0), "IT",7,100),
+            new JobRole(8L,"Project Manager",locations.get(0), "Construction",8,200),
+            new JobRole(9L,"Marketing Manager",locations.get(0), "Marketing",1,300),
+            new JobRole(10L,"Accountant", locations.get(0), "Finance",2,100),
+            new JobRole(11L,"Teacher", locations.get(0), "Education",3,200),
+            new JobRole(12L,"Physician", locations.get(0), "Healthcare",4,300),
+            new JobRole(13L,"Java Dev", locations.get(0), "IT",4,100)
         );
         jobRoleService.getRepo().saveAll(jobRoles);
 
@@ -131,7 +134,11 @@ public class HomeController extends BaseController {
 	            (locationCode == 0 || job.getLocation().getCode() == locationCode)
 	        )
 	        .collect(Collectors.toList());
-
+	    System.out.println("Total jobs in industry: " + jobs.size());
+	    System.out.println("Filtered search results: " + searchResults.size());
+	    searchResults.forEach(job -> System.out.println("Job: " + job.getTitle() + ", Location: " + job.getLocation().getCode()));
+	    List<Location> locations = locationService.getRepo().findAll();
+        mav.addObject("locations", locations);
 	    mav.addObject("searchResults", searchResults);
 	    mav.addObject("keyword", keyword);
 	    mav.addObject("location", locationCode);
