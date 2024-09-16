@@ -12,21 +12,11 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name="cvhub_location", uniqueConstraints=@UniqueConstraint(columnNames = "code"))
+
 public class Location {
 	@Id
     private int code;
     private String name;
     private String division_type;
-	public Location(String name, int code, String division_type) {
-		super();
-		this.name = name;
-		this.code = code;
-		this.division_type = division_type;
-	}
-	
-	public Location() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
     
 }
