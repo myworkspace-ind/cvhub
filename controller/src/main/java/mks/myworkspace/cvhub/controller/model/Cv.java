@@ -1,4 +1,4 @@
-package mks.myworkspace.cvhub.model;
+package mks.myworkspace.cvhub.controller.model;
 
 import java.io.Serializable;
 import org.springframework.web.multipart.MultipartFile;
