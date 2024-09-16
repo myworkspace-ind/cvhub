@@ -18,11 +18,9 @@
  */
 
 package mks.myworkspace.cvhub.controller;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
@@ -32,19 +30,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import mks.myworkspace.cvhub.entity.JobRole;
+import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.Location;
 import mks.myworkspace.cvhub.service.JobRoleService;
 import mks.myworkspace.cvhub.service.LocationService;
@@ -96,22 +96,22 @@ public class HomeController extends BaseController {
     public ModelAndView addJobRoles() {
 		 ModelAndView mav = new ModelAndView("searchResult");
 		List<Location> locations=locationService.getRepo().findAll();
-		List<JobRole> jobRoles = Arrays.asList(
-            new JobRole(1L,"Java Developer", locations.get(0), "IT",1,100),
-            new JobRole(2L,"Marketing Specialist",locations.get(0), "Marketing",2,200),
-            new JobRole(3L,"Financial Analyst", locations.get(0), "Finance",3,300),
-            new JobRole(4L,"Registered Nurse", locations.get(0), "Healthcare",4,100),
-            new JobRole(5L,"Civil Engineer", locations.get(0), "Construction",5,200),
-            new JobRole(6L,"Software Engineer", locations.get(0), "IT",6,300),
-            new JobRole(7L,"Data Scientist", locations.get(0), "IT",7,100),
-            new JobRole(8L,"Project Manager",locations.get(0), "Construction",8,200),
-            new JobRole(9L,"Marketing Manager",locations.get(0), "Marketing",1,300),
-            new JobRole(10L,"Accountant", locations.get(0), "Finance",2,100),
-            new JobRole(11L,"Teacher", locations.get(0), "Education",3,200),
-            new JobRole(12L,"Physician", locations.get(0), "Healthcare",4,300),
-            new JobRole(13L,"Java Dev", locations.get(0), "IT",4,100)
+		List<JobRequest> jobRequests = Arrays.asList(
+            new JobRequest(1L,"Java Developer", locations.get(0), "IT",1,100),
+            new JobRequest(2L,"Marketing Specialist",locations.get(0), "Marketing",2,200),
+            new JobRequest(3L,"Financial Analyst", locations.get(0), "Finance",3,300),
+            new JobRequest(4L,"Registered Nurse", locations.get(0), "Healthcare",4,100),
+            new JobRequest(5L,"Civil Engineer", locations.get(0), "Construction",5,200),
+            new JobRequest(6L,"Software Engineer", locations.get(0), "IT",6,300),
+            new JobRequest(7L,"Data Scientist", locations.get(0), "IT",7,100),
+            new JobRequest(8L,"Project Manager",locations.get(0), "Construction",8,200),
+            new JobRequest(9L,"Marketing Manager",locations.get(0), "Marketing",1,300),
+            new JobRequest(10L,"Accountant", locations.get(0), "Finance",2,100),
+            new JobRequest(11L,"Teacher", locations.get(0), "Education",3,200),
+            new JobRequest(12L,"Physician", locations.get(0), "Healthcare",4,300),
+            new JobRequest(13L,"Java Dev", locations.get(0), "IT",4,100)
         );
-        jobRoleService.getRepo().saveAll(jobRoles);
+        jobRoleService.getRepo().saveAll(jobRequests);
 
         return mav;
     }
@@ -125,7 +125,7 @@ public class HomeController extends BaseController {
         return mav;
     }
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public ModelAndView searchJobs(
+	public ModelAndView searchJobs( /// 
 	    @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
 	    @RequestParam(value = "location", required = false, defaultValue = "0") int locationCode,
 	    @RequestParam(value = "industry", required = false, defaultValue = "") String industry,
@@ -133,12 +133,10 @@ public class HomeController extends BaseController {
 	    HttpSession httpSession
 	) {  
 	    ModelAndView mav = new ModelAndView("searchResult");
-
 	    // 1. Trước tiên, lọc theo ngành
-	    List<JobRole> jobs = jobRoleService.getRepo().findByIndustry(industry);
-
+	    List<JobRequest> jobs = jobRoleService.getRepo().findByIndustry(industry);
 	    // 2. Tiếp tục lọc kết quả dựa trên các tiêu chí khác
-	    List<JobRole> searchResults = jobs.stream()
+	    List<JobRequest> searchResults = jobs.stream()
 	        .filter(job -> 
 	            job.getTitle().toLowerCase().contains(keyword.toLowerCase()) &&
 	            (locationCode == 0 || job.getLocation().getCode() == locationCode)
@@ -172,5 +170,47 @@ public class HomeController extends BaseController {
         }
 	    return mav;
 	}
+	@RequestMapping(value = {"uploadCV"}, method = RequestMethod.GET)
+	public ModelAndView returnUploadCV() {
+		 ModelAndView mav = new ModelAndView("uploadCV/uploadCV");
+		 return mav;
+	}
+	@RequestMapping(value = {"completeCV"}, method = RequestMethod.POST)
+	public String handleFileUpload(@RequestParam("file") MultipartFile file) {
+        String content = "";
+
+        try {
+            if (file.getContentType().equals("application/pdf")) {
+                content = extractTextFromPDF(file);
+            } else if (file.getContentType().equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document") ||
+                       file.getContentType().equals("application/msword")) {
+                content = extractTextFromWord(file);
+            }
+
+            // Trích xuất thông tin cần thiết
+            System.out.println("Total " + content);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Xử lý lỗi
+        }
+
+        return "uploadResult"; // Trả về tên trang kết quả
+    }
+	private String extractTextFromPDF(MultipartFile file) throws IOException {
+        PDDocument document = PDDocument.load(file.getInputStream());
+        PDFTextStripper pdfStripper = new PDFTextStripper();
+        String text = pdfStripper.getText(document);
+        document.close();
+        return text;
+    }
+
+    private String extractTextFromWord(MultipartFile file) throws IOException {
+        XWPFDocument document = new XWPFDocument(file.getInputStream());
+        XWPFWordExtractor extractor = new XWPFWordExtractor(document);
+        String text = extractor.getText();
+        document.close();
+        return text;
+    }
 }
 	

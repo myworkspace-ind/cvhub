@@ -20,8 +20,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="cvhub_jobrole", uniqueConstraints=@UniqueConstraint(columnNames = "id"))
-public class JobRole {
+@Table(name="cvhub_jobrequest", uniqueConstraints=@UniqueConstraint(columnNames = "id"))
+public class JobRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,7 +32,7 @@ public class JobRole {
     private String industry;
     private Integer experience;
     private Integer salary;
-	public JobRole(Long id, String title, Location location, String industry,Integer experience,Integer salary) {
+	public JobRequest(Long id, String title, Location location, String industry,Integer experience,Integer salary) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -44,7 +44,7 @@ public class JobRole {
 		
 	}
 
-	public JobRole() {
+	public JobRequest() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
