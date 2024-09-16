@@ -43,7 +43,8 @@
                         <div class="card-body">
                             <div class="row align-items-center">
                                 <div class="col-md-2 col-sm-3 mb-3 mb-md-0">
-                                    <img src="/api/placeholder/100/100" alt="Company logo" class="img-fluid rounded">
+                           
+                                    <img th:src="@{'data:image/jpeg;base64,' + ${image}}" alt="Company logo"/ class="img-fluid rounded">
                                 </div>
                                 <div class="col-md-8 col-sm-9">
                                     <h3 class="h5 card-title mb-1" th:text="${job.title}"></h3>

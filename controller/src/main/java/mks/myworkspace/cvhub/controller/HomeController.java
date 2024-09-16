@@ -20,6 +20,8 @@
 package mks.myworkspace.cvhub.controller;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Base64;
@@ -29,13 +31,17 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import mks.myworkspace.cvhub.entity.JobRole;
@@ -147,19 +153,24 @@ public class HomeController extends BaseController {
 	    mav.addObject("keyword", keyword);
 	    mav.addObject("location", locationCode);
 	    mav.addObject("industry", industry); 
-
-	    return mav;
-	}
-	// Hàm chuyển đổi ảnh sang Base64
-	private String convertImageToBase64(String imagePath) {
 	    try {
-	        File imageFile = new File(imagePath);
-	        byte[] imageBytes = Files.readAllBytes(imageFile.toPath());
-	        return Base64.getEncoder().encodeToString(imageBytes);
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return null;
-	    }
+            // Download image from URL
+            URL url = new URL("https://static.vecteezy.com/system/resources/previews/014/018/563/non_2x/amazon-logo-on-transparent-background-free-vector.jpg");
+            try (InputStream inputStream = url.openStream()) {
+                byte[] imageBytes = IOUtils.toByteArray(inputStream);
+                
+                // Convert image to Base64
+                String image_base64 = Base64.getEncoder().encodeToString(imageBytes);
+                
+                // Add Base64 image to model
+                mav.addObject("image", image_base64);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle error (e.g., add error message to model)
+            mav.addObject("error", "Failed to download and process the image");
+        }
+	    return mav;
 	}
 }
 	
