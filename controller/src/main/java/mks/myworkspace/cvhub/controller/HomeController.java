@@ -18,7 +18,11 @@
  */
 
 package mks.myworkspace.cvhub.controller;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -145,6 +149,17 @@ public class HomeController extends BaseController {
 	    mav.addObject("industry", industry); 
 
 	    return mav;
+	}
+	// Hàm chuyển đổi ảnh sang Base64
+	private String convertImageToBase64(String imagePath) {
+	    try {
+	        File imageFile = new File(imagePath);
+	        byte[] imageBytes = Files.readAllBytes(imageFile.toPath());
+	        return Base64.getEncoder().encodeToString(imageBytes);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return null;
+	    }
 	}
 }
 	

@@ -40,12 +40,15 @@ public class JobRole {
 		this.industry = industry;
 		this.experience=experience;
 		this.salary=salary;
+		
+		
 	}
 
 	public JobRole() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
 
 	@CreationTimestamp
     @Column(name="created_dte",updatable = false)
