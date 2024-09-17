@@ -36,7 +36,7 @@
 			</p>
 			<div>
 	            <span th:if="${currentPage > 0}">
-	                <form id="previous_page" th:action="@{/api/v1/jobroles}" method="get" style="display:inline;">
+	                <form id="previous_page" th:action="@{/jobrequests}" method="get" style="display:inline;">
 	                    <input type="hidden" name="page" th:value="${currentPage - 1}" />
 	                    <input type="hidden" name="limit" th:value="${limit}" />
 	                    <button type="submit">Previous</button>
@@ -44,7 +44,7 @@
 	            </span>
 	            
 	            <span th:if="${currentPage < totalPages - 1}">
-	                <form id="next_page" th:action="@{/api/v1/jobroles}" method="get" style="display:inline;">
+	                <form id="next_page" th:action="@{/jobrequests}" method="get" style="display:inline;">
 	                    <input type="hidden" name="page" th:value="${currentPage + 1}" />
 	                    <input type="hidden" name="limit" th:value="${limit}" />
 	                    <button type="submit">Next</button>

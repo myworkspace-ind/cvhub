@@ -1,0 +1,64 @@
+body {
+            background-color: #f3f5f7;
+        }
+        .sort-container {
+			padding: 20px;
+		}
+        .main-content {
+            max-width: calc(100% - 40px);
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+         
+        .job-card {
+            transition: all 0.3s ease;
+        }
+        .card-body {
+    background-color: #f2fbf6;
+    border-radius: 10px; /* Thay đổi giá trị nếu cần */
+}
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .favorite-btn {
+            transition: all 0.2s ease;
+        }
+        .favorite-btn:hover {
+            color: #dc3545;
+            transform: scale(1.1);
+        }
+        .btn-outline-primary {
+        color: #28a745; /* Màu chữ xanh lá cây */
+        border-color: #28a745; /* Màu viền xanh lá cây */
+    	}
+
+    	.btn-outline-primary:hover {
+        background-color: #218838; /* Màu nền khi di chuột */
+        color: white; /* Màu chữ trắng khi di chuột */
+    	}
+    	.btn-check:checked + .btn-outline-primary,
+.btn-check:active + .btn-outline-primary,
+.btn-outline-primary:active,
+.btn-outline-primary.active,
+.btn-outline-primary.dropdown-toggle.show {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-outline-primary {
+    color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-outline-primary:hover {
+    color: #fff;
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.btn-check:focus + .btn-outline-primary,
+.btn-outline-primary:focus {
+    box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5);
+}

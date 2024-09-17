@@ -14,7 +14,6 @@ import org.springframework.web.client.RestTemplate;
 
 import lombok.Getter;
 import mks.myworkspace.cvhub.entity.Location;
-import mks.myworkspace.cvhub.repository.JobRoleRepository;
 import mks.myworkspace.cvhub.repository.LocationRepository;
 import mks.myworkspace.cvhub.service.LocationService;
 import lombok.Getter;

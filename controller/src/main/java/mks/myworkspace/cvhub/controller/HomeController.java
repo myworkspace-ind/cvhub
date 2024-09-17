@@ -35,9 +35,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import mks.myworkspace.cvhub.entity.JobRole;
+import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.Location;
-import mks.myworkspace.cvhub.service.JobRoleService;
+import mks.myworkspace.cvhub.service.JobRequestService;
 import mks.myworkspace.cvhub.service.LocationService;
 
 /**
@@ -48,7 +48,7 @@ import mks.myworkspace.cvhub.service.LocationService;
 public class HomeController extends BaseController {
 
 	@Autowired
-	JobRoleService jobRoleService;
+	JobRequestService JobRequestService;
 	@Autowired
 	LocationService locationService;
 
@@ -84,22 +84,22 @@ public class HomeController extends BaseController {
 	}
 
 	@RequestMapping(value = { "/add" }, method = RequestMethod.GET)
-	public ModelAndView addJobRoles() {
+	public ModelAndView addJobRequests() {
 		ModelAndView mav = new ModelAndView("searchResult");
 		List<Location> locations = locationService.getRepo().findAll();
-		List<JobRole> jobRoles = Arrays.asList(new JobRole(1L, "Java Developer", locations.get(0), "IT"),
-				new JobRole(2L, "Marketing Specialist", locations.get(0), "Marketing"),
-				new JobRole(3L, "Financial Analyst", locations.get(0), "Finance"),
-				new JobRole(4L, "Registered Nurse", locations.get(0), "Healthcare"),
-				new JobRole(5L, "Civil Engineer", locations.get(0), "Construction"),
-				new JobRole(6L, "Software Engineer", locations.get(0), "IT"),
-				new JobRole(7L, "Data Scientist", locations.get(0), "IT"),
-				new JobRole(8L, "Project Manager", locations.get(0), "Construction"),
-				new JobRole(9L, "Marketing Manager", locations.get(0), "Marketing"),
-				new JobRole(10L, "Accountant", locations.get(0), "Finance"),
-				new JobRole(11L, "Teacher", locations.get(0), "Education"),
-				new JobRole(12L, "Physician", locations.get(0), "Healthcare"));
-		jobRoleService.getRepo().saveAll(jobRoles);
+		List<JobRequest> JobRequests = Arrays.asList(new JobRequest(1L, "Java Developer", locations.get(0), "IT"),
+				new JobRequest(2L, "Marketing Specialist", locations.get(0), "Marketing"),
+				new JobRequest(3L, "Financial Analyst", locations.get(0), "Finance"),
+				new JobRequest(4L, "Registered Nurse", locations.get(0), "Healthcare"),
+				new JobRequest(5L, "Civil Engineer", locations.get(0), "Construction"),
+				new JobRequest(6L, "Software Engineer", locations.get(0), "IT"),
+				new JobRequest(7L, "Data Scientist", locations.get(0), "IT"),
+				new JobRequest(8L, "Project Manager", locations.get(0), "Construction"),
+				new JobRequest(9L, "Marketing Manager", locations.get(0), "Marketing"),
+				new JobRequest(10L, "Accountant", locations.get(0), "Finance"),
+				new JobRequest(11L, "Teacher", locations.get(0), "Education"),
+				new JobRequest(12L, "Physician", locations.get(0), "Healthcare"));
+		JobRequestService.getRepo().saveAll(JobRequests);
 
 		return mav;
 	}
@@ -122,10 +122,10 @@ public class HomeController extends BaseController {
 		ModelAndView mav = new ModelAndView("searchResult");
 
 		// 1. Trước tiên, lọc theo ngành
-		List<JobRole> jobs = jobRoleService.getRepo().findByIndustry(industry);
+		List<JobRequest> jobs = JobRequestService.getRepo().findByIndustry(industry);
 
 		// 2. Tiếp tục lọc kết quả dựa trên các tiêu chí khác
-		List<JobRole> searchResults = jobs.stream()
+		List<JobRequest> searchResults = jobs.stream()
 				.filter(job -> job.getTitle().toLowerCase().contains(keyword.toLowerCase())
 						&& (locationCode == 0 || job.getLocation().getCode() == locationCode))
 				.collect(Collectors.toList());

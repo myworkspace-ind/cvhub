@@ -4,14 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.Getter;
-import mks.myworkspace.cvhub.repository.JobRoleRepository;
-import mks.myworkspace.cvhub.service.JobRoleService;
+import mks.myworkspace.cvhub.repository.JobRequestRepository;
+import mks.myworkspace.cvhub.service.JobRequestService;
 
 @Service
-public class JobRoleServiceImpl implements JobRoleService {
+public class JobRoleServiceImpl implements JobRequestService {
 
 	@Getter
 	@Autowired
-	JobRoleRepository repo;
+	JobRequestRepository repo;
 
 }

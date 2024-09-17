@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" th:href="@{/resources/uploadCV/uploadCV.css}" />
+     <link rel="stylesheet" th:href="@{/resources/home/style.css}"/>
+    <title>Upload CV</title>
+</head>
+<body>
+	<div th:replace="~{fragments/header :: header}"></div>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Upload CV để các cơ hội việc làm tự tìm đến bạn</h1>
+                <p>Giảm đến 50% thời gian cần thiết để tìm được một công việc phù hợp</p>
+            </div>
+            <div class="header-icon">📄</div>
+        </div>
+        <div class="content">
+            <p>Bạn đã có sẵn CV của mình, chỉ cần tải CV lên, hệ thống sẽ tự động đề xuất CV của bạn tới những nhà tuyển dụng uy tín. Tiết kiệm thời gian, tìm việc thông minh, nắm bắt cơ hội và làm chủ đường đua nghề nghiệp của chính mình.</p>
+            <form id="cv-upload-form"th:action="@{/completeCV}" method="post" enctype="multipart/form-data">
+                <div class="upload-area" onclick="document.getElementById('file-upload').click()">
+                    <p>Tải lên CV từ máy tính, chọn hoặc kéo thả</p>
+                    <p>Hỗ trợ định dạng .doc, .docx, pdf có kích thước dưới 5MB</p>
+                    <input type="file" id="file-upload" name="file" accept=".doc,.docx,.pdf" onchange="updateFileName()">
+                    <div id="file-name"></div>
+                </div>
+                <button type="submit" class="upload-button">Tải CV lên</button>
+            </form>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">📝</div>
+                    <h3>Nhận về các cơ hội tốt nhất</h3>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <h3>Theo dõi số liệu, tối ưu CV</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" th:src="@{/resources/uploadCV/uploadCV.js}" ></script> 
+</body>
+</html>
