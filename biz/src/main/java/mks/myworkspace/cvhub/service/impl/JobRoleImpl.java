@@ -8,10 +8,8 @@ import mks.myworkspace.cvhub.repository.JobRequestRepository;
 import mks.myworkspace.cvhub.service.JobRequestService;
 
 @Service
-public class JobRoleServiceImpl implements JobRequestService {
-
+public class JobRoleImpl implements JobRequestService {
 	@Getter
 	@Autowired
 	JobRequestRepository repo;
-
 }
