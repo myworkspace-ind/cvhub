@@ -1,18 +1,13 @@
- document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
         const locationSelect = document.getElementById('locationSelect');
-        const locationSearch = document.getElementById('locationSearch');
+        const jobRoleSelect = document.getElementById('jobRoleSelect');
         async function fetchLocations() {
             try {
                 const response = await fetch('https://provinces.open-api.vn/api/?depth=1');
                 const locations = await response.json();
-
-                while (locationSelect.options.length > 1) {
-                    locationSelect.remove(1);
-                }
-
+                
                 locations.forEach(location => {
-                    const optionText = `${location.name} (${location.division_type})`;
-                    const option = new Option(optionText, location.code);
+                    const option = new Option(`${location.name} (${location.division_type})`, location.code);
                     locationSelect.add(option);
                 });
             } catch (error) {
@@ -20,17 +15,22 @@
             }
         }
 
-        fetchLocations();
-
-        locationSearch.addEventListener('input', function() {
-            const filterValue = this.value.toLowerCase();
-            Array.from(locationSelect.options).forEach(option => {
-                const optionText = option.text.toLowerCase();
-                if (optionText.includes(filterValue) || option.value === '') {
-                    option.style.display = 'block';
-                } else {
-                    option.style.display = 'none';
-                }
-            });
+        async function fetchJobRoles() {
+    try {
+        const response = await fetch('/cvhub-web/job-roles');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const jobRoles = await response.json(); // Sử dụng phương thức .json() để phân tích cú pháp
+        jobRoles.forEach(role => {
+            const option = new Option(role.title, role.id);
+            jobRoleSelect.add(option);
         });
+    } catch (error) {
+        console.error('Error loading job roles:', error);
+        jobRoleSelect.innerHTML = '<option value="">Error loading job roles</option>';
+    }
+}
+		fetchJobRoles();
+        fetchLocations();
     });

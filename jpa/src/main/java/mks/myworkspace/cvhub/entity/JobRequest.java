@@ -15,39 +15,47 @@ import javax.persistence.UniqueConstraint;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name="cvhub_jobrequest", uniqueConstraints=@UniqueConstraint(columnNames = "id"))
 public class JobRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    @ManyToOne // Mối quan hệ nhiều-một
-    @JoinColumn(name = "cvhub_location")
+    @ManyToOne
+    @JoinColumn(name = "location_id", nullable = false)
     private Location location;
-    private String industry;
+    @ManyToOne
+    @JoinColumn(name = "jobrole_id")
+    private JobRole jobRole;
     private Integer experience;
     private Integer salary;
-	public JobRequest(Long id, String title, Location location, String industry,Integer experience,Integer salary) {
+    @ManyToOne
+    @JoinColumn(name = "organization_id", nullable = false)
+    private Organization organization;
+	
+
+
+	public JobRequest(Long id, String title, Location location, JobRole jobRole, Integer experience, Integer salary,
+			Organization organization) {
 		super();
 		this.id = id;
 		this.title = title;
 		this.location = location;
-		this.industry = industry;
-		this.experience=experience;
-		this.salary=salary;
-		
-		
+		this.jobRole = jobRole;
+		this.experience = experience;
+		this.salary = salary;
+		this.organization = organization;
 	}
 
-	public JobRequest() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 
 
 	@CreationTimestamp
