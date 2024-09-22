@@ -52,6 +52,7 @@ import mks.myworkspace.cvhub.controller.model.JobSearchDTO;
 import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
+import mks.myworkspace.cvhub.service.JobRequestService;
 import mks.myworkspace.cvhub.service.JobRoleService;
 import mks.myworkspace.cvhub.service.LocationService;
 import mks.myworkspace.cvhub.service.OrganizationService;
@@ -68,6 +69,8 @@ public class HomeController extends BaseController {
 	OrganizationService organizationService;
 	@Autowired
 	JobRoleService jobRoleService;
+	@Autowired
+	JobRequestService jobRequestService;
 	@Autowired
 	LocationService locationService;
 	@Autowired

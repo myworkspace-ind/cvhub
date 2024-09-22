@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -40,4 +41,13 @@ public class JobRequestController extends BaseController {
         return mav;
     }
 	
+	@GetMapping("/{id}")
+	public ModelAndView getDetailJob(@PathVariable Long id)
+    {
+		
+		ModelAndView mav = new ModelAndView("detailJob");
+//		JobRequest jobRequest = jobRoleService.getRepo().findById(id).get();
+//		mav.addObject("jobRequest", jobRequest);
+        return mav;
+    }
 }

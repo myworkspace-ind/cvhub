@@ -1,6 +1,6 @@
 package mks.myworkspace.cvhub.repository;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -11,6 +11,6 @@ import org.springframework.data.domain.*;
 @Repository
 public interface JobRequestRepository extends JpaRepository<JobRequest, Long> {
 
-	List<JobRequest> findByIndustry(String industry);
 	Page<JobRequest> findAll(Pageable pageable);
+	Optional<JobRequest> findById(Long id);
 }
