@@ -1,0 +1,48 @@
+.container {
+	display: flex;
+	justify-content: space-between;
+}
+
+.job-detail {
+	flex: 0 0 70%; /* 70% cho chi tiết công việc */
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.company-detail {
+	flex: 0 0 25%; /* 25% cho thông tin công ty */
+	padding: 20px;
+	background-color: #f9f9f9;
+	border-radius: 8px;
+	margin-left: 20px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.company-info, .general-info {
+	margin-bottom: 20px;
+	padding: 10px;
+	background-color: #fff;
+	border-radius: 5px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+	font-size: 20px;
+}
+
+ul {
+	list-style-type: none;
+	padding: 0;
+}
+
+.apply-button {
+	display: inline-block;
+	padding: 10px 20px;
+	background-color: #28a745;
+	color: white;
+	text-decoration: none;
+	border-radius: 5px;
+	margin-top: 20px;
+}
