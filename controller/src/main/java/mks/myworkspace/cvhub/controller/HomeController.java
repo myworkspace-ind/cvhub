@@ -20,13 +20,20 @@
 package mks.myworkspace.cvhub.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
-
+import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
@@ -47,11 +54,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import lombok.extern.slf4j.Slf4j;
 import mks.myworkspace.cvhub.controller.model.JobSearchDTO;
 import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
+import mks.myworkspace.cvhub.entity.Organization;
 import mks.myworkspace.cvhub.service.JobRequestService;
 import mks.myworkspace.cvhub.service.JobRoleService;
 import mks.myworkspace.cvhub.service.LocationService;
@@ -61,20 +68,18 @@ import mks.myworkspace.cvhub.service.SearchJobService;
 /**
  * Handles requests for the application home page.
  */
-@Slf4j
 @Controller
-public class HomeController extends BaseController {
 
+public class HomeController extends BaseController {
 	@Autowired
 	OrganizationService organizationService;
 	@Autowired
 	JobRoleService jobRoleService;
 	@Autowired
-	JobRequestService jobRequestService;
-	@Autowired
 	LocationService locationService;
 	@Autowired
 	SearchJobService searchjobService;
+	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
 
 	/**
 	 * This method is called when binding the HTTP parameter to bean (or model).
@@ -132,7 +137,7 @@ public class HomeController extends BaseController {
 		byte[] image = organizationService.getRepo().getImageByLogoId(logoId);
 
 		if (image == null || image.length == 0) {
-			log.warn("Image not found or empty for logoId: " + logoId);
+			logger.warn("Image not found or empty for logoId: " + logoId);
 			return ResponseEntity.notFound().build();
 		}
 
@@ -146,19 +151,25 @@ public class HomeController extends BaseController {
 	}
 
 	@RequestMapping(value = { "completeCV" }, method = RequestMethod.POST)
-	public String handleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
+	public String handleFileUpload(@RequestParam("file") MultipartFile file) {
 		String content = "";
 
-		if (file.getContentType().equals("application/pdf")) {
-			content = extractTextFromPDF(file);
-		} else if (file.getContentType()
-				.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
-				|| file.getContentType().equals("application/msword")) {
-			content = extractTextFromWord(file);
-		}
+		try {
+			if (file.getContentType().equals("application/pdf")) {
+				content = extractTextFromPDF(file);
+			} else if (file.getContentType()
+					.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+					|| file.getContentType().equals("application/msword")) {
+				content = extractTextFromWord(file);
+			}
 
-		// Trích xuất thông tin cần thiết
-		log.debug("Total " + content);
+			// Trích xuất thông tin cần thiết
+			logger.info("Total " + content);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			// Xử lý lỗi
+		}
 
 		return "uploadResult"; // Trả về tên trang kết quả
 	}

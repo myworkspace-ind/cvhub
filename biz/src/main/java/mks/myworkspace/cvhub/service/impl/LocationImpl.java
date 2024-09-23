@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +16,12 @@ import lombok.Getter;
 import mks.myworkspace.cvhub.entity.Location;
 import mks.myworkspace.cvhub.repository.LocationRepository;
 import mks.myworkspace.cvhub.service.LocationService;
-import lombok.Getter;
 @Service
 public class LocationImpl implements LocationService {
 	@Getter
 	@Autowired
 	LocationRepository repo;
-	@Override
+	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
 	public List<Location> fetchLocationsFromAPI() {
 	    try {
 	        // 1. Tạo RestTemplate
@@ -40,13 +39,13 @@ public class LocationImpl implements LocationService {
 	        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
 	            return Arrays.asList(response.getBody());
 	        } else {
-	            // Xử lý lỗi, ví dụ: log lỗi và trả về danh sách rỗng
-	            System.err.println("Lỗi khi gọi API: " + response.getStatusCode());
+	            
+	        	logger.warn("Lỗi khi gọi API: " + response.getStatusCode());
 	            return new ArrayList<>(); 
 	        }
 	    } catch (Exception e) {
-	        // Xử lý ngoại lệ, ví dụ: log lỗi và trả về danh sách rỗng
-	        System.err.println("Lỗi khi gọi API: " + e.getMessage());
+	        
+	    	logger.warn("Lỗi khi gọi API: " + e.getMessage());
 	        return new ArrayList<>();
 	    }
 	}

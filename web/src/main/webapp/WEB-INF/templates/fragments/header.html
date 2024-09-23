@@ -3,6 +3,7 @@
 <head>
 <link rel="stylesheet"
 	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
 </head>
 <body>
 	<header>
@@ -11,7 +12,7 @@
 			<ul class="nav-links">
 				<li><a href="#">Việc làm</a></li>
 				<li><a href="#">Công ty</a></li>
-				<li><a href="#">Tạo CV</a></li>
+				<li><a th:href="@{uploadCV}">Tạo CV</a></li>
 				<li><a href="#">Blog</a></li>
 			</ul>
 			<div class="auth-buttons">
@@ -22,4 +23,4 @@
 	</header>
 
 </body>
-</html>
+</html>	

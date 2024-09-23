@@ -17,6 +17,7 @@ public class SearchJobImpl implements SearchJobService {
 
 	@Autowired
 	private EntityManager entityManager;
+	
 
 	@Override
 	public List<JobRequest> searchJobRequest(String keyword, int locationCD, Long industryCD) {
@@ -36,7 +37,7 @@ public class SearchJobImpl implements SearchJobService {
 			query.setParameter("industryCD", industryCD);
 		}
 
-		return query.getResultList();
+		return query.getResultList(); 
 	}
 
 	private String buildQuery(String keyword, int locationCD, Long industryCD) {
