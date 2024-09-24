@@ -4,37 +4,54 @@
     <meta charset="UTF-8">
     <title>Organization Details</title>
     <link rel="stylesheet" th:href="@{/resources/organizationDetails/style.css}" />
+    <link rel="stylesheet" th:href="@{/resources/home/style.css}" />
 </head>
 <body>
+    <div th:replace="~{fragments/header :: header}"></div>
     <div class="container">
-        <div class="job-list-container">
-            <div class="job-list">
-                <div th:each="job : ${searchResults}" class="job-card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-2">
-                                <img th:src="@{/images/{logoId}(logoId=${job.organization.logoID})}" alt="Company logo" class="company-logo">
-                            </div>
-                            <div class="col-8">
-                                <h3 class="job-title" th:text="${job.title}"></h3>
-                                <p class="company-name-job" th:text="${job.organization.title}"></p>
-                                <div class="d-flex">
-                                    <span class="location-tag" th:text="'Kinh Nghiệm: ' + ${job.experience}"></span>
-                                    <span class="update-tag" th:text="'Ngày cập nhật: ' + ${job.modified}"></span>
-                                </div>
-                            </div>
-                            <div class="col-2 text-end">
-                                <p class="salary" th:text="${job.salary != null ? job.salary : 'Thỏa thuận'}+' $'"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="org-header">
+            <div class="org-logo">
+                <img th:src="@{/images/{logoId}(logoId=${organization.logoID})}" alt="Company logo">
             </div>
+            <div class="org-info">
+                <h1 class="org-name" th:text="${organization.title}"></h1>
+                <p class="org-details" th:text="${organization.website}"></p>
+            </div>
+            <button class="follow-btn">+ Theo dõi công ty</button>
         </div>
-        <div class="company-info">
-            <img src="/api/placeholder/150/150" alt="Company Logo" class="company-logo">
-            <h2 class="company-name">Company Name</h2>
-            <!-- Add more company information here -->
+
+        <div class="content-section">
+            <h2 class="section-title">Giới thiệu công ty</h2>
+            <p th:text="${organization.summary}"></p>
+            <p>Lý do gia nhập công ty:</p>
+            <ul>
+                <li th:text="${organization.detail}"></li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Tuyển dụng</h2>
+            <ul class="job-list">
+                <li th:each="job : ${jobByOrganization}" class="job-item">
+                    <div>
+                        <div class="job-title" th:text="${job.title}"></div>
+                        <div class="job-location" th:text="${job.location.name}"></div>
+                        <div class="job-date" th:text="${job.createdDate}"></div>
+                    </div>
+                    <button class="apply-btn">Chi Tiết</button>
+                </li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Thông tin liên hệ</h2>
+            <div class="contact-info">
+                <div>
+                    <p><strong>Địa chỉ công ty:</strong></p>
+                    <p th:text="${organization.location}"></p>
+                </div>
+                
+            </div>
         </div>
     </div>
 </body>

@@ -82,12 +82,36 @@ public class MockDataController extends BaseController {
 		jobRoleService.getRepo().saveAll(jobRoles);
 		String image= "https://inkythuatso.com/uploads/images/2021/12/logo-hcmute-inkythuatso-17-13-52-06.jpg";
 		List<Organization> organizations = Arrays.asList(
-	            createOrganization("Tech Company", image),
-	            createOrganization("Marketing Agency", image),
-	            createOrganization("Financial Corp", image),
-	            createOrganization("Health Services", image),
-	            createOrganization("Construction LLC", image),
-	            createOrganization("HCMUTE Education", image)
+	            createOrganization("Tech Innovators Inc.",image,
+	                    "https://techinnovators.com",
+	                    "Leading the way in cutting-edge technology solutions",
+	                    "Tech Innovators Inc. is a forward-thinking company specializing in AI, machine learning, and blockchain technologies. Founded in 2010, we've been at the forefront of technological advancements, serving clients across various industries.",
+	                    "Silicon Valley, CA"),
+	            createOrganization( "Global Marketing Solutions",image,
+	                    "https://globalmarketingsolutions.com",
+	                    "Your partner in comprehensive marketing strategies",
+	                    "Global Marketing Solutions offers end-to-end marketing services, from brand development to digital campaigns. With a team of creative professionals and data analysts, we deliver results-driven marketing solutions for businesses of all sizes.",
+	                    "New York City, NY"),
+	            createOrganization( "Secure Financial Corp",image,
+	                    "https://securefinancial.com",
+	                    "Trusted financial services for a secure future",
+	                    "Secure Financial Corp provides a wide range of financial services including investment management, retirement planning, and risk assessment. Our team of experienced professionals is committed to helping clients achieve their financial goals.",
+	                    "Chicago, IL"),
+	            createOrganization("Wellness Health Services",image,
+	                    "https://wellnesshealthservices.com",
+	                    "Comprehensive healthcare for mind and body",
+	                    "Wellness Health Services is a holistic healthcare provider offering a range of medical and wellness services. From primary care to specialized treatments, we focus on improving the overall health and well-being of our patients.",
+	                    "Los Angeles, CA"),
+	            createOrganization("BuildRight Construction LLC",image,
+	                    "https://buildright-construction.com",
+	                    "Building dreams, one project at a time",
+	                    "BuildRight Construction LLC is a full-service construction company specializing in residential and commercial projects. With a focus on quality craftsmanship and customer satisfaction, we bring our clients' visions to life.",
+	                    "Denver, CO"),
+	            createOrganization( "HCMUTE Education",image,
+	                    "https://hcmute.edu.vn",
+	                    "Shaping the future through quality education",
+	                    "HCMUTE Education is a leading educational institution committed to providing high-quality education and fostering innovation. We offer a wide range of programs designed to prepare students for successful careers in various fields.",
+	                    "Ho Chi Minh City, Vietnam")
 	        );
 	        organizationService.getRepo().saveAll(organizations);
 		return mav;
@@ -98,14 +122,15 @@ public class MockDataController extends BaseController {
         }
     }
 
-    private Organization createOrganization(String title, String logoUrl) {
+    private Organization createOrganization(String title, String logoUrl,String website, String summary, String detail,
+			String location) {
         try {
             byte[] logo = downloadImage(logoUrl);
             UUID logoID = UUID.randomUUID(); // Tạo một UUID ngẫu nhiên
-            return new Organization(title, logoID, logo);
+            return new  Organization( title,logoID,logo,website,summary,detail,location);
         } catch (IOException e) {
             e.printStackTrace();
-            return new Organization(title, null, null); // Trả về tổ chức mà không có logo nếu xảy ra lỗi
+            return new Organization(title, null, null, null, null, null, null); // Trả về tổ chức mà không có logo nếu xảy ra lỗi
         }
     }
 }
