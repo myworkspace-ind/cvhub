@@ -20,24 +20,19 @@
 package mks.myworkspace.cvhub.controller;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -58,8 +53,6 @@ import mks.myworkspace.cvhub.controller.model.JobSearchDTO;
 import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
-import mks.myworkspace.cvhub.entity.Organization;
-import mks.myworkspace.cvhub.service.JobRequestService;
 import mks.myworkspace.cvhub.service.JobRoleService;
 import mks.myworkspace.cvhub.service.LocationService;
 import mks.myworkspace.cvhub.service.OrganizationService;
@@ -167,12 +160,17 @@ public class HomeController extends BaseController {
 			logger.info("Total " + content);
 
 		} catch (IOException e) {
-			e.printStackTrace();
-			// Xử lý lỗi
+			logger.error("Đã xảy ra lỗi: {}", e.getMessage(), e);
 		}
 
-		return "uploadResult"; // Trả về tên trang kết quả
+		return "uploadResult"; //
 	}
+	  @GetMapping("/details")
+	   public ModelAndView getJobDetails(@RequestParam("id") Long jobId) {
+	        // Replace with your service call to fetch the job details using jobId
+			ModelAndView mav = new ModelAndView("V");
+	        return mav;
+	    }
 
 	private String extractTextFromPDF(MultipartFile file) throws IOException {
 		PDDocument document = PDDocument.load(file.getInputStream());

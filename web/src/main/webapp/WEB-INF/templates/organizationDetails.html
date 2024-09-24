@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Organization Details</title>
+    <link rel="stylesheet" th:href="@{/resources/organizationDetails/style.css}" />
+</head>
+<body>
+    <div class="container">
+        <div class="job-list-container">
+            <div class="job-list">
+                <div th:each="job : ${searchResults}" class="job-card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-2">
+                                <img th:src="@{/images/{logoId}(logoId=${job.organization.logoID})}" alt="Company logo" class="company-logo">
+                            </div>
+                            <div class="col-8">
+                                <h3 class="job-title" th:text="${job.title}"></h3>
+                                <p class="company-name-job" th:text="${job.organization.title}"></p>
+                                <div class="d-flex">
+                                    <span class="location-tag" th:text="'Kinh Nghiệm: ' + ${job.experience}"></span>
+                                    <span class="update-tag" th:text="'Ngày cập nhật: ' + ${job.modified}"></span>
+                                </div>
+                            </div>
+                            <div class="col-2 text-end">
+                                <p class="salary" th:text="${job.salary != null ? job.salary : 'Thỏa thuận'}+' $'"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="company-info">
+            <img src="/api/placeholder/150/150" alt="Company Logo" class="company-logo">
+            <h2 class="company-name">Company Name</h2>
+            <!-- Add more company information here -->
+        </div>
+    </div>
+</body>
+</html>
