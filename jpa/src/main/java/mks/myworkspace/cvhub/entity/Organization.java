@@ -37,13 +37,21 @@ import lombok.Setter;
 	private UUID logoID;
 	@Lob
 	private byte[] logo;
-	
-	
-	public Organization(String title, UUID logoID, byte[] logo) {
+    private String website;
+    private String summary;
+    private String detail;
+    private String location;
+
+	public Organization( String title, UUID logoID, byte[] logo, String website, String summary, String detail,
+			String location) {
 		super();
 		this.title = title;
 		this.logoID = logoID;
 		this.logo = logo;
+		this.website = website;
+		this.summary = summary;
+		this.detail = detail;
+		this.location = location;
 	}
 
 	@CreationTimestamp

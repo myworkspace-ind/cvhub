@@ -4,44 +4,15 @@
 <meta charset="UTF-8">
 <title>The generated source code Web Application for Sakai</title>
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet"
-	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <link rel="stylesheet" th:href="@{/resources/searchCondition/style.css}" />
 <link rel="stylesheet" th:href="@{/resources/home/style.css}" />
 </head>
 <body>
 
-	<div th:replace="~{fragments/header :: header}"></div>
-	<div class="container">
-		<div th:replace="~{fragments/searchCondition :: search}"></div>
-		<script type="text/javascript"
-			th:src="@{/resources/searchCondition/searchProvince.js}"></script>
-		<h2>Job Roles</h2>
-		<ul>
-			<li th:each="jobRequest : ${jobrequests}"><span
-				th:text="${jobRequest.title}"></span></li>
-		</ul>
-
-		<p>
-			Total Pages: <span th:text="${totalPages}"></span>
-		</p>
-		<div>
-			<span th:if="${currentPage > 0}">
-				<form id="previous_page" th:action="@{/jobrequests}" method="get"
-					style="display: inline;">
-					<input type="hidden" name="page" th:value="${currentPage - 1}" />
-					<input type="hidden" name="limit" th:value="${limit}" />
-					<button type="submit">Previous</button>
-				</form>
-			</span> <span th:if="${currentPage < totalPages - 1}">
-				<form id="next_page" th:action="@{/jobrequests}" method="get"
-					style="display: inline;">
-					<input type="hidden" name="page" th:value="${currentPage + 1}" />
-					<input type="hidden" name="limit" th:value="${limit}" />
-					<button type="submit">Next</button>
-				</form>
-			</span>
-		</div>
-	</div>
+    <div th:replace="~{fragments/header :: header}"></div>
+    <div class="container">
+        <div th:replace="~{fragments/searchCondition :: search}"></div>
+   <script type="text/javascript" th:src="@{/resources/searchCondition/searchProvince.js}" ></script> 
 </body>
 </html>
