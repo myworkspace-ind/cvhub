@@ -1,7 +1,6 @@
 package mks.myworkspace.cvhub.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -14,15 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import mks.myworkspace.cvhub.entity.JobRequest;
-import mks.myworkspace.cvhub.entity.Location;
 import mks.myworkspace.cvhub.entity.Organization;
 import mks.myworkspace.cvhub.repository.JobRequestRepository;
-import mks.myworkspace.cvhub.service.JobRequestService;
-import mks.myworkspace.cvhub.service.JobRoleService;
 import mks.myworkspace.cvhub.service.OrganizationService;
 
 @Controller
-public class OrganizationDetails extends BaseController {
+public class OrganizationController extends BaseController {
 	@Autowired
 	OrganizationService organizationService;
 	@Autowired
@@ -36,4 +32,10 @@ public class OrganizationDetails extends BaseController {
 		mav.addObject("jobByOrganization", jobByOrganization);
 		return mav;
 	}
+	@RequestMapping(value = { "/organizationRegister" }, method = RequestMethod.GET)
+	public ModelAndView registerOrganization(HttpServletRequest request, HttpSession httpSession) {
+		ModelAndView mav = new ModelAndView("register");
+		return mav;
+	}
+	
 }
