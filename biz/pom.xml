@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>cvhub</artifactId>
 		<groupId>mks.myworkspace.cvhub</groupId>
-		<version>23.0</version>
+		<version>23.2</version>
 	</parent>
 <!-- 	<groupId>mks.myworkspace.cvhub</groupId> -->
 	<artifactId>cvhub-biz</artifactId>
