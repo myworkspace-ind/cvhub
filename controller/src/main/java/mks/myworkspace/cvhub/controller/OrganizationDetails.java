@@ -36,4 +36,11 @@ public class OrganizationDetails extends BaseController {
 		mav.addObject("jobByOrganization", jobByOrganization);
 		return mav;
 	}
+	@RequestMapping(value = { "/organizations" }, method = RequestMethod.GET)
+	public ModelAndView getOrganizations() {
+		ModelAndView mav = new ModelAndView("candidate/organizationList");
+		List<Organization> organizations = organizationService.getRepo().findAll();
+		mav.addObject("organizations", organizations);
+		return mav;
+	}
 }
