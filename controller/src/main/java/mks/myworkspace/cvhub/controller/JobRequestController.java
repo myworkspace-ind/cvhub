@@ -1,12 +1,5 @@
 package mks.myworkspace.cvhub.controller;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,13 +8,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import mks.myworkspace.cvhub.entity.JobRequest;
-import mks.myworkspace.cvhub.service.JobRequestService;
+import mks.myworkspace.cvhub.repository.JobRequestRepository;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 @Controller
 @RequestMapping("/jobrequests")
-public class JobRequestController extends BaseController {
-	@Autowired
-	JobRequestService jobRequestService;
+public class JobRequestController {
+
+    @Autowired
+    private JobRequestRepository jobRequestRepository;
 	
 	@GetMapping("")  //http://localhost:8080/cvhub-web/jobrequests?page=0&limit=10
 	public ModelAndView getAllJobRoles(
@@ -33,22 +34,20 @@ public class JobRequestController extends BaseController {
                 page, limit,
                 Sort.by("createdDate").descending()
         );
-        Page<JobRequest> jobRolePage = jobRequestService.getRepo().findAll(pageRequest);
-        int totalPages = jobRolePage.getTotalPages();
-        List<JobRequest> jobRoles = jobRolePage.getContent();
-        mav.addObject("jobrequests", jobRoles);
+        Page<JobRequest> jobRequestPage = jobRequestRepository.findAll(pageRequest);
+        int totalPages = jobRequestPage.getTotalPages();
+        List<JobRequest> jobRequests = jobRequestPage.getContent();
+        mav.addObject("jobrequests", jobRequests);
         mav.addObject("totalPages", totalPages);
         mav.addObject("currentPage", page);
         return mav;
     }
-	
-	@GetMapping("/{id}")
-	public ModelAndView getDetailJob(@PathVariable Long id)
-    {
-		
-		ModelAndView mav = new ModelAndView("detailJob"); 
-		JobRequest jobRequest = jobRequestService.getRepo().findById(id).get();
-		mav.addObject("jobRequest", jobRequest);
+
+    @GetMapping("/{id}")
+    public ModelAndView getDetailJob(@PathVariable Long id) {
+        ModelAndView mav = new ModelAndView("jobDetail");
+        JobRequest jobRequest = jobRequestRepository.findById(id).orElse(null);
+        mav.addObject("jobRequest", jobRequest);
         return mav;
     }
 }

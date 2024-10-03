@@ -34,6 +34,9 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -53,6 +56,7 @@ import mks.myworkspace.cvhub.controller.model.JobSearchDTO;
 import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
+import mks.myworkspace.cvhub.repository.JobRequestRepository;
 import mks.myworkspace.cvhub.service.JobRoleService;
 import mks.myworkspace.cvhub.service.LocationService;
 import mks.myworkspace.cvhub.service.OrganizationService;
@@ -72,6 +76,9 @@ public class HomeController extends BaseController {
 	LocationService locationService;
 	@Autowired
 	SearchJobService searchjobService;
+	@Autowired
+    private JobRequestRepository jobRequestRepository;
+	
 	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
 
 	/**
@@ -95,11 +102,23 @@ public class HomeController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
-	public ModelAndView displayHome(HttpServletRequest request, HttpSession httpSession) {
+	public ModelAndView displayHome(HttpServletRequest request, 
+									HttpSession httpSession, 
+									@RequestParam(value = "page", defaultValue = "0") int page,
+						            @RequestParam(value ="limit", defaultValue = "10") int limit) {
 		ModelAndView mav = new ModelAndView("home");
 
 		initSession(request, httpSession);
-
+		PageRequest pageRequest = PageRequest.of(
+                page, limit,
+                Sort.by("createdDate").descending()
+        );
+        Page<JobRequest> jobRequestPage = jobRequestRepository.findAll(pageRequest);
+        int totalPages = jobRequestPage.getTotalPages();
+        List<JobRequest> jobRequests = jobRequestPage.getContent();
+        mav.addObject("jobrequests", jobRequests);
+        mav.addObject("totalPages", totalPages);
+        mav.addObject("currentPage", page);
 		mav.addObject("currentSiteId", getCurrentSiteId());
 		mav.addObject("userDisplayName", getCurrentUserDisplayName());
 		List<Location> locations = locationService.getRepo().findAll();
