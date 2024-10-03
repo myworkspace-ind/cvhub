@@ -171,12 +171,7 @@ public class HomeController extends BaseController {
 			ModelAndView mav = new ModelAndView("V");
 	        return mav;
 	    }
-	  @GetMapping("/registerOrganization")
-	   public ModelAndView getJobDetails() {
-	        // Replace with your service call to fetch the job details using jobId
-			ModelAndView mav = new ModelAndView("organization/register");
-	        return mav;
-	    }
+
 
 	private String extractTextFromPDF(MultipartFile file) throws IOException {
 		PDDocument document = PDDocument.load(file.getInputStream());

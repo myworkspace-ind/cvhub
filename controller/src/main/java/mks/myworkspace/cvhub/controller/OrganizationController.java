@@ -13,8 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import mks.myworkspace.cvhub.entity.JobRequest;
+import mks.myworkspace.cvhub.entity.JobRole;
+import mks.myworkspace.cvhub.entity.Location;
 import mks.myworkspace.cvhub.entity.Organization;
 import mks.myworkspace.cvhub.repository.JobRequestRepository;
+import mks.myworkspace.cvhub.service.JobRoleService;
+import mks.myworkspace.cvhub.service.LocationService;
 import mks.myworkspace.cvhub.service.OrganizationService;
 
 @Controller
@@ -23,6 +27,10 @@ public class OrganizationController extends BaseController {
 	OrganizationService organizationService;
 	@Autowired
 	JobRequestRepository jobRequestRepository;
+	@Autowired
+	JobRoleService jobRoleService;
+	@Autowired
+	LocationService locationService;
 	@RequestMapping(value = { "/organization" }, method = RequestMethod.GET)
 	public ModelAndView displayHome(@RequestParam("id") Long id,HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("organizationDetails");
@@ -34,7 +42,12 @@ public class OrganizationController extends BaseController {
 	}
 	@RequestMapping(value = { "/organizationRegister" }, method = RequestMethod.GET)
 	public ModelAndView registerOrganization(HttpServletRequest request, HttpSession httpSession) {
-		ModelAndView mav = new ModelAndView("register");
+		ModelAndView mav = new ModelAndView("organization/register");
+		 List<JobRole> jobRoles = jobRoleService.getRepo().findAll();
+		
+		 mav.addObject("jobRoles", jobRoles);
+			List<Location> locations = locationService.getRepo().findAll();
+			mav.addObject("locations", locations);
 		return mav;
 	}
 	
