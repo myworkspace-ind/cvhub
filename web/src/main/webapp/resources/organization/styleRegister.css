@@ -81,3 +81,18 @@
         .form-wrapper {
             height: 100%;
         }
+               .tab-pane {
+           display: none;
+       }
+
+       .tab-pane.active {
+           display: block;
+       }
+
+       .fade {
+           transition: opacity 0.15s linear;
+       }
+
+       .fade:not(.show) {
+           opacity: 0;
+       }

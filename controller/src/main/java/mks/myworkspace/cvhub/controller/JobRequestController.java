@@ -2,15 +2,24 @@ package mks.myworkspace.cvhub.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import mks.myworkspace.cvhub.controller.model.JobRequestDTO;
+import mks.myworkspace.cvhub.controller.model.OrganizationDTO;
 import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.repository.JobRequestRepository;
+import mks.myworkspace.cvhub.service.JobRequestService;
+import mks.myworkspace.cvhub.service.OrganizationService;
 
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,34 +29,55 @@ import org.springframework.data.domain.Sort;
 @Controller
 @RequestMapping("/jobrequests")
 public class JobRequestController {
+	@Autowired
+	JobRequestService jobRequestService;
+	@Autowired
+	OrganizationService organizationService;
 
-    @Autowired
-    private JobRequestRepository jobRequestRepository;
-	
-	@GetMapping("")  //http://localhost:8080/cvhub-web/jobrequests?page=0&limit=10
-	public ModelAndView getAllJobRoles(
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value ="limit", defaultValue = "10") int limit )
-    {
+	@GetMapping("") // http://localhost:8080/cvhub-web/jobrequests?page=0&limit=10
+	public ModelAndView getAllJobRoles(@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "limit", defaultValue = "10") int limit) {
 		ModelAndView mav = new ModelAndView("home");
-        PageRequest pageRequest = PageRequest.of(
-                page, limit,
-                Sort.by("createdDate").descending()
-        );
-        Page<JobRequest> jobRequestPage = jobRequestRepository.findAll(pageRequest);
-        int totalPages = jobRequestPage.getTotalPages();
-        List<JobRequest> jobRequests = jobRequestPage.getContent();
-        mav.addObject("jobrequests", jobRequests);
-        mav.addObject("totalPages", totalPages);
-        mav.addObject("currentPage", page);
-        return mav;
-    }
+		PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("createdDate").descending());
+		Page<JobRequest> jobRequestPage = jobRequestService.getRepo().findAll(pageRequest);
+		int totalPages = jobRequestPage.getTotalPages();
+		List<JobRequest> jobRequests = jobRequestPage.getContent();
+		mav.addObject("jobrequests", jobRequests);
+		mav.addObject("totalPages", totalPages);
+		mav.addObject("currentPage", page);
+		return mav;
+	}
 
-    @GetMapping("/{id}")
-    public ModelAndView getDetailJob(@PathVariable Long id) {
-        ModelAndView mav = new ModelAndView("jobDetail");
-        JobRequest jobRequest = jobRequestRepository.findById(id).orElse(null);
-        mav.addObject("jobRequest", jobRequest);
-        return mav;
-    }
+	@GetMapping("/{id}")
+	public ModelAndView getDetailJob(@PathVariable Long id) {
+		ModelAndView mav = new ModelAndView("jobDetail");
+		JobRequest jobRequest = jobRequestService.getRepo().findById(id).orElse(null);
+		mav.addObject("jobRequest", jobRequest);
+		return mav;
+	}
+
+	@RequestMapping(value = { "/registerJob" }, method = RequestMethod.POST)
+	public ModelAndView registerOrganization(@ModelAttribute JobRequestDTO jobRequestDTO,
+			@RequestParam("organizationTitle") String organizationTitle, HttpServletRequest request,
+			HttpSession httpSession) {
+		try {
+			JobRequest jobRequest = jobRequestService.createJobRequest(jobRequestDTO.getTitle(),
+					jobRequestDTO.getLocationCode(), jobRequestDTO.getDistrictCode(), jobRequestDTO.getJobRoleId(),
+					jobRequestDTO.getExperience(), jobRequestDTO.getSalary(),
+					organizationService.getRepo().getIdByTitle(organizationTitle), // Sử dụng ID của tổ chức vừa tạo
+					jobRequestDTO.getJobDescription());
+
+			// Lưu JobRequest vào cơ sở dữ liệu
+			jobRequestService.getRepo().save(jobRequest);
+			  ModelAndView mav = new ModelAndView();
+		        mav.setViewName("redirect:/organization?id=" + organizationService.getRepo().getIdByTitle(organizationTitle));
+		        return mav;
+
+		} catch (Exception e) {
+			// Xử lý lỗi
+			ModelAndView mav = new ModelAndView("error");
+			mav.addObject("errorMessage", "Có lỗi xảy ra khi đăng ký tổ chức: " + e.getMessage());
+			return mav;
+		}
+	}
 }

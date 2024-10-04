@@ -1,4 +1,4 @@
-package mks.myworkspace.cvhub.entity;
+package mks.myworkspace.cvhub.controller.model;
 
 
 
@@ -18,4 +18,6 @@ public class OrganizationDTO {
     private String summary;
     private String detail;
     private String location;
+    
 }
+

@@ -1,4 +1,4 @@
-package mks.myworkspace.cvhub.entity;
+package mks.myworkspace.cvhub.controller.model;
 
 
 import lombok.AllArgsConstructor;

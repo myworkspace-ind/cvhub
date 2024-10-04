@@ -15,4 +15,6 @@ import mks.myworkspace.cvhub.entity.Organization;
 public interface OrganizationRepository extends JpaRepository<Organization,Long> {
 	@Query("SELECT o.logo FROM Organization o WHERE o.logoID = :logoId")
 	byte[] getImageByLogoId(@Param("logoId") UUID logoId);
+	@Query("SELECT o.id From Organization o WHERE o.title = :title")
+	Long getIdByTitle(@Param("title") String title);
 }

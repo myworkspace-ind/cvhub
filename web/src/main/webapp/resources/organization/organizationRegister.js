@@ -23,3 +23,18 @@ function handleEmployerFormSubmit(event) {
 				}
 			});
 		});
+function appendOrganizationTitle() {
+    // Lấy giá trị từ Form 1
+   const orgTitle = document.querySelector('input[name="title"]').value;
+
+    // Tạo một trường ẩn trong Form 2 để gửi kèm
+    const hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = 'organizationTitle';
+    hiddenInput.value = orgTitle;
+
+    // Thêm trường ẩn vào Form 2
+    document.getElementById('form2').appendChild(hiddenInput);
+    
+    return true; // Cho phép gửi form
+}
