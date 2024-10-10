@@ -33,7 +33,7 @@ public class JobRequestImpl implements JobRequestService {
 	OrganizationService organizationService;
 	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
 	@Override
-	public JobRequest createJobRequest(String title, int locationCode, int districtCode, Long jobRoleId,
+	public JobRequest createJobRequest(String title, int locationCode, Long jobRoleId,
 	                                    Integer experience, Integer salary, Long organizationId, String jobDescription) {
 		// Kiểm tra tính hợp lệ của các tham số đầu vào
 		if (title == null || title.isEmpty() || organizationId == null) {
@@ -59,6 +59,7 @@ public class JobRequestImpl implements JobRequestService {
 	    jobRequest.setExperience(experience);
 	    jobRequest.setSalary(salary);
 	    jobRequest.setOrganization(organization);
+	    jobRequest.setDetailsJob(jobDescription);
 	    
 	    // Trả về đối tượng JobRequest đã tạo
 	    return jobRequest;

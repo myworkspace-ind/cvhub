@@ -38,24 +38,12 @@ public class JobRequest {
     private JobRole jobRole;
     private Integer experience;
     private Integer salary;
+    @Column(columnDefinition = "TEXT")
+    private String detailsJob;
     @ManyToOne
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
 	
-
-
-	public JobRequest(Long id, String title, Location location, JobRole jobRole, Integer experience, Integer salary,
-			Organization organization) {
-		super();
-		this.id = id;
-		this.title = title;
-		this.location = location;
-		this.jobRole = jobRole;
-		this.experience = experience;
-		this.salary = salary;
-		this.organization = organization;
-	}
-
 
 
 	@CreationTimestamp

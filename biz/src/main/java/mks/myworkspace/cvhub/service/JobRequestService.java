@@ -12,6 +12,6 @@ import mks.myworkspace.cvhub.repository.JobRequestRepository;
 @Service
 public interface JobRequestService {
 	JobRequestRepository getRepo();
-	JobRequest createJobRequest(String title, int locationCode,int districtCode, Long jobRoleId, Integer experience,
+	JobRequest createJobRequest(String title, int locationCode, Long jobRoleId, Integer experience,
 			Integer salary,Long organizationId,String jobDescription);
 }

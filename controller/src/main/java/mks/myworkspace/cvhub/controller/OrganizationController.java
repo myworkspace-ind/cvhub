@@ -46,6 +46,10 @@ public class OrganizationController extends BaseController {
 		ModelAndView mav = new ModelAndView("organizationDetails");
 		Organization organization = organizationService.getRepo().findById(id).orElse(null);
 		List<JobRequest> jobByOrganization = jobRequestRepository.findByOrganizationId(id);
+		List<JobRole> alLJobRole= jobRoleService.getRepo().findAll();
+		List<Location> locations = locationService.getRepo().findAll();
+		mav.addObject("locations", locations);
+		mav.addObject("alLJobRole", alLJobRole);
 		mav.addObject("organization", organization);
 		mav.addObject("jobByOrganization", jobByOrganization);
 		return mav;
@@ -53,7 +57,6 @@ public class OrganizationController extends BaseController {
 	@RequestMapping(value = { "/showRegister" }, method = RequestMethod.GET)
 		public ModelAndView registerOrganization( HttpServletRequest request,
 				HttpSession httpSession) {
-		 logger.debug("Template path: " + "organization/register");
 		ModelAndView mav = new ModelAndView("organization/register");
 		 List<JobRole> jobRoles = jobRoleService.getRepo().findAll();
 		
@@ -77,9 +80,6 @@ public class OrganizationController extends BaseController {
 	            organizationDTO.getLocation()
 	        );
 	        organization = organizationService.getRepo().save(organization);
-
-	       
-
 	        // Chuyển hướng đến trang tổ chức
 	        ModelAndView mav = new ModelAndView();
 	        mav.setViewName("redirect:/organization?id=" + organization.getId());
@@ -92,4 +92,5 @@ public class OrganizationController extends BaseController {
 	        return mav;
 	    }
 	}
+	
 }

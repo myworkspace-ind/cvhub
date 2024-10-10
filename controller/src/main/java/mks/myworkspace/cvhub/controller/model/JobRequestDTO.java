@@ -11,7 +11,6 @@ import lombok.Setter;
 public class JobRequestDTO {
 	private String title;
     private int locationCode;
-    private int districtCode;
     private Long jobRoleId;
     private Integer experience;
     private Integer salary;

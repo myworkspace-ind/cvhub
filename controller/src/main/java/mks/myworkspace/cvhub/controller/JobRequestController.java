@@ -57,27 +57,26 @@ public class JobRequestController {
 	}
 
 	@RequestMapping(value = { "/registerJob" }, method = RequestMethod.POST)
-	public ModelAndView registerOrganization(@ModelAttribute JobRequestDTO jobRequestDTO,
-			@RequestParam("organizationTitle") String organizationTitle, HttpServletRequest request,
-			HttpSession httpSession) {
-		try {
-			JobRequest jobRequest = jobRequestService.createJobRequest(jobRequestDTO.getTitle(),
-					jobRequestDTO.getLocationCode(), jobRequestDTO.getDistrictCode(), jobRequestDTO.getJobRoleId(),
-					jobRequestDTO.getExperience(), jobRequestDTO.getSalary(),
-					organizationService.getRepo().getIdByTitle(organizationTitle), // Sử dụng ID của tổ chức vừa tạo
-					jobRequestDTO.getJobDescription());
-
-			// Lưu JobRequest vào cơ sở dữ liệu
-			jobRequestService.getRepo().save(jobRequest);
-			  ModelAndView mav = new ModelAndView();
-		        mav.setViewName("redirect:/organization?id=" + organizationService.getRepo().getIdByTitle(organizationTitle));
-		        return mav;
-
-		} catch (Exception e) {
-			// Xử lý lỗi
-			ModelAndView mav = new ModelAndView("error");
-			mav.addObject("errorMessage", "Có lỗi xảy ra khi đăng ký tổ chức: " + e.getMessage());
-			return mav;
-		}
-	}
+    public ModelAndView registerJob(@ModelAttribute JobRequestDTO jobRequestDTO) {
+		 System.out.println("Job Description: " + jobRequestDTO.getJobDescription());
+        try {
+            JobRequest jobRequest = jobRequestService.createJobRequest(
+            		jobRequestDTO.getTitle(),
+            		jobRequestDTO.getLocationCode(),
+            		jobRequestDTO.getJobRoleId(),
+            		jobRequestDTO.getExperience(),
+            		jobRequestDTO.getSalary(),
+            		jobRequestDTO.getOrganizationId(),
+            		jobRequestDTO.getJobDescription()
+            		);
+            jobRequest = jobRequestService.getRepo().save(jobRequest);
+            ModelAndView mav = new ModelAndView();
+	        mav.setViewName("redirect:/organization?id=" + jobRequestDTO.getOrganizationId());
+	        return mav;
+        } catch (Exception e) {
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMessage", "Có lỗi xảy ra khi đăng ký công việc: " + e.getMessage());
+            return mav;
+        }
+    }
 }
