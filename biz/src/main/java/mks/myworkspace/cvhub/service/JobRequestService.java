@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.Organization;
 import mks.myworkspace.cvhub.repository.JobRequestRepository;
-@Service
+
 public interface JobRequestService {
 	JobRequestRepository getRepo();
 

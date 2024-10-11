@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import mks.myworkspace.cvhub.repository.OrganizationRepository;
 
-@Service
 public interface OrganizationService {
 	OrganizationRepository getRepo();
 
