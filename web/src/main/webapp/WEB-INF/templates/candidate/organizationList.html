@@ -41,12 +41,12 @@
         <div class="container">
             <h2>DANH SÁCH CÁC CÔNG TY NỔI BẬT</h2>
             <div class="row">
-                <div class="col-md-4" th:each="company : ${companies}">
+                <div class="col-md-4" th:each="company : ${organizations}">
                     <div class="thumbnail company-card">
-                        <img th:src="${company.image}" alt="Company Image">
+                        <img th:src="@{/images/{logoId}(logoId=${company.logoID})}" alt="Company Image">
                         <div class="caption">
-                            <h3 th:text="${company.name}">Company Name</h3>
-                            <p th:text="${company.description}">Company Description</p>
+                            <h3 th:text="${company.title}">Company Name</h3>
+                            <p th:text="${company.summary}">Company Description</p>
                         </div>
                     </div>
                 </div>
