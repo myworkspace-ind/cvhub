@@ -195,3 +195,17 @@
     	resize: none;
     	/* Ngăn người dùng thay đổi kích thước */
     }
+    input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        textarea {
+    width: 100%; /* Chiều rộng cố định */
+    max-width: 500px; /* Chiều rộng tối đa */
+    height: 150px; /* Chiều cao cố định */
+    max-height: 300px; /* Chiều cao tối đa */
+    resize: none; /* Ngăn người dùng thay đổi kích thước */
+    overflow-y: auto; /* Cho phép cuộn dọc nếu nội dung vượt quá chiều cao */
+}

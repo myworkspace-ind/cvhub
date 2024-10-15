@@ -104,10 +104,21 @@
 					placeholder="Nhập lương" min="0">
 
 				<div class="form-group">
-					<label for="detailsJob">Chi tiết công việc tuyển dụng*</label>
-					<textarea class="form-control fixed-textarea" id="jobDescription" name="jobDescription" required
-						placeholder="Nhập chi tiết công việc tại đây..."></textarea>
-				</div>
+                <label for="detailsJob">Chi tiết công việc*</label>
+                <textarea id="jobDescription" name="jobDescription" required placeholder="Nhập chi tiết công việc (mỗi dòng là một gạch đầu dòng)"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="requirementsCandidate">Yêu cầu ứng viên*</label>
+                <textarea id="requirementsCandidate" name="requirementsCandidate" required placeholder="Nhập yêu cầu ứng viên (mỗi dòng là một gạch đầu dòng)"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="benefitCandidate">Quyền lợi ứng viên*</label>
+                <textarea id="benefitCandidate" name="benefitCandidate" required placeholder="Nhập quyền lợi ứng viên (mỗi dòng là một gạch đầu dòng)"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="deadlineApplication">Hạn nộp hồ sơ*</label>
+                <input type="date" id="deadlineApplication" name="deadlineApplication" required>
+            </div>
 			</div>
 
 			<button type="submit" class="btn btn-primary">Lưu</button>

@@ -43,29 +43,29 @@ public class MockDataController extends BaseController {
 //        binder.registerCustomEditor((Class<List<ItemKine>>)(Class<?>)List.class, orderNoteEditor);
 
 	}
-	@RequestMapping(value = { "/add" }, method = RequestMethod.GET)
-	public ModelAndView addJobRoles() {
-		ModelAndView mav = new ModelAndView("searchResult");
-		List<Location> locations = locationService.getRepo().findAll();
-		List<JobRole> jobRole= jobRoleService.getRepo().findAll();
-		List<Organization> organization = organizationService.getRepo().findAll();
-		List<JobRequest> jobRequests = Arrays.asList(
-				new JobRequest(1L, "Java Developer", locations.get(0), jobRole.get(0),1, 100,organization.get(0)),
-				new JobRequest(2L, "Marketing Specialist", locations.get(0), jobRole.get(1), 2, 200,organization.get(1)),
-				new JobRequest(3L, "Financial Analyst", locations.get(0), jobRole.get(2), 3, 300,organization.get(2)),
-				new JobRequest(4L, "Registered Nurse", locations.get(0), jobRole.get(3), 4, 100,organization.get(3)),
-				new JobRequest(5L, "Civil Engineer", locations.get(0), jobRole.get(4), 5, 200,organization.get(4)),
-				new JobRequest(6L, "Software Engineer", locations.get(0), jobRole.get(0), 6, 300,organization.get(0)),
-				new JobRequest(7L, "Data Scientist", locations.get(0), jobRole.get(0),2, 100,organization.get(0)),
-				new JobRequest(8L, "Project Manager", locations.get(0), jobRole.get(4), 8, 200,organization.get(4)),
-				new JobRequest(9L, "Marketing Manager", locations.get(0), jobRole.get(1), 1, 300,organization.get(1)),
-				new JobRequest(10L, "Accountant", locations.get(0), jobRole.get(2), 2, 100,organization.get(2)),
-				new JobRequest(11L, "Teacher", locations.get(0), jobRole.get(5), 3, 200,organization.get(5)),
-				new JobRequest(12L, "Physician", locations.get(0), jobRole.get(5), 4, 300,organization.get(5)),
-				new JobRequest(13L, "Java Dev", locations.get(0), jobRole.get(0), 4, 100,organization.get(0)));
-		jobRequestService.getRepo().saveAll(jobRequests);
-		return mav;
-	}
+//	@RequestMapping(value = { "/add" }, method = RequestMethod.GET)
+//	public ModelAndView addJobRoles() {
+//		ModelAndView mav = new ModelAndView("searchResult");
+//		List<Location> locations = locationService.getRepo().findAll();
+//		List<JobRole> jobRole= jobRoleService.getRepo().findAll();
+//		List<Organization> organization = organizationService.getRepo().findAll();
+//		List<JobRequest> jobRequests = Arrays.asList(
+//				new JobRequest(1L, "Java Developer", locations.get(0), jobRole.get(0),1, 100,organization.get(0)),
+//				new JobRequest(2L, "Marketing Specialist", locations.get(0), jobRole.get(1), 2, 200,organization.get(1)),
+//				new JobRequest(3L, "Financial Analyst", locations.get(0), jobRole.get(2), 3, 300,organization.get(2)),
+//				new JobRequest(4L, "Registered Nurse", locations.get(0), jobRole.get(3), 4, 100,organization.get(3)),
+//				new JobRequest(5L, "Civil Engineer", locations.get(0), jobRole.get(4), 5, 200,organization.get(4)),
+//				new JobRequest(6L, "Software Engineer", locations.get(0), jobRole.get(0), 6, 300,organization.get(0)),
+//				new JobRequest(7L, "Data Scientist", locations.get(0), jobRole.get(0),2, 100,organization.get(0)),
+//				new JobRequest(8L, "Project Manager", locations.get(0), jobRole.get(4), 8, 200,organization.get(4)),
+//				new JobRequest(9L, "Marketing Manager", locations.get(0), jobRole.get(1), 1, 300,organization.get(1)),
+//				new JobRequest(10L, "Accountant", locations.get(0), jobRole.get(2), 2, 100,organization.get(2)),
+//				new JobRequest(11L, "Teacher", locations.get(0), jobRole.get(5), 3, 200,organization.get(5)),
+//				new JobRequest(12L, "Physician", locations.get(0), jobRole.get(5), 4, 300,organization.get(5)),
+//				new JobRequest(13L, "Java Dev", locations.get(0), jobRole.get(0), 4, 100,organization.get(0)));
+//		jobRequestService.getRepo().saveAll(jobRequests);
+//		return mav;
+//	}
 	@RequestMapping(value = { "/addAll" }, method = RequestMethod.GET)
 	public ModelAndView addLocation() {
 		ModelAndView mav = new ModelAndView("searchResult");

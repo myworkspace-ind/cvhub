@@ -1,5 +1,7 @@
 package mks.myworkspace.cvhub.service.impl;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -34,7 +36,7 @@ public class JobRequestImpl implements JobRequestService {
 	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
 	@Override
 	public JobRequest createJobRequest(String title, int locationCode, Long jobRoleId,
-	                                    Integer experience, Integer salary, Long organizationId, String jobDescription) {
+	                                    Integer experience, Integer salary, Long organizationId, String jobDescription,String requirementsCandidate,String benefitCandidate,LocalDate deadlineApplication) {
 		// Kiểm tra tính hợp lệ của các tham số đầu vào
 		if (title == null || title.isEmpty() || organizationId == null) {
 	        throw new IllegalArgumentException("Title and Organization ID must not be null or empty.");
@@ -60,6 +62,9 @@ public class JobRequestImpl implements JobRequestService {
 	    jobRequest.setSalary(salary);
 	    jobRequest.setOrganization(organization);
 	    jobRequest.setDetailsJob(jobDescription);
+	    jobRequest.setRequirementsCandidate(requirementsCandidate);
+	    jobRequest.setBenefitCandidate(benefitCandidate);
+	    jobRequest.setDeadlineApplication(deadlineApplication);
 	    
 	    // Trả về đối tượng JobRequest đã tạo
 	    return jobRequest;

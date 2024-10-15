@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import mks.myworkspace.cvhub.controller.model.JobRequestDTO;
 import mks.myworkspace.cvhub.controller.model.OrganizationDTO;
 import mks.myworkspace.cvhub.entity.JobRequest;
+import mks.myworkspace.cvhub.entity.Organization;
 import mks.myworkspace.cvhub.repository.JobRequestRepository;
 import mks.myworkspace.cvhub.service.JobRequestService;
 import mks.myworkspace.cvhub.service.OrganizationService;
@@ -67,7 +68,10 @@ public class JobRequestController {
             		jobRequestDTO.getExperience(),
             		jobRequestDTO.getSalary(),
             		jobRequestDTO.getOrganizationId(),
-            		jobRequestDTO.getJobDescription()
+            		jobRequestDTO.getJobDescription(),
+            		jobRequestDTO.getRequirementsCandidate(),
+            		jobRequestDTO.getBenefitCandidate(),
+            		jobRequestDTO.getDeadlineApplication()
             		);
             jobRequest = jobRequestService.getRepo().save(jobRequest);
             ModelAndView mav = new ModelAndView();
