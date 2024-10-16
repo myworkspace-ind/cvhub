@@ -9,6 +9,9 @@ body {
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.navbar-left {
+	display: ruby;
+}
 /* Brand logo and title */
 .navbar-brand {
 	font-weight: bold;
@@ -16,6 +19,7 @@ body {
 	align-items: center;
 	color: #2d2d2d;
 	font-size: 2.5rem;
+	font-size: 1.5rem;
 }
 
 .navbar-brand img {
@@ -31,6 +35,7 @@ body {
 
 .navbar-nav .nav-link {
 	font-size: 1.65rem;
+	font-size: 1rem;
 	color: #555;
 	margin-right: 20px;
 	transition: color 0.3s;
@@ -46,15 +51,26 @@ body {
 	padding: 8px 18px;
 	font-size: 1.65rem;
 }
+.icon-btn {
+	font-size: 0.95rem;
+}
+
+.btn-custom {
+	border-radius: 20px;
+	padding: 8px 18px;
+	font-size: 0.95rem;
+}
 
 .btn-outline-success-custom {
 	color: #28a745;
 	border: 2px solid #28a745;
+	font-size: 0.95rem;
 }
 
 .btn-outline-success-custom:hover {
 	background-color: #28a745;
 	color: white;
+	font-size: 0.95rem;
 }
 
 .btn-success-custom {
@@ -63,6 +79,7 @@ body {
 	border-radius: 20px;
 	padding: 8px 18px;
 	font-size: 1.65rem;
+	font-size: 0.95rem;
 }
 
 .btn-success-custom:hover {
@@ -74,6 +91,7 @@ body {
 .icon-btn {
 	margin-right: 15px;
 	font-size: 1.75rem;
+	font-size: 1rem;
 	color: #2d2d2d;
 	cursor: pointer;
 }

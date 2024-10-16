@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 import mks.myworkspace.cvhub.entity.Organization;
 import mks.myworkspace.cvhub.repository.OrganizationRepository;
 
-@Service
 public interface OrganizationService {
 	OrganizationRepository getRepo();
 	Organization createOrganization(String title, MultipartFile logoFile, String website, String summary, String detail, String location);
