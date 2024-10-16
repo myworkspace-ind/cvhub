@@ -34,39 +34,82 @@ public class JobRequestImpl implements JobRequestService {
 	@Autowired
 	OrganizationService organizationService;
 	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
+
 	@Override
-	public JobRequest createJobRequest(String title, int locationCode, Long jobRoleId,
-	                                    Integer experience, Integer salary, Long organizationId, String jobDescription,String requirementsCandidate,String benefitCandidate,LocalDate deadlineApplication) {
+	public JobRequest createJobRequest(String title, int locationCode, Long jobRoleId, Integer experience,
+			Integer salary, Long organizationId, String jobDescription, String requirementsCandidate,
+			String benefitCandidate, LocalDate deadlineApplication) {
 		// Kiểm tra tính hợp lệ của các tham số đầu vào
 		if (title == null || title.isEmpty() || organizationId == null) {
-	        throw new IllegalArgumentException("Title and Organization ID must not be null or empty.");
+			throw new IllegalArgumentException("Title and Organization ID must not be null or empty.");
+		}
+
+		// Tìm kiếm đối tượng Location và JobRole từ mã tương ứng
+		Location location = locationService.getRepo().findById(locationCode)
+				.orElseThrow(() -> new IllegalArgumentException("Invalid location code"));
+
+		JobRole jobRole = jobRoleService.getRepo().findById(jobRoleId).orElse(null); // Có thể là null nếu không tìm
+																						// thấy
+
+		// Tìm kiếm đối tượng Organization từ organizationId
+		Organization organization = organizationService.getRepo().findById(organizationId)
+				.orElseThrow(() -> new IllegalArgumentException("Invalid organization ID"));
+
+		// Tạo một đối tượng JobRequest mới
+		JobRequest jobRequest = new JobRequest();
+		jobRequest.setTitle(title);
+		jobRequest.setLocation(location);
+		jobRequest.setJobRole(jobRole);
+		jobRequest.setExperience(experience);
+		jobRequest.setSalary(salary);
+		jobRequest.setOrganization(organization);
+		jobRequest.setDetailsJob(jobDescription);
+		jobRequest.setRequirementsCandidate(requirementsCandidate);
+		jobRequest.setBenefitCandidate(benefitCandidate);
+		jobRequest.setDeadlineApplication(deadlineApplication);
+
+		// Trả về đối tượng JobRequest đã tạo
+		return jobRequest;
+	}
+
+	@Override
+	public JobRequest updateJobRequest( JobRequest jobRequest, String title, int locationCode, Long jobRoleId,
+			Integer experience, Integer salary, String jobDescription, String requirementsCandidate,
+			String benefitCandidate, LocalDate deadlineApplication) {
+
+
+// Validate input parameters
+		if (title == null || title.isEmpty()) {
+			throw new IllegalArgumentException("Title must not be null or empty.");
+		}
+
+// Find Location and JobRole objects from their respective codes
+		Location location = locationService.getRepo().findById(locationCode)
+				.orElseThrow(() -> new IllegalArgumentException("Invalid location code"));
+
+		JobRole jobRole = jobRoleService.getRepo().findById(jobRoleId).orElse(null); // Can be null if not found
+
+// Update the existing JobRequest object
+		jobRequest.setTitle(title);
+		jobRequest.setLocation(location);
+		jobRequest.setJobRole(jobRole);
+		jobRequest.setExperience(experience);
+		jobRequest.setSalary(salary);
+		jobRequest.setDetailsJob(jobDescription);
+		jobRequest.setRequirementsCandidate(requirementsCandidate);
+		jobRequest.setBenefitCandidate(benefitCandidate);
+		jobRequest.setDeadlineApplication(deadlineApplication);
+
+// Save and return the updated JobRequest
+		return getRepo().save(jobRequest);
+	}
+
+	@Override
+	public void deleteJobRequest(JobRequest jobRequest) {
+		if (jobRequest == null) {
+	        throw new IllegalArgumentException("JobRequest must not be null.");
 	    }
-
-	    // Tìm kiếm đối tượng Location và JobRole từ mã tương ứng
-	    Location location = locationService.getRepo().findById(locationCode)
-	            .orElseThrow(() -> new IllegalArgumentException("Invalid location code"));
-	    
-	    JobRole jobRole = jobRoleService.getRepo().findById(jobRoleId)
-	            .orElse(null); // Có thể là null nếu không tìm thấy
-
-	    // Tìm kiếm đối tượng Organization từ organizationId
-	    Organization organization = organizationService.getRepo().findById(organizationId)
-	            .orElseThrow(() -> new IllegalArgumentException("Invalid organization ID"));
-
-	    // Tạo một đối tượng JobRequest mới
-	    JobRequest jobRequest = new JobRequest();
-	    jobRequest.setTitle(title);
-	    jobRequest.setLocation(location);
-	    jobRequest.setJobRole(jobRole);
-	    jobRequest.setExperience(experience);
-	    jobRequest.setSalary(salary);
-	    jobRequest.setOrganization(organization);
-	    jobRequest.setDetailsJob(jobDescription);
-	    jobRequest.setRequirementsCandidate(requirementsCandidate);
-	    jobRequest.setBenefitCandidate(benefitCandidate);
-	    jobRequest.setDeadlineApplication(deadlineApplication);
-	    
-	    // Trả về đối tượng JobRequest đã tạo
-	    return jobRequest;
-}
+		getRepo().delete(jobRequest);
+		
+	}
 }

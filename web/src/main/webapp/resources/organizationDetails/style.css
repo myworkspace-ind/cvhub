@@ -209,3 +209,14 @@
     resize: none; /* Ngăn người dùng thay đổi kích thước */
     overflow-y: auto; /* Cho phép cuộn dọc nếu nội dung vượt quá chiều cao */
 }
+.apply-btn {
+    /* Thêm các style cần thiết để nút trông giống như mong muốn */
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #00a86b;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

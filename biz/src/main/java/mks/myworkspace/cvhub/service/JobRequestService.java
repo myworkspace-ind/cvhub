@@ -16,4 +16,8 @@ public interface JobRequestService {
 	JobRequestRepository getRepo();
 	JobRequest createJobRequest(String title, int locationCode, Long jobRoleId, Integer experience,
 			Integer salary,Long organizationId,String jobDescription,String requirementsCandidate,String benefitCandidate,LocalDate deadlineApplication);
+	JobRequest updateJobRequest( JobRequest jobRequest,String title, int locationCode, Long jobRoleId,
+			Integer experience, Integer salary, String jobDescription, String requirementsCandidate,
+			String benefitCandidate, LocalDate deadlineApplication);
+	void deleteJobRequest(JobRequest jobRequest);
 }

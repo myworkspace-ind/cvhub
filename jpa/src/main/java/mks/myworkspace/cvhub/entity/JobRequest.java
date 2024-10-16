@@ -60,4 +60,6 @@ public class JobRequest {
     @Column(name="modified_dte")
     @UpdateTimestamp
     Date modified;
+
+
 }

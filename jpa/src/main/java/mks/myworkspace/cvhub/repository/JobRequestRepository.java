@@ -18,4 +18,5 @@ public interface JobRequestRepository extends JpaRepository<JobRequest, Long> {
 //	  @Query("SELECT jr FROM JobRequest jr WHERE jr.id = :id")
 	    Optional<JobRequest> findById(@Param("id") Long id);
 	    Page<JobRequest> findAll(@Param("pageRequest") Pageable pageRequest );
+	    JobRequest findByTitle(@Param("title") String title);
 }

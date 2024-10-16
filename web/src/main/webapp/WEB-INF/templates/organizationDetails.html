@@ -42,7 +42,10 @@
 						<div class="job-location" th:text="${job.location.name}"></div>
 						<div class="job-date" th:text="${job.createdDate}"></div>
 					</div>
-					<button class="apply-btn">Chi Tiết</button>
+					<form th:action="@{/jobrequests/{id}(id=${job.id})}" method="get" style="display: inline;">
+    <button type="submit" class="apply-btn">Chi Tiết</button>
+</form>
+				
 				</li>
 			</ul>
 		</div>
