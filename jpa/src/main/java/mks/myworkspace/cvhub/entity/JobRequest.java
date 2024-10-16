@@ -1,5 +1,6 @@
 package mks.myworkspace.cvhub.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -14,6 +15,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,24 +40,17 @@ public class JobRequest {
     private JobRole jobRole;
     private Integer experience;
     private Integer salary;
+    @Column(columnDefinition = "TEXT")
+    private String detailsJob;
+    @Column(columnDefinition = "TEXT")
+    private String requirementsCandidate;
+    @Column(columnDefinition = "TEXT")
+    private String benefitCandidate;
     @ManyToOne
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
+    private LocalDate deadlineApplication;
 	
-
-
-	public JobRequest(Long id, String title, Location location, JobRole jobRole, Integer experience, Integer salary,
-			Organization organization) {
-		super();
-		this.id = id;
-		this.title = title;
-		this.location = location;
-		this.jobRole = jobRole;
-		this.experience = experience;
-		this.salary = salary;
-		this.organization = organization;
-	}
-
 
 
 	@CreationTimestamp
@@ -65,4 +60,6 @@ public class JobRequest {
     @Column(name="modified_dte")
     @UpdateTimestamp
     Date modified;
+
+
 }

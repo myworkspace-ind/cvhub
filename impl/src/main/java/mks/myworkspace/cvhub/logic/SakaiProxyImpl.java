@@ -29,7 +29,6 @@ import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.event.api.EventTrackingService;
-import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.util.SiteParticipantHelper;
@@ -168,13 +167,7 @@ public class SakaiProxyImpl implements SakaiProxy {
     
 	@Override
 	public boolean isUserRoleSwapped() {
-		try {
-			return securityService.isUserRoleSwapped();
-		} catch (IdUnusedException e) {
-			log.error("Could not call method isUserRoleSwapped()", e);
-		}
-		
-		return false;
+		return securityService.isUserRoleSwapped();
 	}
 
 	/**
