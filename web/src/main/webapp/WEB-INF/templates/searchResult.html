@@ -32,9 +32,10 @@
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script type="text/javascript" th:src="@{/resources/searchResult/NavigateToDetails.js}"></script>
 
-	<link rel="stylesheet" th:href="@{/resources/searchResult/styleSearchResult.css}" />
-	<link rel="stylesheet" th:href="@{/resources/searchCondition/style.css}" />
-	<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
+<link rel="stylesheet"
+	th:href="@{/resources/searchResult/styleSearchResult.css}" />
+<link rel="stylesheet" th:href="@{/resources/searchCondition/style.css}" />
+<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
 
 </head>
 
@@ -83,8 +84,10 @@
 							</div>
 							<div class="col-8">
 								<h3 class="job-title" th:text="${job.title}"></h3>
-								<form th:action="@{/organization}" method="get" class="job-organization">
-									<input type="hidden" name="id" th:value="${job.organization.id}">
+								<form th:action="@{/organization}" method="get"
+									class="job-organization">
+									<input type="hidden" name="id"
+										th:value="${job.organization.id}">
 									<p class="company-name">
 										<span th:text="${job.organization.title}"></span>
 									</p>
@@ -113,6 +116,7 @@
 				</div>
 			</div>
 		</div>
+	</div>
 </body>
 
 </html>
