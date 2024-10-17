@@ -92,5 +92,19 @@ public class OrganizationController extends BaseController {
 	        return mav;
 	    }
 	}
+	@RequestMapping(value = { "/organizations" }, method = RequestMethod.GET)
+	public ModelAndView getOrganizations(HttpServletRequest request, HttpSession httpSession) {
+		ModelAndView mav = new ModelAndView("candidate/organizationList");
+		List<Organization> organizations = organizationService.getRepo().findAll();
+		mav.addObject("organizations", organizations);
+		return mav;
+	}
+	@RequestMapping(value = { "/organizations/addReview" }, method = RequestMethod.POST)
+	public ModelAndView addReview(@ModelAttribute OrganizationDTO organizationDTO, HttpServletRequest request, HttpSession httpSession) {
+		ModelAndView mav = new ModelAndView("candidate/organizationList");
+		List<Organization> organizations = organizationService.getRepo().findAll();
+		mav.addObject("organizations", organizations);
+		return mav;
+	}
 	
 }
