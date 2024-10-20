@@ -134,9 +134,7 @@ public class MockDataController extends BaseController {
         }
     }
 	@RequestMapping(value = { "/addReview" }, method = RequestMethod.GET)
-	public ModelAndView addReview() {
-		ModelAndView mav = new ModelAndView("home");
+	public void addReview() {
 		
-		return mav;
 	}
 }

@@ -10,25 +10,34 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import lombok.RequiredArgsConstructor;
 import mks.myworkspace.cvhub.controller.model.JobRequestDTO;
 import mks.myworkspace.cvhub.controller.model.JobSearchDTO;
 import mks.myworkspace.cvhub.controller.model.OrganizationDTO;
+import mks.myworkspace.cvhub.controller.model.OrganizationReviewDTO;
 import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
 import mks.myworkspace.cvhub.entity.Organization;
+import mks.myworkspace.cvhub.entity.OrganizationReview;
 import mks.myworkspace.cvhub.repository.JobRequestRepository;
+import mks.myworkspace.cvhub.repository.OrganizationRepository;
+import mks.myworkspace.cvhub.repository.OrganizationReviewRepository;
 import mks.myworkspace.cvhub.service.JobRequestService;
 import mks.myworkspace.cvhub.service.JobRoleService;
 import mks.myworkspace.cvhub.service.LocationService;
+import mks.myworkspace.cvhub.service.OrganizationReviewService;
 import mks.myworkspace.cvhub.service.OrganizationService;
 
 @Controller
+@RequiredArgsConstructor
 public class OrganizationController extends BaseController {
 	@Autowired
 	OrganizationService organizationService;
@@ -40,6 +49,10 @@ public class OrganizationController extends BaseController {
 	LocationService locationService;
 	@Autowired
 	JobRequestService jobRequestService;
+	
+	private final OrganizationReviewService reviewService;
+	private final OrganizationRepository organizationRepo;
+	
 	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
 	@RequestMapping(value = { "/organization" }, method = RequestMethod.GET)
 	public ModelAndView displayHome(@RequestParam("id") Long id,HttpServletRequest request, HttpSession httpSession) {
@@ -99,12 +112,28 @@ public class OrganizationController extends BaseController {
 		mav.addObject("organizations", organizations);
 		return mav;
 	}
-	@RequestMapping(value = { "/organizations/addReview" }, method = RequestMethod.POST)
-	public ModelAndView addReview(@ModelAttribute OrganizationDTO organizationDTO, HttpServletRequest request, HttpSession httpSession) {
-		ModelAndView mav = new ModelAndView("candidate/organizationList");
-		List<Organization> organizations = organizationService.getRepo().findAll();
-		mav.addObject("organizations", organizations);
-		return mav;
+	@RequestMapping(value = { "/organizations/{id}/addReview" }, method = RequestMethod.POST)
+	public OrganizationReview addReview(@PathVariable("id") Long organizationId,
+										@RequestBody OrganizationReviewDTO reviewDTO,
+										HttpServletRequest request, 
+										HttpSession httpSession) 
+	{
+//		ModelAndView mav = new ModelAndView("candidate/organizationList"); 
+		OrganizationReview newReview = new OrganizationReview();
+		newReview.setOrganization(organizationRepo.findById(organizationId).get());
+		newReview.setRating(reviewDTO.getRating());
+		newReview.setReviewText(reviewDTO.getReviewText());
+		reviewService.createReview(newReview);
+		return newReview;
+//		mav.addObject("organizations", organizations);
+//		return mav;
+	}
+	@RequestMapping(value = { "/organizations/{id}/getReviews" }, method = RequestMethod.POST)
+	public List<OrganizationReview> getReviews(HttpServletRequest request, HttpSession httpSession) {
+//		ModelAndView mav = new ModelAndView("candidate/organizationList"); 
+		return reviewService.getReviews();
+//		mav.addObject("organizations", organizations);
+//		return mav;
 	}
 	
 }

@@ -41,9 +41,6 @@ public class OrganizationReview {
 //    @JoinColumn(name = "user_id", nullable = false)
 //    private User user;
 
-    @Column(name = "reviewer_name", nullable = false, length = 100)
-    private String reviewerName;
-
     @Column(nullable = false)
     private Integer rating;
 

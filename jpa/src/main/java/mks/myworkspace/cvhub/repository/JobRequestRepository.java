@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import mks.myworkspace.cvhub.entity.JobRequest;
-import mks.myworkspace.cvhub.entity.JobRequest;
 public interface JobRequestRepository extends JpaRepository<JobRequest, Long> {
 
 	  @Query("SELECT jr FROM JobRequest jr WHERE jr.organization.id = :organizationId")
