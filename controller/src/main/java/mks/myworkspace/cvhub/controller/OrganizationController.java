@@ -61,10 +61,13 @@ public class OrganizationController extends BaseController {
 		List<JobRequest> jobByOrganization = jobRequestRepository.findByOrganizationId(id);
 		List<JobRole> alLJobRole= jobRoleService.getRepo().findAll();
 		List<Location> locations = locationService.getRepo().findAll();
+		List<OrganizationReview> reviews = reviewService.getReviewsByOrganizationId(id);
 		mav.addObject("locations", locations);
 		mav.addObject("alLJobRole", alLJobRole);
 		mav.addObject("organization", organization);
 		mav.addObject("jobByOrganization", jobByOrganization);
+		mav.addObject("reviews", reviews);
+		mav.addObject("reviewCount", reviews.size());
 		return mav;
 	}
 	@RequestMapping(value = { "/showRegister" }, method = RequestMethod.GET)

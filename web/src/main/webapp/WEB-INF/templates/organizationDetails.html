@@ -190,18 +190,13 @@
 		</div>
 		<div class="content-section">
 			<h2 class="section-title">Review</h2>
-			<div class="container review-container">
+			<div class="container review-container" th:each="review : ${reviews}">
 				<div class="review-header">
-					<button id="openReviewForm" class="btn btn-primary">Viết
-						Review công ty MCredit</button>
-					<div class="star-rating">
-						<span class="filled">★</span> <span class="filled">★</span> <span
-							class="filled">★</span> <span class="filled">★</span> <span>★</span>
-					</div>
+					<button id="openReviewForm" class="btn btn-primary" th:text="'Viết Review công ty ' + ${organization.title}"></button>
 				</div>
 
 				<div class="review-count">
-					<span th:text="${reviewCount}">35</span> bình luận
+					<span th:text="${reviewCount}"></span> bình luận
 					<div class="pull-right">
 						<select id="sortCombobox" class="form-control custom-select">
 							<option value="newest">Mới nhất</option>
@@ -212,19 +207,18 @@
 					</div>
 				</div>
 
-				<div class="review-item">
+				<div class="review-item" >
 					<div class="review-author">
 						<div class="author-avatar">A</div>
 						<strong>Ẩn danh</strong> <span class="review-date pull-right">9
 							phút trước</span>
 					</div>
 					<div class="star-rating">
-						<span class="filled">★</span> <span>★</span> <span>★</span> <span>★</span>
-						<span>★</span>
+						<th:block th:each="star : ${#numbers.sequence(1, 5)}">
+							<span th:class="${star <= review.rating} ? 'filled' : ''">★</span>
+						</th:block>
 					</div>
-					<p class="review-text">Công ty nên nể nha mọi người, phỏng vấn
-						rất thiếu chuyên nghiệp và coi thường ứng viên. Đặc biệt là HR
-						M*** H*** nào đó vô cùng coi thường ứng viên</p>
+					<p class="review-text" th:text="${review.reviewText}"></p>
 				</div>
 
 				<div class="comment-actions">
