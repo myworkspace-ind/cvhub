@@ -156,34 +156,7 @@ public class HomeController extends BaseController {
 		return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
 	}
 
-	@RequestMapping(value = { "uploadCV" }, method = RequestMethod.GET)
-	public ModelAndView returnUploadCV() {
-		ModelAndView mav = new ModelAndView("uploadCV/uploadCV");
-		return mav;
-	}
-
-	@RequestMapping(value = { "completeCV" }, method = RequestMethod.POST)
-	public String handleFileUpload(@RequestParam("file") MultipartFile file) {
-		String content = "";
-
-		try {
-			if (file.getContentType().equals("application/pdf")) {
-				content = extractTextFromPDF(file);
-			} else if (file.getContentType()
-					.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
-					|| file.getContentType().equals("application/msword")) {
-				content = extractTextFromWord(file);
-			}
-
-			// Trích xuất thông tin cần thiết
-			logger.info("Total " + content);
-
-		} catch (IOException e) {
-			logger.error("Đã xảy ra lỗi: {}", e.getMessage(), e);
-		}
-
-		return "uploadResult"; //
-	}
+	
 	  @GetMapping("/details")
 	   public ModelAndView getJobDetails(@RequestParam("id") Long jobId) {
 	        // Replace with your service call to fetch the job details using jobId
@@ -192,21 +165,7 @@ public class HomeController extends BaseController {
 	    }
 
 
-	private String extractTextFromPDF(MultipartFile file) throws IOException {
-		PDDocument document = PDDocument.load(file.getInputStream());
-		PDFTextStripper pdfStripper = new PDFTextStripper();
-		String text = pdfStripper.getText(document);
-		document.close();
-		return text;
-	}
-
-	private String extractTextFromWord(MultipartFile file) throws IOException {
-		XWPFDocument document = new XWPFDocument(file.getInputStream());
-		XWPFWordExtractor extractor = new XWPFWordExtractor(document);
-		String text = extractor.getText();
-		document.close();
-		return text;
-	}
+	
 
 	public byte[] uuidToBytes(UUID uuid) {
 		ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[256]);

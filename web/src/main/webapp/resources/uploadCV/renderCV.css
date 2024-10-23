@@ -1,0 +1,146 @@
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #ebfff0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Container chính */
+        .cv-container {
+            width: 210mm;
+            height: 297mm;
+            margin: 0 auto;
+            background: white;
+            padding: 15mm;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .cv-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            height: 45mm;
+        }
+
+        .contact-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            font-size: 0.8em;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00c853;
+        }
+
+        .avatar {
+            width: 35mm;
+            height: 45mm;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            color: #00c853;
+            font-size: 0.9em;
+            font-weight: bold;
+            padding-bottom: 3px;
+            border-bottom: 2px solid #ff5722;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .section-content {
+            padding: 0 10px;
+            font-size: 0.8em;
+            line-height: 1.4;
+        }
+
+        /* Grid Layouts */
+        .three-columns {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+
+            .cv-container {
+                box-shadow: none;
+                padding: 15mm;
+            }
+
+            .download-btn {
+                display: none;
+            }
+        }
+
+        /* Ensure content fits */
+        .content-block {
+            white-space: pre-line;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: calc(100% - 10px);
+        }
+
+        /* Experience section with limited height */
+        .experience-section {
+            max-height: 80mm;
+            overflow: hidden;
+        }
+
+        /* Skills and other sections with limited height */
+        .small-section {
+            max-height: 40mm;
+            overflow: hidden;
+        }
+
+        /* Download button */
+        .download-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #00c853;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
