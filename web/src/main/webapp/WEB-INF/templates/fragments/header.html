@@ -8,10 +8,10 @@
 <body>
 	<header>
 		<nav class="navbar" th:fragment="header">
-			<div class="logo">CVHub</div>
+			<div th:href="@{home}" class="logo">CVHub</div>
 			<ul class="nav-links">
 				<li><a href="#">Việc làm</a></li>
-				<li><a href="#">Công ty</a></li>
+				<li><a th:href="@{showRegister}">Công ty</a></li>
 				<li><a th:href="@{uploadCV}">Tạo CV</a></li>
 				<li><a href="#">Blog</a></li>
 			</ul>

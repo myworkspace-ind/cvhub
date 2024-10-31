@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TopCV - Đăng nhập</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+ <link rel="stylesheet" th:href="@{/resources/signInOut/signIn.css}" />
+</head>
+<body>
+    <div class="login-container">
+        <div class="welcome-text">
+            <h1>Chào mừng bạn đã quay trở lại</h1>
+            <p>Cùng xây dựng một hồ sơ nổi bật và nhận được các cơ hội sự nghiệp lý tưởng</p>
+        </div>
+
+        <form>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" value="21110783@student.hcmute.edu.vn" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password">
+            </div>
+
+            <div class="forgot-password">
+                <a href="#">Quên mật khẩu</a>
+            </div>
+
+            <button type="submit" class="login-button">Đăng nhập</button>
+
+           
+
+            <div class="terms">
+                <label>
+                    <input type="checkbox" checked>
+                    Bằng việc đăng nhập bằng tài khoản mạng xã hội, tôi đã đọc và đồng ý với 
+                    <a href="#">Điều khoản dịch vụ</a> và 
+                    <a href="#">Chính sách bảo mật</a> của CVHub
+                </label>
+            </div>
+
+            <div class="signup-link">
+                Bạn chưa có tài khoản? <a th:href="@{user/showRegister}>Đăng ký ngay</a>
+            </div>
+
+            <div class="copyright">
+                © 2016. All Rights Reserved. TopCV Vietnam JSC.
+            </div>
+        </form>
+    </div>
+
+    <div class="brand-side">
+        
+        <h1>Tiếp lợi thế</h1>
+        <h1>Nối thành công</h1>
+        <p>CVHub - Hệ sinh thái nhân sự tiên phong ứng dụng công nghệ tại Việt Nam</p>
+    </div>
+</body>
+</html>

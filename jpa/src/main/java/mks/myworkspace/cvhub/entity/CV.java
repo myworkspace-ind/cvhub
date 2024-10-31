@@ -25,6 +25,9 @@ public class CV {
 
     private String fullName;
     @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+    @ManyToOne
     @JoinColumn(name = "jobrole_id")
     private JobRole jobRole;
     

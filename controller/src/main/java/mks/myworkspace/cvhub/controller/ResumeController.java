@@ -1,23 +1,9 @@
 package mks.myworkspace.cvhub.controller;
-import edu.stanford.nlp.ling.CoreAnnotations;
-import edu.stanford.nlp.ling.CoreLabel;
-import edu.stanford.nlp.pipeline.Annotation;
-import edu.stanford.nlp.pipeline.StanfordCoreNLP;
-import edu.stanford.nlp.util.CoreMap;
-import mks.myworkspace.cvhub.controller.model.CvDTO;
-import mks.myworkspace.cvhub.entity.CV;
-import mks.myworkspace.cvhub.entity.JobRole;
-import mks.myworkspace.cvhub.entity.Location;
-import mks.myworkspace.cvhub.service.CvService;
-import mks.myworkspace.cvhub.service.JobRoleService;
-import mks.myworkspace.cvhub.service.LocationService;
-import mks.myworkspace.cvhub.service.OrganizationService;
-import mks.myworkspace.cvhub.service.ParsingCVService;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
-import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,20 +13,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import mks.myworkspace.cvhub.controller.model.CvDTO;
+import mks.myworkspace.cvhub.entity.CV;
+import mks.myworkspace.cvhub.entity.JobRole;
+import mks.myworkspace.cvhub.entity.Location;
+import mks.myworkspace.cvhub.service.CvService;
+import mks.myworkspace.cvhub.service.JobRoleService;
+import mks.myworkspace.cvhub.service.LocationService;
+import mks.myworkspace.cvhub.service.ParsingCVService;
 
 @Controller
 public class ResumeController  extends BaseController  {
