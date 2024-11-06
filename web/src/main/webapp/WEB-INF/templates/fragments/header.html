@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<link rel="stylesheet"
-	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
 </head>
+
 <body>
 	<header>
 		<nav class="navbar" th:fragment="header">
@@ -16,11 +17,12 @@
 				<li><a href="#">Blog</a></li>
 			</ul>
 			<div class="auth-buttons">
-				<button class="login">Đăng nhập</button>
-				<button class="signup">Đăng ký</button>
+				<a th:href="@{/login}" class="login btn">Đăng nhập</a>
+				<a th:href="@{/register}" class="signup btn">Đăng ký</a>
 			</div>
 		</nav>
 	</header>
 
 </body>
-</html>	
+
+</html>
