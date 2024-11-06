@@ -4,24 +4,60 @@
 <head>
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
+	<script type="text/javascript" th:src="@{/resources/home/b.js}"></script>
 </head>
 
 <body>
 	<header>
-		<nav class="navbar" th:fragment="header">
-			<div th:href="@{home}" class="logo">CVHub</div>
+		<nav>
+			<a class="logo" th:href="@{/}">CVHub</a>
+
 			<ul class="nav-links">
 				<li><a href="#">Việc làm</a></li>
 				<li><a th:href="@{showRegister}">Công ty</a></li>
 				<li><a th:href="@{uploadCV}">Tạo CV</a></li>
 				<li><a href="#">Blog</a></li>
 			</ul>
+
 			<div class="auth-buttons">
-				<a th:href="@{/login}" class="login btn">Đăng nhập</a>
-				<a th:href="@{/register}" class="signup btn">Đăng ký</a>
+				<!-- Khi chưa đăng nhập -->
+				<th:block th:unless="${#httpServletRequest.remoteUser}">
+					<a class="login btn" th:href="@{/login}">Đăng nhập</a>
+					<a class="signup btn" th:href="@{/register}">Đăng ký</a>
+				</th:block>
+
+				<!-- Khi đã đăng nhập -->
+				<th:block th:if="${#httpServletRequest.remoteUser}">
+					<div class="profile-dropdown">
+						<button class="profile-button">
+							<div class="avatar-placeholder">
+								<div class="user-icon"></div>
+							</div>
+						</button>
+
+						 <div class="dropdown-menu">
+							<div class="user-info">
+								<div class="user-name" th:text="${#httpServletRequest.remoteUser}">
+									Le Dinh Minh
+								</div>
+								<div class="user-email" th:text="${#httpServletRequest.remoteUser}">
+									21110783@student.hcmute.edu.vn
+								</div>
+								<div class="user-id">
+									Mã ứng viên: #8234114
+								</div>
+							</div>
+							<div class="dropdown-links">
+								<a href="#">Cài đặt thông tin cá nhân</a>
+								<a th:href="@{/logout}" class="logout">Đăng xuất</a>
+							</div>
+					</div>
+			</div>
+			</th:block>
 			</div>
 		</nav>
 	</header>
+
 
 </body>
 
