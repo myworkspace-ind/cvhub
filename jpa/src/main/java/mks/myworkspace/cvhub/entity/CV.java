@@ -29,11 +29,7 @@ public class CV {
     private User user;
     @ManyToOne
     @JoinColumn(name = "jobrole_id")
-    @Lob
-    private byte[] fileData;
-    
-    @Column(name = "is_uploaded")
-    private Boolean isUploaded = false;
+
     private JobRole jobRole;
     
     private String email;
