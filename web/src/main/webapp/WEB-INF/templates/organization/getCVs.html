@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TopCV - Hồ sơ ứng viên đã nộp</title>
+<!-- Bootstrap 3 CSS -->
+<link
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	rel="stylesheet">
+<!-- Font Awesome -->
+<link
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet">
+<style>
+body {
+	background: #f5f5f5;
+	padding-top: 20px;
+}
+
+.status-badge {
+	padding: 5px 10px;
+	border-radius: 3px;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.status-new {
+	background: #5bc0de;
+	color: white;
+}
+
+.status-viewed {
+	background: #f0ad4e;
+	color: white;
+}
+
+.status-contacted {
+	background: #5cb85c;
+	color: white;
+}
+
+.status-rejected {
+	background: #d9534f;
+	color: white;
+}
+
+.cv-card {
+	background: white;
+	border: 1px solid #ddd;
+	margin-bottom: 20px;
+	padding: 15px;
+	border-radius: 4px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.cv-header {
+	border-bottom: 1px solid #eee;
+	margin-bottom: 15px;
+	padding-bottom: 15px;
+}
+
+.cv-avatar {
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	margin-right: 15px;
+}
+
+.candidate-name {
+	font-size: 18px;
+	font-weight: bold;
+	margin: 0 0 5px 0;
+}
+
+.job-title {
+	color: #666;
+	font-size: 14px;
+	margin: 0 0 5px 0;
+}
+
+.filter-section {
+	background: white;
+	padding: 15px;
+	margin-bottom: 20px;
+	border-radius: 4px;
+	border: 1px solid #ddd;
+}
+
+.action-buttons .btn {
+	margin-right: 5px;
+}
+
+.cv-stats {
+	margin: 10px 0;
+	padding: 10px 0;
+	border-top: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+}
+
+.stat-item {
+	display: inline-block;
+	margin-right: 20px;
+	color: #666;
+}
+</style>
+</head>
+<body>
+	<div class="container">
+		<!-- Filter Section -->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="filter-section">
+					<form class="form-horizontal">
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>Trạng thái</label> <select class="form-control">
+										<option>Tất cả trạng thái</option>
+										<option>Chưa xem</option>
+										<option>Đã xem</option>
+										<option>Đã liên hệ</option>
+										<option>Đã từ chối</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>Vị trí tuyển dụng</label> <select class="form-control">
+										<option>Tất cả vị trí</option>
+										<option th:each="job : ${jobRequests}" th:value="${job.id}"
+											th:text="${job.title}">Senior Java Developer</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Tìm kiếm</label> <input type="text" class="form-control"
+										placeholder="Tên ứng viên, email, số điện thoại...">
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="form-group">
+									<label>&nbsp;</label>
+									<button type="submit" class="btn btn-primary form-control">
+										<i class="fa fa-search"></i> Tìm kiếm
+									</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- CV List -->
+		<div class="row">
+			<div class="col-md-12">
+
+				<!-- Single CV Card -->
+				<div class="cv-card" th:each="cvs : ${cvs}">
+					<div class="cv-header">
+						<div class="row">
+							<div class="col-md-8">
+								<div class="media">
+									<div class="media-left">
+										<img class="cv-avatar" src="https://via.placeholder.com/80"
+											alt="Avatar">
+									</div>
+									<div class="media-body">
+										<h4 class="candidate-name" th:text="${cvs.fullName}">Tên
+											ứng viên</h4>
+										<p class="job-title">
+											<span th:text="${cvs.skills}">Kỹ năng</span>
+										</p>
+										<p>
+											<i class="fa fa-envelope"></i> <span th:text="${cvs.email}">Email</span>
+											&nbsp;&nbsp; <i class="fa fa-phone"></i> <span
+												th:text="${cvs.phone}">Phone</span>
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="cv-stats">
+						<div class="stat-item">
+							<i class="fa fa-briefcase"></i> <span
+								th:text="${cvs.experience + ' năm kinh nghiệm'}">Kinh
+								nghiệm</span>
+						</div>
+						<div class="stat-item">
+							<i class="fa fa-graduation-cap"></i> <span
+								th:text="${cvs.education}">Học vấn</span>
+						</div>
+						<div class="stat-item">
+							<i class="fa fa-map-marker"></i>
+							<!--                     <span th:text="${cvs.locationCode == 0 ? 'Hà Nội' :  -->
+							<!--                                   cvs.locationCode == 1 ? 'Hồ Chí Minh' :  -->
+							<!--                                   cvs.locationCode == 2 ? 'Đà Nẵng' : 'Khác'}"> -->
+							<!--                         Địa điểm -->
+							<!--                     </span> -->
+						</div>
+					</div>
+
+					<div class="action-buttons">
+						<a class="btn btn-info"> <i class="fa fa-eye"></i> Xem CV
+						</a>
+						<button class="btn btn-success">
+							<i class="fa fa-phone"></i> Liên hệ
+						</button>
+						<button class="btn btn-warning">
+							<i class="fa fa-calendar"></i> Hẹn phỏng vấn
+						</button>
+						<button class="btn btn-danger">
+							<i class="fa fa-times"></i> Từ chối
+						</button>
+						<div class="btn-group">
+							<button type="button" class="btn btn-default dropdown-toggle"
+								data-toggle="dropdown">
+								<i class="fa fa-ellipsis-h"></i>
+							</button>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a href="#"><i class="fa fa-download"></i> Tải CV</a></li>
+								<li><a href="#"><i class="fa fa-share"></i> Chia sẻ</a></li>
+								<li><a href="#"><i class="fa fa-star"></i> Đánh dấu</a></li>
+								<li><a href="#"><i class="fa fa-sticky-note"></i> Thêm
+										ghi chú</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- jQuery and Bootstrap JS -->
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>
