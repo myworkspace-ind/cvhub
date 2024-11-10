@@ -1,5 +1,6 @@
 package mks.myworkspace.cvhub.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.RequiredArgsConstructor;
+import mks.myworkspace.cvhub.controller.model.CvDTO;
 import mks.myworkspace.cvhub.controller.model.JobRequestDTO;
 import mks.myworkspace.cvhub.controller.model.JobSearchDTO;
 import mks.myworkspace.cvhub.controller.model.OrganizationDTO;
@@ -137,6 +139,62 @@ public class OrganizationController extends BaseController {
 		return reviewService.getReviews();
 //		mav.addObject("organizations", organizations);
 //		return mav;
+	}
+	
+	@RequestMapping(value = { "/organization/{id}/getCVs" }, method = RequestMethod.GET)
+	public ModelAndView GetCVs(@ModelAttribute OrganizationDTO organizationDTO, 
+											 @PathVariable("id") long id, 
+	                                         HttpServletRequest request,
+	                                         HttpSession httpSession) 
+	{
+	    try {
+	        List<JobRequest> jobRequests = jobRequestService.getRepo().findByOrganizationId(id);
+	        // Chuyển hướng đến trang tổ chức
+	        ModelAndView mav = new ModelAndView("organization/getCVs.html");
+	        CvDTO cv1 = new CvDTO();
+	        CvDTO cv2 = new CvDTO();
+	        CvDTO cv3 = new CvDTO();
+	        
+	        cv1.setEmail("cv1@gmail.com");
+	        cv1.setEducation("ute1");
+	        cv1.setFullName("Nguyen Van A");
+	        cv1.setPhone("0123456789");
+	        cv1.setLocationCode(0);
+	        cv1.setSkills("Java");
+	        cv1.setExperience("3");
+
+	        cv2.setEmail("cv2@gmail.com");
+	        cv2.setEducation("FPT University");
+	        cv2.setFullName("Nguyen Van B");
+	        cv2.setPhone("0987654321");
+	        cv2.setLocationCode(1);
+	        cv2.setSkills("Python, Machine Learning");
+	        cv2.setExperience("2");
+
+	        cv3.setEmail("cv3@gmail.com");
+	        cv3.setEducation("HCMUS");
+	        cv3.setFullName("Tran Thi B");
+	        cv3.setPhone("0369852147");
+	        cv3.setLocationCode(2);
+	        cv3.setSkills("ReactJS, NodeJS, MongoDB");
+	        cv3.setExperience("4");
+	        
+	        List<CvDTO> cvs = new ArrayList();
+	        cvs.add(cv1);
+	        cvs.add(cv2);
+	        cvs.add(cv3);
+	        
+	        mav.addObject("jobRequests", jobRequests);
+	        mav.addObject("cvs", cvs);
+	        
+	        return mav;
+
+	    } catch (Exception e) {
+	        // Xử lý lỗi
+	        ModelAndView mav = new ModelAndView("error");
+	        mav.addObject("errorMessage", "Có lỗi xảy ra khi đăng ký tổ chức: " + e.getMessage());
+	        return mav;
+	    }
 	}
 	
 }
