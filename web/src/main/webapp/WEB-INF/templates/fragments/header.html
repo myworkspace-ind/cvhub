@@ -2,9 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-	<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
-	<script type="text/javascript" th:src="@{/resources/home/b.js}"></script>
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
+<script type="text/javascript" th:src="@{/resources/home/b.js}"></script>
 </head>
 
 <body>
@@ -13,27 +14,17 @@
 			<a class="logo" th:href="@{/}">CVHub</a>
 
 			<ul class="nav-links">
-				<ul>
-					<li><a href="#">Việc làm</a></li>
-					<li><a th:href="@{/uploadCV}">Tạo CV</a></li>
-					<li><a href="#">Blog</a></li>
-					 <li th:if="${#request.userPrincipal != null}">
-                <span th:text="${'Role: ' + #request.userPrincipal.authorities}"></span>
-                 
-            </li>
-            
-            <!-- Nút đăng ký tuyển dụng cho ROLE_USER -->
-            <li th:if="${#request.isUserInRole('USER')}">
-                <a th:href="@{/showRegister}" class="btn btn-primary">Đăng ký tuyển dụng</a>
-            </li>
-            <!-- Nút quản lý cho ROLE_ADMIN -->
-            <li th:if="${#request.isUserInRole('ADMIN')}">
-    <a th:href="@{/organization(id=${session.userId})}" class="btn btn-primary">
-        Quản lý tuyển dụng
-    </a>
-</li>
-				</ul>
-
+				<li><a href="#">Việc làm</a></li>
+				<li><a th:href="@{/uploadCV}">Tạo CV</a></li>
+				<li><a href="#">Quản lý CV</a></li>
+				<!-- Nút đăng ký tuyển dụng cho ROLE_USER -->
+				<li th:if="${#request.isUserInRole('USER')}"><a
+					th:href="@{/showRegister}" >Đăng ký
+						tuyển dụng</a></li>
+				<!-- Nút quản lý cho ROLE_ADMIN -->
+				<li th:if="${#request.isUserInRole('ADMIN')}"><a
+					th:href="@{/organization(id=${session.userId})}"
+					> Quản lý tuyển dụng </a></li>
 			</ul>
 
 			<div class="auth-buttons">
@@ -43,11 +34,12 @@
 					<a class="signup btn" th:href="@{/register}">Đăng ký</a>
 				</th:block>
 				<div class="profile-info" th:if="${#request.userPrincipal != null}">
-					<span th:text="${#request.userPrincipal.name}"></span>
-					<a class="logout" th:href="@{/logout}">Đăng xuất</a>
+					<span th:text="${#request.userPrincipal.name}"></span> <a
+						class="logout" th:href="@{/logout}">Đăng xuất</a>
 				</div>
 				<!-- Khi đã đăng nhập -->
-				<div class="profile-dropdown" th:if="${#request.userPrincipal != null}">
+				<div class="profile-dropdown"
+					th:if="${#request.userPrincipal != null}">
 					<div class="avatar-placeholder">
 						<div class="user-icon"></div>
 					</div>
@@ -58,16 +50,16 @@
 						</div>
 
 						<div class="dropdown-links">
-							<a href="#">Cài đặt thông tin cá nhân</a>
-							<a th:href="@{/showRegister}" class="btn btn-primary">Đăng ký tuyển dụng</a>
-							<a class="logout" th:href="@{/logout}">Đăng xuất</a>
+							<a href="#">Cài đặt thông tin cá nhân</a> <a
+								th:href="@{/showRegister}" class="btn btn-primary">Đăng ký
+								tuyển dụng</a> <a class="logout" th:href="@{/logout}">Đăng xuất</a>
 						</div>
 					</div>
 				</div>
 			</div>
 		</nav>
 	</header>
-
+	<script th:src="@{/resources/home/b.js}"></script>
 
 </body>
 
