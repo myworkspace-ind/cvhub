@@ -2,8 +2,6 @@ package mks.myworkspace.cvhub.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 import mks.myworkspace.cvhub.entity.JobRequest;
 
 public interface SearchJobService {
