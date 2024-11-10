@@ -63,8 +63,8 @@
 		</main>
 		<aside class="sidebar">.
 			<div class="company-card">
-				<form th:action="@{/organization}" method="get" class="job-organization">
-					<input type="hidden" name="id" th:value="${jobRequest.organization.id}">
+				<form th:action="@{/organization/{id}(id=${jobRequest.organization.id})}" method="get"
+					class="job-organization">
 					<button type="submit" class="company-name-button">
 						<span th:text="${jobRequest.organization.title}"></span>
 					</button>
@@ -75,20 +75,23 @@
 					style="display: inline-block; text-decoration: none; margin-top: 10px;">Xem trang công ty</a>
 
 				<div style="display: inline-block; margin-top: 10px;">
-    <button id="toggleJobForm" class="apply-button"
-        style="text-decoration: none; background-color: #00a86b; color: white; border: none; border-radius: 5px; padding: 10px 20px; cursor: pointer; font: inherit;">
-        Sửa thông tin tuyển dụng
-    </button>
-    <form id="requirementsForm2" th:action="@{/jobrequests/deleteJob/{id}(id=${jobRequest.id})}" method="post" style="display: inline-block;">
-        <input type="hidden" id="jobRequestId" name="jobRequestId" th:value="${jobRequest.id}">
-        <button type="submit" class="apply-button" style="text-decoration: none; background-color: #00a86b; color: white; border: none; border-radius: 5px; padding: 10px 20px; cursor: pointer; font: inherit;">Xóa</button>
-    </form>
-</div>
+					<button id="toggleJobForm" class="apply-button"
+						style="text-decoration: none; background-color: #00a86b; color: white; border: none; border-radius: 5px; padding: 10px 20px; cursor: pointer; font: inherit;">
+						Sửa thông tin tuyển dụng
+					</button>
+					<form id="requirementsForm2" th:action="@{/jobrequests/deleteJob/{id}(id=${jobRequest.id})}"
+						method="post" style="display: inline-block;">
+						<input type="hidden" id="jobRequestId" name="jobRequestId" th:value="${jobRequest.id}">
+						<button type="submit" class="apply-button"
+							style="text-decoration: none; background-color: #00a86b; color: white; border: none; border-radius: 5px; padding: 10px 20px; cursor: pointer; font: inherit;">Xóa</button>
+					</form>
+				</div>
 			</div>
 			<div class="overlay" id="formOverlay"></div>
 			<div id="jobPostForm">
 				<h3>Sửa thông tin tuyển dụng</h3>
-				<form id="requirementsForm" th:action="@{/jobrequests/updateJob/{id}(id=${jobRequest.id})}" method="post">
+				<form id="requirementsForm" th:action="@{/jobrequests/updateJob/{id}(id=${jobRequest.id})}"
+					method="post">
 					<input type="hidden" id="organizationId" name="organizationId"
 						th:value="${jobRequest.organization.id}">
 
@@ -167,7 +170,7 @@
 
 					<button type="submit" class="btn btn-primary">Lưu thay đổi</button>
 				</form>
-				
+
 			</div>
 
 		</aside>

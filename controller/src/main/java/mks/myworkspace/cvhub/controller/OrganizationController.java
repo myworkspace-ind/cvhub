@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,9 +47,8 @@ public class OrganizationController extends BaseController {
 	@Autowired
     private UserService userService;
 	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
-	@PreAuthorize("hasRole('ROLE_ADMIN') and @organizationService.isOwner(#id, principal.username)")
-	@RequestMapping(value = { "/organization" }, method = RequestMethod.GET)
-	public ModelAndView displayHome(@RequestParam("id") Long id,HttpServletRequest request, HttpSession httpSession) {
+	 @RequestMapping(value = { "/organization/{id}" }, method = RequestMethod.GET)
+	    public ModelAndView displayHome(@PathVariable("id") Long id, HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("organizationDetails");
 		Organization organization = organizationService.getRepo().findById(id).orElse(null);
 		List<JobRequest> jobByOrganization = jobRequestRepository.findByOrganizationId(id);
@@ -58,15 +58,25 @@ public class OrganizationController extends BaseController {
 		mav.addObject("alLJobRole", alLJobRole);
 		mav.addObject("organization", organization);
 		mav.addObject("jobByOrganization", jobByOrganization);
-		
+		 boolean isOwner = false;
+		    if (request.getUserPrincipal() != null) {
+		        isOwner = organizationService.isOwner(id, request.getUserPrincipal().getName());
+		    }
+		    mav.addObject("isOwner", isOwner);
+		    
+		    return mav;
+	}
+	@PreAuthorize("hasRole('ROLE_ADMIN') and @organizationService.isOwner(#id, principal.username)")
+	@RequestMapping(value = { "/organization" }, method = RequestMethod.GET)
+	public ModelAndView displayHomeForOrganization(HttpServletRequest request) {
 		 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	        User currentUser = userService.findUserByEmail(auth.getName());
-		
-		Organization organization2 = organizationService.findByUserId(currentUser.getId());
-		httpSession.setAttribute("currentUser", currentUser);
-		httpSession.setAttribute("organization", organization2);
-		
-		return mav;
+		    User currentUser = userService.findUserByEmail(auth.getName());
+		    Organization org = organizationService.findByUserId(currentUser.getId());
+		    
+		    if (org != null) {
+		        return new ModelAndView("redirect:/organization/" + org.getId());
+		    }
+		    return new ModelAndView("redirect:/showRegister");
 	}
 	@RequestMapping(value = { "showRegister" }, method = RequestMethod.GET)
     public ModelAndView registerOrganization(HttpServletRequest request) {

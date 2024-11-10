@@ -21,8 +21,11 @@
 				<h1 class="org-name" th:text="${organization.title}"></h1>
 				<p class="org-details" th:text="${organization.website}"></p>
 			</div>
-			<button id="toggleJobForm" class="follow-btn">Thêm thông tin tuyển dụng</button>
-			<button id="toggleJobForm2" class="follow-btn">Sửa thông tin công ty</button>
+			<!-- Kiểm tra user đã đăng nhập và là chủ của organization này -->
+			<div th:if="${isOwner}">
+				<button id="toggleJobForm" class="follow-btn">Thêm thông tin tuyển dụng</button>
+				<button id="toggleJobForm2" class="follow-btn">Sửa thông tin công ty</button>
+			</div>
 		</div>
 
 		<div class="content-section">
@@ -44,9 +47,9 @@
 						<div class="job-date" th:text="${job.createdDate}"></div>
 					</div>
 					<form th:action="@{/jobrequests/{id}(id=${job.id})}" method="get" style="display: inline;">
-    <button type="submit" class="apply-btn">Chi Tiết</button>
-</form>
-				
+						<button type="submit" class="apply-btn">Chi Tiết</button>
+					</form>
+
 				</li>
 			</ul>
 		</div>
@@ -81,15 +84,14 @@
 						th:text="${alLJobRole.title}"></option>
 				</select>
 			</div>
-<div class="form-group">
-                <label for="locationCode">Địa điểm làm việc*</label>
-                <select class="form-control" id="locationCode" name="locationCode" required>
-                    <option selected disabled>Chọn địa điểm</option>
-                    <option th:each="location : ${locations}" 
-                            th:value="${location.code}" 
-                            th:text="${location.name}"></option>
-                </select>
-            </div>
+			<div class="form-group">
+				<label for="locationCode">Địa điểm làm việc*</label>
+				<select class="form-control" id="locationCode" name="locationCode" required>
+					<option selected disabled>Chọn địa điểm</option>
+					<option th:each="location : ${locations}" th:value="${location.code}" th:text="${location.name}">
+					</option>
+				</select>
+			</div>
 			<div class="form-group">
 				<label for="experience">Yêu cầu kinh nghiệm*</label>
 				<input type="number" class="form-control" id="experience" name="experience" min="0" required
@@ -108,21 +110,24 @@
 					placeholder="Nhập lương" min="0">
 
 				<div class="form-group">
-                <label for="detailsJob">Chi tiết công việc*</label>
-                <textarea id="jobDescription" name="jobDescription" required placeholder="Nhập chi tiết công việc (mỗi dòng là một gạch đầu dòng)"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="requirementsCandidate">Yêu cầu ứng viên*</label>
-                <textarea id="requirementsCandidate" name="requirementsCandidate" required placeholder="Nhập yêu cầu ứng viên (mỗi dòng là một gạch đầu dòng)"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="benefitCandidate">Quyền lợi ứng viên*</label>
-                <textarea id="benefitCandidate" name="benefitCandidate" required placeholder="Nhập quyền lợi ứng viên (mỗi dòng là một gạch đầu dòng)"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="deadlineApplication">Hạn nộp hồ sơ*</label>
-                <input type="date" id="deadlineApplication" name="deadlineApplication" required>
-            </div>
+					<label for="detailsJob">Chi tiết công việc*</label>
+					<textarea id="jobDescription" name="jobDescription" required
+						placeholder="Nhập chi tiết công việc (mỗi dòng là một gạch đầu dòng)"></textarea>
+				</div>
+				<div class="form-group">
+					<label for="requirementsCandidate">Yêu cầu ứng viên*</label>
+					<textarea id="requirementsCandidate" name="requirementsCandidate" required
+						placeholder="Nhập yêu cầu ứng viên (mỗi dòng là một gạch đầu dòng)"></textarea>
+				</div>
+				<div class="form-group">
+					<label for="benefitCandidate">Quyền lợi ứng viên*</label>
+					<textarea id="benefitCandidate" name="benefitCandidate" required
+						placeholder="Nhập quyền lợi ứng viên (mỗi dòng là một gạch đầu dòng)"></textarea>
+				</div>
+				<div class="form-group">
+					<label for="deadlineApplication">Hạn nộp hồ sơ*</label>
+					<input type="date" id="deadlineApplication" name="deadlineApplication" required>
+				</div>
 			</div>
 
 			<button type="submit" class="btn btn-primary">Lưu</button>

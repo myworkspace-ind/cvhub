@@ -7,16 +7,23 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+
+import mks.myworkspace.cvhub.entity.User;
 import mks.myworkspace.cvhub.service.ParsingCVService;
+import mks.myworkspace.cvhub.service.UserService;
 
 @Service
 public class ParsingCVImpl implements ParsingCVService {
+	@Autowired
+	private UserService userService;
     public final Logger logger = LoggerFactory.getLogger(this.getClass());
+    
     private static final Set<String> SKILL_KEYWORDS = new HashSet<>(Arrays.asList(
         "skills", "technical skills", "programming languages", "technologies", "tools", "frameworks"
     ));
@@ -54,12 +61,13 @@ public class ParsingCVImpl implements ParsingCVService {
     }
 
     @Override
-    public Map<String, String> parseContent(String content) {
+    public Map<String, String> parseContent(String content, User user) {
         Map<String, String> parsedInfo = new HashMap<>();
+        // Lấy thông tin từ user được truyền vào
+        parsedInfo.put("name", user.getFullName());
+        parsedInfo.put("phone", user.getPhone());
+        parsedInfo.put("email", user.getEmail());
         
-        parsedInfo.put("name", extractName(content));
-        parsedInfo.put("email", extractEmail(content));
-        parsedInfo.put("phone", extractPhoneNumber(content));
         parsedInfo.put("skills", extractSection(content, SKILL_KEYWORDS));
         parsedInfo.put("experience", extractSection(content, EXPERIENCE_KEYWORDS));
         parsedInfo.put("education", extractSection(content, EDUCATION_KEYWORDS));
@@ -84,55 +92,7 @@ public class ParsingCVImpl implements ParsingCVService {
         return text;
     }
 
-    private String extractName(String content) {
-        // Tìm tên ở đầu document dựa vào pattern
-        // Giả định rằng tên là cụm từ đầu tiên có 2-4 từ, mỗi từ bắt đầu bằng chữ hoa
-        Pattern namePattern = Pattern.compile("^([A-Z][a-z]+(\\s[A-Z][a-z]+){1,3})");
-        Matcher nameMatcher = namePattern.matcher(content);
-        if (nameMatcher.find()) {
-            return nameMatcher.group(1);
-        }
-        
-        // Backup pattern - tìm cụm từ có dạng tên người trong vài dòng đầu
-        String[] lines = content.split("\n");
-        Pattern backupPattern = Pattern.compile("([A-Z][a-z]+(\\s[A-Z][a-z]+){1,3})");
-        for (int i = 0; i < Math.min(5, lines.length); i++) {
-            Matcher matcher = backupPattern.matcher(lines[i]);
-            if (matcher.find()) {
-                return matcher.group(1);
-            }
-        }
-        
-        return "";
-    }
-
-    private String extractEmail(String content) {
-        Pattern pattern = Pattern.compile("\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b");
-        Matcher matcher = pattern.matcher(content);
-        return matcher.find() ? matcher.group() : "";
-    }
-
-    private String extractPhoneNumber(String content) {
-        // Pattern cho số điện thoại Việt Nam
-        Pattern vnPhonePattern = Pattern.compile("(\\+84|0)[0-9]{9,10}");
-        Matcher vnPhoneMatcher = vnPhonePattern.matcher(content);
-        if (vnPhoneMatcher.find()) {
-            return vnPhoneMatcher.group();
-        }
-
-        // Pattern backup cho các dãy số có độ dài phù hợp với số điện thoại
-        Pattern backupPattern = Pattern.compile("\\d{7,15}");
-        Matcher backupMatcher = backupPattern.matcher(content);
-        String longestMatch = "";
-        while (backupMatcher.find()) {
-            String match = backupMatcher.group();
-            if (match.length() > longestMatch.length()) {
-                longestMatch = match;
-            }
-        }
-        
-        return longestMatch.length() >= 7 ? longestMatch : "";
-    }
+  
 
     private String extractSection(String content, Set<String> keywords) {
         String lowercaseContent = content.toLowerCase();

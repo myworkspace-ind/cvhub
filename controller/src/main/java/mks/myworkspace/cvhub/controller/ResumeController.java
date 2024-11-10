@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,10 +26,12 @@ import mks.myworkspace.cvhub.controller.model.CvDTO;
 import mks.myworkspace.cvhub.entity.CV;
 import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
+import mks.myworkspace.cvhub.entity.User;
 import mks.myworkspace.cvhub.service.CvService;
 import mks.myworkspace.cvhub.service.JobRoleService;
 import mks.myworkspace.cvhub.service.LocationService;
 import mks.myworkspace.cvhub.service.ParsingCVService;
+import mks.myworkspace.cvhub.service.UserService;
 
 @Controller
 public class ResumeController  extends BaseController  {
@@ -40,7 +44,8 @@ public class ResumeController  extends BaseController  {
 	JobRoleService jobRoleService;
 	@Autowired
 	LocationService locationService;
-
+	 @Autowired
+	  UserService userService;
 	@RequestMapping(value = { "uploadCV" }, method = RequestMethod.GET)
 	public ModelAndView returnUploadCV() {
 		ModelAndView mav = new ModelAndView("uploadCV/uploadCV");
@@ -50,9 +55,12 @@ public class ResumeController  extends BaseController  {
 	@RequestMapping(value = { "completeCV" }, method = RequestMethod.POST)
 	public ModelAndView  handleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
 		 ModelAndView modelAndView = new ModelAndView("uploadCV/completeCV");
+		 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	        User currentUser = userService.findUserByEmail(auth.getName());
 		    try {
 		        String content = parsingCVService.extractTextFromPdfOrWord(file);
-		        Map<String, String> parsedInfo = parsingCVService.parseContent(content);
+		        Map<String, String> parsedInfo = parsingCVService.parseContent(content, currentUser);
+
 		        modelAndView.addObject("cvData", parsedInfo);
 		    } catch (IOException e) {
 		        modelAndView.addObject("error", "Không thể xử lý file: " + e.getMessage());
@@ -66,6 +74,16 @@ public class ResumeController  extends BaseController  {
 	@RequestMapping(value = { "saveCV" }, method = RequestMethod.POST)
 	public ModelAndView saveCV(@ModelAttribute CvDTO cvDTO) {
 		ModelAndView mav = new ModelAndView("uploadCV/renderCV");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            return new ModelAndView("redirect:/login");
+        }
+		User currentUser = userService.findUserByEmail(auth.getName());
+        if (currentUser == null) {
+            mav.setViewName("error");
+            mav.addObject("errorMessage", "User not found");
+            return mav;
+        }
 		CV cvNew =cvService.saveCV(
 	            cvDTO.getFullName(),
 	            cvDTO.getLocationCode(),
@@ -78,7 +96,8 @@ public class ResumeController  extends BaseController  {
 	            cvDTO.getProjects(),
 	            cvDTO.getCertifications(),
 	            cvDTO.getActivities(),
-	            cvDTO.getLogoFile()
+	            cvDTO.getLogoFile(),
+	            currentUser
 	        );
 		CV savedCV=cvService.getRepo().save(cvNew);
 		  mav.addObject("cv", savedCV);
