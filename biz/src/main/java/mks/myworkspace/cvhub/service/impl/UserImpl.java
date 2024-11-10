@@ -30,7 +30,7 @@ public class UserImpl implements UserService {
 
         user.setPassword(password);
         user.setPhone(phone);
-    
+        user.setRole("ROLE_USER");
         return repo.save(user);
 	}
 

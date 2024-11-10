@@ -31,7 +31,12 @@ public class User {
     private String password;
     
     private String phone;
+
+    @Column(name = "role", nullable = false)
+    private String role = "ROLE_USER"; // Mặc định là ROLE_USER
     
+    @OneToOne(mappedBy = "user")
+    private Organization organization;
 
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

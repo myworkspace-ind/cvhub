@@ -40,4 +40,18 @@ public class OrganizationImpl implements OrganizationService {
 	    }
 	    throw new IOException("Logo file is null or empty");
 	}
+
+	@Override
+	public boolean isOwner(Long organizationId, String userEmail) {
+		        Organization org = repo.findById(organizationId).orElse(null);
+		        if (org == null || org.getUser() == null) {
+		            return false;
+		        }
+		        return org.getUser().getEmail().equals(userEmail);
+	}
+
+	@Override
+	public Organization findByUserId(Long id) {
+		return repo.findByUserId(id);
+	}
 }

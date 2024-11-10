@@ -13,10 +13,27 @@
 			<a class="logo" th:href="@{/}">CVHub</a>
 
 			<ul class="nav-links">
-				<li><a href="#">Việc làm</a></li>
-				<li><a th:href="@{showRegister}">Công ty</a></li>
-				<li><a th:href="@{uploadCV}">Tạo CV</a></li>
-				<li><a href="#">Blog</a></li>
+				<ul>
+					<li><a href="#">Việc làm</a></li>
+					<li><a th:href="@{/uploadCV}">Tạo CV</a></li>
+					<li><a href="#">Blog</a></li>
+					 <li th:if="${#request.userPrincipal != null}">
+                <span th:text="${'Role: ' + #request.userPrincipal.authorities}"></span>
+                 
+            </li>
+            
+            <!-- Nút đăng ký tuyển dụng cho ROLE_USER -->
+            <li th:if="${#request.isUserInRole('USER')}">
+                <a th:href="@{/showRegister}" class="btn btn-primary">Đăng ký tuyển dụng</a>
+            </li>
+            <!-- Nút quản lý cho ROLE_ADMIN -->
+            <li th:if="${#request.isUserInRole('ADMIN')}">
+    <a th:href="@{/organization(id=${session.userId})}" class="btn btn-primary">
+        Quản lý tuyển dụng
+    </a>
+</li>
+				</ul>
+
 			</ul>
 
 			<div class="auth-buttons">
@@ -25,35 +42,28 @@
 					<a class="login btn" th:href="@{/login}">Đăng nhập</a>
 					<a class="signup btn" th:href="@{/register}">Đăng ký</a>
 				</th:block>
-
+				<div class="profile-info" th:if="${#request.userPrincipal != null}">
+					<span th:text="${#request.userPrincipal.name}"></span>
+					<a class="logout" th:href="@{/logout}">Đăng xuất</a>
+				</div>
 				<!-- Khi đã đăng nhập -->
-				<th:block th:if="${#httpServletRequest.remoteUser}">
-					<div class="profile-dropdown">
-						<button class="profile-button">
-							<div class="avatar-placeholder">
-								<div class="user-icon"></div>
-							</div>
-						</button>
-
-						 <div class="dropdown-menu">
-							<div class="user-info">
-								<div class="user-name" th:text="${#httpServletRequest.remoteUser}">
-									Le Dinh Minh
-								</div>
-								<div class="user-email" th:text="${#httpServletRequest.remoteUser}">
-									21110783@student.hcmute.edu.vn
-								</div>
-								<div class="user-id">
-									Mã ứng viên: #8234114
-								</div>
-							</div>
-							<div class="dropdown-links">
-								<a href="#">Cài đặt thông tin cá nhân</a>
-								<a th:href="@{/logout}" class="logout">Đăng xuất</a>
-							</div>
+				<div class="profile-dropdown" th:if="${#request.userPrincipal != null}">
+					<div class="avatar-placeholder">
+						<div class="user-icon"></div>
 					</div>
-			</div>
-			</th:block>
+
+					<div class="dropdown-menu">
+						<div class="user-info">
+							<div class="user-name" th:text="${#request.userPrincipal.name}"></div>
+						</div>
+
+						<div class="dropdown-links">
+							<a href="#">Cài đặt thông tin cá nhân</a>
+							<a th:href="@{/showRegister}" class="btn btn-primary">Đăng ký tuyển dụng</a>
+							<a class="logout" th:href="@{/logout}">Đăng xuất</a>
+						</div>
+					</div>
+				</div>
 			</div>
 		</nav>
 	</header>

@@ -116,7 +116,9 @@ nav {
     border: 1px solid #eee;
     z-index: 1001;
 }
-
+.dropdown-menu.show {
+    display: block;
+}
 .user-info {
     padding: 16px;
     border-bottom: 1px solid #eee;
