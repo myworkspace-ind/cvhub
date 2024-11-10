@@ -192,7 +192,8 @@
 			<h2 class="section-title">Review</h2>
 			<div class="container review-container" th:each="review : ${reviews}">
 				<div class="review-header">
-					<button id="openReviewForm" class="btn btn-primary" th:text="'Viết Review công ty ' + ${organization.title}"></button>
+					<button id="openReviewForm" class="btn btn-primary"
+						th:text="'Viết Review công ty ' + ${organization.title}"></button>
 				</div>
 
 				<div class="review-count">
@@ -207,7 +208,7 @@
 					</div>
 				</div>
 
-				<div class="review-item" >
+				<div class="review-item">
 					<div class="review-author">
 						<div class="author-avatar">A</div>
 						<strong>Ẩn danh</strong> <span class="review-date pull-right">9
@@ -309,7 +310,7 @@
 
 	<div class="overlay" id="overlay"></div>
 	<div class="review-form" id="reviewForm">
-		<h2>Viết Review DAIICHI GROUP - DAIICHI TRAVEL</h2>
+		<h2>Viết Review</h2>
 		<form>
 			<div class="form-group">
 				<label>Cho điểm công ty (1 - 5 sao)</label>
