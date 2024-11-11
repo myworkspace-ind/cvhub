@@ -60,7 +60,11 @@ public class CV {
 	private UUID logoID;
 	@Lob
 	private byte[] logo;
-
+	
+	@Column(name = "is_selected", nullable = false, columnDefinition = "boolean default false")
+    private boolean selected = false;  // Set default value to false
+	
+	
     @CreationTimestamp
     @Column(name="created_date", updatable = false)
     private Date createdDate;

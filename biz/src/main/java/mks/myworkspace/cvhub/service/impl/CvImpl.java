@@ -1,10 +1,13 @@
 package mks.myworkspace.cvhub.service.impl;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Getter;
@@ -67,4 +70,19 @@ public class CvImpl implements CvService {
 		}
 		throw new IOException("Logo file is null or empty");
 	}
+
+	@Override
+	public long getSelectedCVCount(Long userId) {
+		// TODO Auto-generated method stub
+		 return repo.getSelectedCVCount(userId);
+	}
+
+
+
+	@Override
+	public List<CV> findCVsByUserId(Long id) {
+		return repo.findCVsByUserId(id);
+	}
+
+	
 }
