@@ -6,3 +6,7 @@ GRANT ALL PRIVILEGES ON sakai.* TO 'sakai_user'@'%';
 CREATE database cvhub default character set utf8;
 CREATE user 'cvhub_user'@'%.%.%.%' identified by 'Cvhub!123';
 GRANT ALL PRIVILEGES ON cvhub.* TO 'cvhub_user'@'%.%.%.%';
+
+#REVOKE all PRIVILEGES ON cvhub_user.* FROM 'cvhub_user'@'%.%.%.%';
+#drop user 'cvhub_user'@'%.%.%.%';
+#drop database cvhub; 
