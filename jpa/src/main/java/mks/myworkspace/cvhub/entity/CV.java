@@ -61,9 +61,10 @@ public class CV {
 	@Lob
 	private byte[] logo;
 	
-	@Column(name = "is_selected", nullable = false, columnDefinition = "boolean default false")
-    private boolean selected = false;  // Set default value to false
-	
+	 @Column(name = "isprimary",nullable = false)
+	    private boolean isprimary = false;
+	 @Column(nullable = false)
+	    private boolean selected = false;
 	
     @CreationTimestamp
     @Column(name="created_date", updatable = false)

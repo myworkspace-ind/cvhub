@@ -1,53 +1,102 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Cài đặt thông tin cá nhân</title>
-    <link rel="stylesheet" th:href="@{/resources/signInOut/manageCV.css}" />
+	<meta charset="UTF-8">
+	<title>Quản lý CV</title>
+	<link rel="stylesheet" th:href="@{/resources/signInOut/manageCV.css}" />
+	<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
 </head>
+
 <body>
-    <div th:replace="~{fragments/header :: header}"></div>
+	<div th:replace="~{fragments/header :: header}"></div>
+	<div class="cv-management-container">
+		<div class="user-profile">
+			<div class="profile-avatar">
+				<img th:src="@{/resources/image/defaultAv.png}" alt="Profile Picture" class="avatar-img">
+			</div>
+			<div class="profile-info">
+				<h2 class="profile-name">Chào bạn trở lại, <span th:text="${user.fullName}"></span></h2>
+				
+			</div>
+			<a href="/profile/settings" class="action-btn">
+				<span>Nâng cấp tài khoản</span>
+			</a>
+		</div>
 
-    <div class="settings-container">
-        <h1>Cài đặt thông tin cá nhân</h1>
+		
 
-        <div class="alert alert-success" th:if="${success}" th:text="${success}"></div>
-        <div class="alert alert-error" th:if="${error}" th:text="${error}"></div>
+		<div class="cv-grid">
+			<div th:each="cv : ${cvList}" class="cv-card">
+				<div class="cv-preview">
+					<div class="preview-header">
+						<div class="preview-contact-bar">
+							<span>📱 <span th:text="${cv.phone}">0888277472</span></span>
+							<span>✉️ <span th:text="${cv.email}">email@example.com</span></span>
+							<span>📍 <span th:text="${cv.location.name}">TP HCM</span></span>
+						</div>
+						<div class="preview-name" th:text="${cv.fullName}">Le Dinh Minh</div>
+					</div>
 
-        <div class="profile-section">
-            <div class="profile-avatar"></div>
-            <div class="profile-info">
-                <h2 th:text="${user.fullName}">Tên người dùng</h2>
-            </div>
-        </div>
+					<div class="preview-content">
+						<div class="preview-section">
+							<div class="preview-section-title">WORK EXPERIENCE</div>
+							<div class="preview-section-content" th:text="${cv.experience ?: '-'}"></div>
+						</div>
 
-        <form th:action="@{/profile/edit}" method="post" th:object="${userSettings}">
-            <div class="form-group">
-                <label>Họ và tên <span class="required">*</span></label>
-                <input type="text" class="form-control" th:field="*{fullName}" required>
-            </div>
+						<div class="preview-section">
+							<div class="preview-section-title">EDUCATION</div>
+							<div class="preview-section-content" th:text="${cv.education ?: '-'}"></div>
+						</div>
 
-            <div class="form-group">
-                <label>Số điện thoại</label>
-                <input type="tel" class="form-control" th:field="*{phone}">
-            </div>
+						<div class="preview-section">
+							<div class="preview-section-title">SKILLS</div>
+							<div class="preview-section-content" th:text="${cv.skills ?: '-'}"></div>
+						</div>
 
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" class="form-control" th:field="*{email}" disabled>
-            </div>
+						<div class="preview-section">
+							<div class="preview-section-title">CERTIFICATIONS</div>
+							<div class="preview-section-content" th:text="${cv.certifications ?: '-'}"></div>
+						</div>
 
-            <div class="cv-section">
-                <div class="cv-header">
-                    <div class="cv-count">
-                        <span th:text="${selectedCvCount}">0</span> CV đang được chọn
-                    </div>
-                    <a href="#" class="cv-change-btn">Thay đổi</a>
-                </div>
-            </div>
+						<div class="preview-section">
+							<div class="preview-section-title">PROJECTS</div>
+							<div class="preview-section-content" th:text="${cv.projects ?: '-'}"></div>
+						</div>
 
-            <button type="submit" class="btn-submit">Lưu</button>
-        </form>
-    </div>
+						<div class="preview-section">
+							<div class="preview-section-title">ACTIVITIES</div>
+							<div class="preview-section-content" th:text="${cv.activities ?: '-'}"></div>
+						</div>
+					</div>
+				</div>
+				<div class="cv-details">
+					<h3 class="cv-title" th:text="${cv.fullName}">CV Title</h3>
+					<div class="cv-meta">
+						<span th:text="${'Cập nhật lần cuối: ' + cv.modifiedDate}"></span>
+					</div>
+					<div class="cv-actions">
+						<div th:if="${cv.isprimary}">
+							<button class="action-btn primary-cv" disabled>CV Chính</button>
+						</div>
+						<div th:unless="${cv.isprimary}">
+							<form th:action="@{'/cv/' + ${cv.id} + '/setPrimary'}" method="post"
+								style="display: inline;">
+								<button type="submit" class="action-btn">Đặt làm CV chính</button>
+							</form>
+						</div>
+
+						<a th:href="@{'/renderCV/' + ${cv.id}}" class="action-btn">Xem và Tải xuống</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<a th:href="@{/uploadCV}" class="create-cv-btn">
+			+ Tạo mới
+		</a>
+	</div>
+	<script th:src="@{/resources/signInOut/manageCV.js}"></script>
 </body>
+
 </html>

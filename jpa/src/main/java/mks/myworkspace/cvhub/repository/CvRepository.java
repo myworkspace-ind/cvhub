@@ -14,8 +14,8 @@ import mks.myworkspace.cvhub.entity.CV;
 public interface CvRepository extends JpaRepository<CV, Long> {
 	@Query("SELECT o.logo FROM CV o WHERE o.logoID = :logoId")
 	byte[] getImageByLogoId(@Param("logoId") UUID logoId);
-	@Query("SELECT COUNT(c) FROM CV c WHERE c.user.id = :userId")
-    long getSelectedCVCount(@Param("userId") Long userId);
+	@Query("SELECT COUNT(cv) FROM CV cv WHERE cv.user.id = :userId AND cv.selected = true")
+	long getSelectedCVCount(@Param("userId") Long userId);
 	@Query("SELECT c FROM CV c WHERE c.user.id = :userId ORDER BY c.createdDate DESC")
 	List<CV> findCVsByUserId(@Param("userId") Long userId);
 	@Query("SELECT cv FROM CV cv WHERE cv.id = :cvId AND cv.user.id = :userId")
@@ -31,8 +31,7 @@ public interface CvRepository extends JpaRepository<CV, Long> {
     List<CV> findSelectedCVsByUserId(@Param("userId") Long userId);
     
     // Kiểm tra số lượng CV đã chọn của user có vượt quá limit không
-    @Query("SELECT CASE WHEN COUNT(cv) >= :limit THEN true ELSE false END FROM CV cv " +
-           "WHERE cv.user.id = :userId AND cv.selected = true")
+    @Query("SELECT CASE WHEN COUNT(cv) >= :limit THEN true ELSE false END FROM CV cv WHERE cv.user.id = :userId AND cv.selected = true")
     boolean hasReachedSelectedLimit(@Param("userId") Long userId, @Param("limit") int limit);
 
     // Optional: Tìm CV mới nhất của user
@@ -43,4 +42,6 @@ public interface CvRepository extends JpaRepository<CV, Long> {
     @Query("SELECT cv FROM CV cv WHERE cv.user.id = :userId AND cv.jobRole.id = :jobRoleId")
     List<CV> findByUserIdAndJobRole(@Param("userId") Long userId, @Param("jobRoleId") Long jobRoleId);
 
+    
+    
 }

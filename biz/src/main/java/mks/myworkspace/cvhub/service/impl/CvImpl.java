@@ -73,7 +73,7 @@ public class CvImpl implements CvService {
 
 	@Override
 	public long getSelectedCVCount(Long userId) {
-		// TODO Auto-generated method stub
+
 		 return repo.getSelectedCVCount(userId);
 	}
 
@@ -83,6 +83,22 @@ public class CvImpl implements CvService {
 	public List<CV> findCVsByUserId(Long id) {
 		return repo.findCVsByUserId(id);
 	}
+
+	@Override
+	public void setPrimaryCV(Long id, Long id2) {
+		List<CV> userCVs = repo.findByUserId(id2);
+        userCVs.forEach(cv -> cv.setIsprimary(false));
+        repo.saveAll(userCVs);
+        
+        // Đặt CV được chọn thành primary
+        CV selectedCV = repo.findById(id).orElse(null);
+        if (selectedCV != null && selectedCV.getUser().getId().equals(id2)) {
+            selectedCV.setIsprimary(true);
+            repo.save(selectedCV);
+        }
+	}
+
+	
 
 	
 }
