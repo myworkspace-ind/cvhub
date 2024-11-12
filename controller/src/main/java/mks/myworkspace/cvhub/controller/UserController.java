@@ -23,9 +23,13 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import mks.myworkspace.cvhub.entity.CV;
+import mks.myworkspace.cvhub.entity.JobApplication;
+import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.User;
 import mks.myworkspace.cvhub.controller.model.UserDTO;
 import mks.myworkspace.cvhub.service.CvService;
+import mks.myworkspace.cvhub.service.JobApplicationService;
+import mks.myworkspace.cvhub.service.JobRequestService;
 import mks.myworkspace.cvhub.service.UserService;
 
 @Controller
@@ -36,6 +40,12 @@ public class UserController {
     
     @Autowired
     private CvService cvService;
+    
+    @Autowired
+    private JobRequestService jobRequestService;
+    
+    @Autowired
+    private JobApplicationService jobApplicationService;
 
     @GetMapping("/profile/edit")
     public ModelAndView showPersonalSettings(Model model) {
@@ -110,5 +120,16 @@ public class UserController {
         mav.setViewName("/signInOut/editUser");
         return mav;
     }
-
+    @PostMapping("/applyJob/{jobRequestId}")
+    public ModelAndView applyForJob(@PathVariable Long jobRequestId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = userService.findUserByEmail(auth.getName());
+        
+        JobRequest jobRequest = jobRequestService.getRepo().findById(jobRequestId).get();
+        
+        jobApplicationService.AddJobApplication(currentUser, jobRequest);
+        //ModelAndView mav = new ModelAndView("candidate/applied");
+        ModelAndView mav = new ModelAndView("/home");
+        return mav;
+    }
 }
