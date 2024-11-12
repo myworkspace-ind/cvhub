@@ -55,8 +55,39 @@
 			</div>
 
 			<button type="submit" class="btn-save">Lưu</button>
-		</form>
-	</div>
+			<button type="button" class="btn-save" onclick="togglePopup()">Thay đổi mật khẩu</button>
+        </form>
+    </div>
+
+    <!-- Popup for Change Password -->
+    <div class="popup" id="passwordPopup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="togglePopup()">✖</span>
+            <h2>Thay đổi mật khẩu</h2>
+            <form th:action="@{/profile/change-password}" method="post">
+                <div class="form-group">
+                    <label>Mật khẩu cũ</label>
+                    <input type="password" name="oldPassword" required>
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu mới</label>
+                    <input type="password" name="newPassword" required>
+                </div>
+                <div class="form-group">
+                    <label>Xác nhận mật khẩu mới</label>
+                    <input type="password" name="confirmPassword" required>
+                </div>
+                <button type="submit" class="btn-save">Thay đổi</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function togglePopup() {
+            const popup = document.getElementById('passwordPopup');
+            popup.style.display = (popup.style.display === "flex") ? "none" : "flex";
+        }
+    </script>
 </body>
 
 </html>
