@@ -1,4 +1,4 @@
-package mks.myworkspace.cvhub.controller;
+	package mks.myworkspace.cvhub.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -133,8 +133,4 @@ public class MockDataController extends BaseController {
             return new Organization(title, null, null, null, null, null, null); // Trả về tổ chức mà không có logo nếu xảy ra lỗi
         }
     }
-	@RequestMapping(value = { "/addReview" }, method = RequestMethod.GET)
-	public void addReview() {
-		
-	}
 }

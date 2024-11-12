@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import lombok.Getter;
 import mks.myworkspace.cvhub.repository.JobRoleRepository;
 import mks.myworkspace.cvhub.service.JobRoleService;
+
 @Service
 public class JobRoleImpl implements JobRoleService {
 

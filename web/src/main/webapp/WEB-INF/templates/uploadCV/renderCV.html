@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CV Template</title>
+	<link rel="stylesheet" th:href="@{/resources/uploadCV/renderCV.css}" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+	<script type="text/javascript" th:src="@{/resources/uploadCV/renderCV.js}"></script>
+	<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
+</head>
+
+
+<body>
+	<div th:replace="~{fragments/header :: header}"></div>
+    <!-- Giữ nguyên phần HTML như cũ -->
+    <div class="cv-container" id="cv-container">
+        <div class="cv-header">
+            <div class="header-content">
+                <div class="contact-bar">
+                    <div class="contact-item">
+                        <span>📱</span>
+                        <span th:text="${cv.phone}">0888277472</span>
+                    </div>
+                    <div class="contact-item">
+                        <span>✉️</span>
+                        <span th:text="${cv.email}">21110783@student.hcmute.edu.vn</span>
+                    </div>
+                    <div class="contact-item">
+                        <span>📍</span>
+                        <span>TP HCM</span>
+                    </div>
+                </div>
+                <div class="name" th:text="${cv.fullName}">Le Dinh Minh</div>
+            </div>
+            <div class="avatar">
+                <img th:if="${cv.logo != null}" th:src="@{/cv/images/{logoId}(logoId=${cv.logoID})}"
+                     alt="Profile Picture" />
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">WORK EXPERIENCE</div>
+            <div class="section-content" th:if="${cv.experience}">
+                <div class="content-block" th:text="${cv.experience}"></div>
+            </div>
+            <div class="section-content" th:unless="${cv.experience}">-</div>
+        </div>
+
+        <div class="three-columns">
+            <div class="section">
+                <div class="section-title">EDUCATION</div>
+                <div class="section-content" th:if="${cv.education}">
+                    <div class="content-block" th:text="${cv.education}"></div>
+                </div>
+                <div class="section-content" th:unless="${cv.education}">-</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">SKILL</div>
+                <div class="section-content" th:if="${cv.skills}">
+                    <div class="content-block" th:text="${cv.skills}"></div>
+                </div>
+                <div class="section-content" th:unless="${cv.skills}">-</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">CERTIFACATIONS</div>
+                <div class="section-content" th:if="${cv.certifications}">
+                    <div class="content-block" th:text="${cv.certifications}"></div>
+                </div>
+                <div class="section-content" th:unless="${cv.certifications}">-</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">PROJECT</div>
+            <div class="section-content" th:if="${cv.projects}">
+                <div class="content-block" th:text="${cv.projects}"></div>
+            </div>
+            <div class="section-content" th:unless="${cv.projects}">-</div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">ACTIVITIES</div>
+            <div class="section-content" th:if="${cv.activities}">
+                <div class="content-block" th:text="${cv.activities}"></div>
+            </div>
+            <div class="section-content" th:unless="${cv.activities}">-</div>
+        </div>
+    </div>
+  <button class="download-btn" id="download-btn">
+        <svg class="pdf-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="20" height="20">
+            <path fill="white" d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48z"/>
+        </svg>
+        <span>Tải PDF</span>
+        <div class="loading-spinner"></div>
+    </button>
+</body>
+
+</html>
