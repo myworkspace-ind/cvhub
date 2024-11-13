@@ -1,5 +1,7 @@
 package mks.myworkspace.cvhub.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,5 +28,15 @@ public class JobApplicationImpl implements JobApplicationService{
         jobApplication.setStatus(null);
         jobApplication.setNote(null);
         repo.save(jobApplication);
+	}
+	@Override
+	public List<JobApplication> getApplicationsByUser(User currentUser) {
+		// TODO Auto-generated method stub
+		return repo.findByUser(currentUser);
+	}
+	@Override
+	public boolean hasUserApplied(User user, Long jobRequestId) {
+		List<JobApplication> applications = getApplicationsByUser(user);
+	    return applications.stream().anyMatch(app -> app.getJobRequest().getId().equals(jobRequestId));
 	}
 }

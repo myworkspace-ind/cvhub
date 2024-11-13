@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý đơn ứng tuyển</title>
+	<link rel="stylesheet" th:href="@{/resources/signInOut/appliedJobs.css}" />
+	<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
+</head>
+<body>
+	<div th:replace="~{fragments/header :: header}"></div>
+    <div class="header">
+        <h1>Quản lý đơn ứng tuyển</h1>
+    </div>
+
+        <div class="applications-grid" th:if="${not #lists.isEmpty(applications)}">
+            <!-- Wrap card trong một link -->
+            <a th:href="@{'/jobrequests/' + ${appli.jobRequest.id}}" 
+               class="job-link"
+               th:each="appli : ${applications}">
+                <div class="application-card">
+                    <h2 class="job-title" th:text="${appli.jobRequest.title}">Tiêu đề công việc</h2>
+                    <p class="company-name" th:text="${appli.jobRequest.organization.title}">Tên công ty</p>
+
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Địa điểm:</span>
+                            <span th:text="${appli.jobRequest.location.name}">Địa điểm</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Vị trí:</span>
+                            <span th:text="${appli.jobRequest.jobRole.title}">Vị trí công việc</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Mức lương:</span>
+                            <span th:text="${appli.jobRequest.salary + ' $'}">Mức lương</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Kinh nghiệm:</span>
+                            <span th:text="${appli.jobRequest.experience + ' năm'}">Kinh nghiệm</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="status-badge"
+                              th:classappend="${appli.status == 'PENDING' ? 'status-pending' : 
+                                              appli.status == 'APPROVED' ? 'status-approved' : 
+                                              'status-rejected'}"
+                              th:text="${appli.status == 'PENDING' ? 'Đang chờ' : 
+                                       appli.status == 'APPROVED' ? 'Đã duyệt' : 
+                                       'Từ chối'}">
+                        </span>
+                    </div>
+
+                    <p class="application-date">
+                        Ngày ứng tuyển: <span th:text="${#dates.format(appli.createdDate, 'dd/MM/yyyy')}">Ngày</span>
+                    </p>
+                </div>
+            </a>
+        </div>
+
+        <div class="no-applications" th:if="${#lists.isEmpty(applications)}">
+            <p>Bạn chưa ứng tuyển vào vị trí nào.</p>
+        </div>
+    </div>
+</body>
+</html>

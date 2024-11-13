@@ -120,16 +120,5 @@ public class UserController {
         mav.setViewName("/signInOut/editUser");
         return mav;
     }
-    @PostMapping("/applyJob/{jobRequestId}")
-    public ModelAndView applyForJob(@PathVariable Long jobRequestId) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = userService.findUserByEmail(auth.getName());
-        
-        JobRequest jobRequest = jobRequestService.getRepo().findById(jobRequestId).get();
-        
-        jobApplicationService.AddJobApplication(currentUser, jobRequest);
-        //ModelAndView mav = new ModelAndView("candidate/applied");
-        ModelAndView mav = new ModelAndView("/home");
-        return mav;
-    }
+    
 }

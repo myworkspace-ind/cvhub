@@ -26,10 +26,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import mks.myworkspace.cvhub.controller.model.CvDTO;
 import mks.myworkspace.cvhub.entity.CV;
+import mks.myworkspace.cvhub.entity.JobApplication;
+import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
 import mks.myworkspace.cvhub.entity.User;
 import mks.myworkspace.cvhub.service.CvService;
+import mks.myworkspace.cvhub.service.JobApplicationService;
+import mks.myworkspace.cvhub.service.JobRequestService;
 import mks.myworkspace.cvhub.service.JobRoleService;
 import mks.myworkspace.cvhub.service.LocationService;
 import mks.myworkspace.cvhub.service.ParsingCVService;
@@ -45,9 +49,13 @@ public class ResumeController  extends BaseController  {
 	@Autowired
 	JobRoleService jobRoleService;
 	@Autowired
+	JobApplicationService jobApplicationService;
+	@Autowired
 	LocationService locationService;
 	 @Autowired
 	  UserService userService;
+	 @Autowired
+		JobRequestService jobRequestService;
 	@RequestMapping(value = { "uploadCV" }, method = RequestMethod.GET)
 	public ModelAndView returnUploadCV() {
 		ModelAndView mav = new ModelAndView("uploadCV/uploadCV");
@@ -203,4 +211,37 @@ public class ResumeController  extends BaseController  {
         return mav;
     }
    
+	@RequestMapping(value = { "/profile/applications" }, method = RequestMethod.GET)
+	public ModelAndView viewAppliedJobs() {
+	    ModelAndView mav = new ModelAndView("signInOut/appliedJobs");
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    User currentUser = userService.findUserByEmail(auth.getName());
+
+	    // Lấy danh sách các JobApplication của người dùng
+	    List<JobApplication> applications = jobApplicationService.getApplicationsByUser(currentUser);
+	  
+	    // Thêm danh sách vào model
+	    mav.addObject("applications", applications);
+	    return mav;
+	}
+	@PostMapping("/applyJob/{jobRequestId}")
+	public ModelAndView applyForJob(@PathVariable Long jobRequestId) {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    User currentUser = userService.findUserByEmail(auth.getName());
+	    ModelAndView mav = new ModelAndView("redirect:/signInOut/appliedJobs");
+	    // Kiểm tra xem người dùng đã ứng tuyển chưa
+	    boolean hasApplied = jobApplicationService.hasUserApplied(currentUser, jobRequestId);
+	    if (hasApplied) {
+
+	        mav.addObject("errorMessage", "Bạn đã ứng tuyển vào công việc này.");
+	        return mav;
+	    }
+	    
+	    JobRequest jobRequest = jobRequestService.getRepo().findById(jobRequestId).orElse(null);
+	    if (jobRequest != null) {
+	        jobApplicationService.AddJobApplication(currentUser, jobRequest);
+	    }
+	    
+	    return mav;
+	}
 }
