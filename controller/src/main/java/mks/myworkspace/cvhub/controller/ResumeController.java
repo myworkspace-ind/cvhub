@@ -244,4 +244,25 @@ public class ResumeController  extends BaseController  {
 	    
 	    return mav;
 	}
+	@GetMapping("/renderCVPrimary/{id}")
+    public ModelAndView renderPrimaryCV(@PathVariable Long id) {
+        ModelAndView mav = new ModelAndView("uploadCV/renderCV");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        
+        if (auth == null || !auth.isAuthenticated()) {
+            return new ModelAndView("redirect:/login");
+        }
+        
+        User currentUser = userService.findUserByEmail(auth.getName());
+        CV cv = cvService.getRepo().findPrimaryByUserId(id);
+        
+        if (cv == null) {
+            mav.setViewName("error");
+            mav.addObject("errorMessage", "CV không tồn tại hoặc bạn không có quyền truy cập");
+            return mav;
+        }
+        
+        mav.addObject("cv", cv);
+        return mav;
+    }
 }

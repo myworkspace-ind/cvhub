@@ -27,6 +27,7 @@ import mks.myworkspace.cvhub.entity.User;
 import mks.myworkspace.cvhub.controller.model.CvDTO;
 import mks.myworkspace.cvhub.controller.model.OrganizationDTO;
 import mks.myworkspace.cvhub.controller.model.OrganizationReviewDTO;
+import mks.myworkspace.cvhub.entity.JobApplication;
 import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
@@ -35,6 +36,7 @@ import mks.myworkspace.cvhub.entity.OrganizationReview;
 import mks.myworkspace.cvhub.repository.JobRequestRepository;
 import mks.myworkspace.cvhub.repository.OrganizationRepository;
 import mks.myworkspace.cvhub.repository.OrganizationReviewRepository;
+import mks.myworkspace.cvhub.service.JobApplicationService;
 import mks.myworkspace.cvhub.service.JobRequestService;
 import mks.myworkspace.cvhub.service.JobRoleService;
 import mks.myworkspace.cvhub.service.LocationService;
@@ -57,6 +59,8 @@ public class OrganizationController extends BaseController {
 	JobRequestService jobRequestService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private JobApplicationService jobApplicationService;
 	
 	private final OrganizationReviewService reviewService;
 	private final OrganizationRepository organizationRepo;
@@ -190,45 +194,30 @@ public class OrganizationController extends BaseController {
 	public ModelAndView GetCVs(@ModelAttribute OrganizationDTO organizationDTO, @PathVariable("id") long id,
 			HttpServletRequest request, HttpSession httpSession) {
 		try {
-			List<JobRequest> jobRequests = jobRequestService.getRepo().findByOrganizationId(id);
+			List<JobRequest> jobRequests = jobRequestService.findAllByOrganizationId(id);
 			// Chuyển hướng đến trang tổ chức
 			ModelAndView mav = new ModelAndView("organization/getCVs.html");
-			CvDTO cv1 = new CvDTO();
-			CvDTO cv2 = new CvDTO();
-			CvDTO cv3 = new CvDTO();
-
-			cv1.setEmail("cv1@gmail.com");
-			cv1.setEducation("ute1");
-			cv1.setFullName("Nguyen Van A");
-			cv1.setPhone("0123456789");
-			cv1.setLocationCode(0);
-			cv1.setSkills("Java");
-			cv1.setExperience("3");
-
-			cv2.setEmail("cv2@gmail.com");
-			cv2.setEducation("FPT University");
-			cv2.setFullName("Nguyen Van B");
-			cv2.setPhone("0987654321");
-			cv2.setLocationCode(1);
-			cv2.setSkills("Python, Machine Learning");
-			cv2.setExperience("2");
-
-			cv3.setEmail("cv3@gmail.com");
-			cv3.setEducation("HCMUS");
-			cv3.setFullName("Tran Thi B");
-			cv3.setPhone("0369852147");
-			cv3.setLocationCode(2);
-			cv3.setSkills("ReactJS, NodeJS, MongoDB");
-			cv3.setExperience("4");
-
-			List<CvDTO> cvs = new ArrayList();
-			cvs.add(cv1);
-			cvs.add(cv2);
-			cvs.add(cv3);
+			List<User> users = new ArrayList<User>();
+			List<JobApplication> applications = jobApplicationService.findAll();
+			List<JobApplication> applicationsNeed = new ArrayList<JobApplication>();
+			for ( var application : applications){
+				for (var jobRequest : jobRequests) {
+					if (jobRequest.getId() == application.getJobRequest().getId()) {
+						users.add(application.getUser());
+						applicationsNeed.add(application);
+					}
+				}
+			}
+			List<JobApplication> applicationsNeed2 = this.removeDuplicatesManually2(applicationsNeed);
+			List<User> users2 = this.removeDuplicatesManually(users);
+//			List<CvDTO> cvs = new ArrayList();
+//			cvs.add(cv1);
+//			cvs.add(cv2);
+//			cvs.add(cv3);
 
 			mav.addObject("jobRequests", jobRequests);
-			mav.addObject("cvs", cvs);
-
+			mav.addObject("jobApplications", applicationsNeed2);
+			mav.addObject("cvs", users2);
 			return mav;
 		}
 		catch (Exception e) {
@@ -238,4 +227,22 @@ public class OrganizationController extends BaseController {
 			return mav;
 		}
 	}
+	public static List<User> removeDuplicatesManually(List<User> list) {
+        List<User> result = new ArrayList<>();
+        for (User item : list) {
+            if (!result.contains(item)) {
+                result.add(item);
+            }
+        }
+        return result;
+    }
+	public static List<JobApplication> removeDuplicatesManually2(List<JobApplication> list) {
+        List<JobApplication> result = new ArrayList<>();
+        for (JobApplication item : list) {
+            if (!result.contains(item)) {
+                result.add(item);
+            }
+        }
+        return result;
+    }
 }

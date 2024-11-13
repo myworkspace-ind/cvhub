@@ -11,4 +11,5 @@ public interface UserService {
 	User createUser(String fullName, String email, String password, String phone) throws Exception;
 	boolean isEmailExists(String email);
 	User findUserByEmail(String email);
+	User getUser(Long id);
 }

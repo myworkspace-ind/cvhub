@@ -15,4 +15,7 @@ import mks.myworkspace.cvhub.entity.User;
 public interface JobApplicationRepository extends JpaRepository<JobApplication, Long> {
 	@Query("SELECT ja FROM JobApplication ja WHERE ja.user = :user")
     List<JobApplication> findByUser(@Param("user") User user);
+	
+	@Query("SELECT ja FROM JobApplication ja WHERE ja.jobRequest = :jobRequest")
+    List<JobApplication> findByUserAndJobRequest(@Param("jobRequest") JobRequest jobRequest);
 }

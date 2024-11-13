@@ -164,15 +164,12 @@ body {
 							<div class="col-md-8">
 								<div class="media">
 									<div class="media-left">
-										<img class="cv-avatar" src="https://via.placeholder.com/80"
-											alt="Avatar">
+										<img th:src="@{/resources/image/defaultAv.png}"
+											alt="Profile Picture" class="cv-avatar">
 									</div>
 									<div class="media-body">
 										<h4 class="candidate-name" th:text="${cvs.fullName}">Tên
 											ứng viên</h4>
-										<p class="job-title">
-											<span th:text="${cvs.skills}">Kỹ năng</span>
-										</p>
 										<p>
 											<i class="fa fa-envelope"></i> <span th:text="${cvs.email}">Email</span>
 											&nbsp;&nbsp; <i class="fa fa-phone"></i> <span
@@ -184,38 +181,25 @@ body {
 						</div>
 					</div>
 
-					<div class="cv-stats">
-						<div class="stat-item">
-							<i class="fa fa-briefcase"></i> <span
-								th:text="${cvs.experience + ' năm kinh nghiệm'}">Kinh
-								nghiệm</span>
-						</div>
-						<div class="stat-item">
-							<i class="fa fa-graduation-cap"></i> <span
-								th:text="${cvs.education}">Học vấn</span>
-						</div>
-						<div class="stat-item">
-							<i class="fa fa-map-marker"></i>
-							<!--                     <span th:text="${cvs.locationCode == 0 ? 'Hà Nội' :  -->
-							<!--                                   cvs.locationCode == 1 ? 'Hồ Chí Minh' :  -->
-							<!--                                   cvs.locationCode == 2 ? 'Đà Nẵng' : 'Khác'}"> -->
-							<!--                         Địa điểm -->
-							<!--                     </span> -->
-						</div>
-					</div>
-
 					<div class="action-buttons">
-						<a class="btn btn-info"> <i class="fa fa-eye"></i> Xem CV
-						</a>
+						<form th:action="@{'/renderCVPrimary/' + ${cvs.id}}" method="get"
+							style="display: inline;">
+							<button class="btn btn-info">
+								<i class="fa fa-eye"></i> Xem CV
+							</button>
+						</form>
 						<button class="btn btn-success">
 							<i class="fa fa-phone"></i> Liên hệ
 						</button>
 						<button class="btn btn-warning">
 							<i class="fa fa-calendar"></i> Hẹn phỏng vấn
 						</button>
-						<button class="btn btn-danger">
-							<i class="fa fa-times"></i> Từ chối
-						</button>
+						<form th:action="@{'/renderCVPrimary/' + ${cvs.id}}" method="post"
+							style="display: inline;">
+							<button class="btn btn-danger">
+								<i class="fa fa-times"></i> Từ chối
+							</button>
+						</form> 
 						<div class="btn-group">
 							<button type="button" class="btn btn-default dropdown-toggle"
 								data-toggle="dropdown">

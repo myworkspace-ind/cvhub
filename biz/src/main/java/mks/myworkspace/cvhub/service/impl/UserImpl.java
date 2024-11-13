@@ -43,4 +43,10 @@ public class UserImpl implements UserService {
 	public User findUserByEmail(String email) {
 		return repo.findUserByEmail(email);
 	}
+
+	@Override
+	public User getUser(Long id) {
+		// TODO Auto-generated method stub
+		return repo.findById(id).get();
+	}
 }

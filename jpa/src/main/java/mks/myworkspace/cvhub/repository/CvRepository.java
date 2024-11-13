@@ -42,6 +42,7 @@ public interface CvRepository extends JpaRepository<CV, Long> {
     @Query("SELECT cv FROM CV cv WHERE cv.user.id = :userId AND cv.jobRole.id = :jobRoleId")
     List<CV> findByUserIdAndJobRole(@Param("userId") Long userId, @Param("jobRoleId") Long jobRoleId);
 
-    
+    @Query("SELECT cv FROM CV cv WHERE cv.user.id = :userId AND cv.isprimary = true")
+    CV findPrimaryByUserId(@Param("userId") Long userId);
     
 }

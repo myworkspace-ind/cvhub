@@ -120,5 +120,10 @@ public class UserController {
         mav.setViewName("/signInOut/editUser");
         return mav;
     }
-    
+    @PostMapping("/organization/{organizationId}/denygetCV/{userId}")
+    public ModelAndView updateApplicationStatus() {
+        ModelAndView mav = new ModelAndView();
+        
+        return mav;
+    }
 }

@@ -12,4 +12,6 @@ public interface JobApplicationService {
 
 	List<JobApplication> getApplicationsByUser(User currentUser);
 	boolean hasUserApplied(User user, Long jobRequestId);
+	List<JobApplication> getApplicationsByJobRequest(JobRequest jobRequest);
+	List<JobApplication> findAll();
 }
