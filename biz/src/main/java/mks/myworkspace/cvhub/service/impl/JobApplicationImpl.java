@@ -48,4 +48,9 @@ public class JobApplicationImpl implements JobApplicationService{
 		// TODO Auto-generated method stub
 		return repo.findAll();
 	}
+	@Override
+	public void deleteApplicationById(Long id) {
+		repo.deleteById(id);
+		
+	}
 }

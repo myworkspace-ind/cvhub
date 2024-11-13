@@ -9,134 +9,6 @@
 <link rel="stylesheet" th:href="@{/resources/home/style.css}" />
 <script type="text/javascript"
 	th:src="@{/resources/organizationDetails/organizationDetails.js}"></script>
-<style>
-.review-container {
-	max-width: 600px;
-	margin: 20px auto;
-	padding: 15px;
-	background-color: #f8f8f8;
-	border-radius: 5px;
-}
-	<meta charset="UTF-8">
-	<title>Organization Details</title>
-	<link rel="stylesheet" th:href="@{/resources/organizationDetails/style.css}" />
-	<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
-	<script type="text/javascript" th:src="@{/resources/organizationDetails/organizationDetails.js}"></script>
-
-.review-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 15px;
-}
-
-.star-rating {
-	color: #ddd;
-	font-size: 24px;
-}
-
-.star-rating .filled {
-	color: #ffd700;
-}
-
-.review-count {
-	margin-bottom: 10px;
-}
-
-.review-item {
-	background-color: #fff;
-	padding: 10px;
-	margin-bottom: 10px;
-	border-radius: 5px;
-}
-
-.review-author {
-	display: flex;
-	align-items: center;
-	margin-bottom: 5px;
-}
-
-.author-avatar {
-	width: 30px;
-	height: 30px;
-	background-color: #007bff;
-	color: #fff;
-	border-radius: 50%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	margin-right: 10px;
-}
-
-.review-date {
-	font-size: 12px;
-	color: #777;
-}
-
-.review-text {
-	margin-top: 5px;
-}
-
-.review-actions {
-	margin-top: 10px;
-}
-
-.review-actions button {
-	background: none;
-	border: none;
-	cursor: pointer;
-	margin-right: 10px;
-}
-
-.overlay {
-	display: none;
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.5);
-	z-index: 1000;
-}
-
-.review-form {
-	display: none;
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	background-color: white;
-	padding: 20px;
-	border-radius: 5px;
-	width: 80%;
-	max-width: 500px;
-	z-index: 1001;
-}
-
-.star-rating-input {
-	display: flex;
-	flex-direction: row-reverse;
-	justify-content: flex-end;
-}
-
-.star-rating-input input {
-	display: none;
-}
-
-.star-rating-input label {
-	cursor: pointer;
-	font-size: 30px;
-	color: #ddd;
-}
-
-.star-rating-input label:before {
-	content: '\2605';
-}
-
-.star-rating-input input:checked ~ label {
-	color: #ffd700;
-}
-</style>
 </head>
 
 <body>
@@ -144,7 +16,8 @@
 	<div class="container">
 		<div class="org-header">
 			<div class="org-logo">
-				<img th:src="@{/images/{logoId}(logoId=${organization.logoID})}" alt="Company logo">
+				<img th:src="@{/images/{logoId}(logoId=${organization.logoID})}"
+					alt="Company logo">
 			</div>
 			<div class="org-info">
 				<h1 class="org-name" th:text="${organization.title}"></h1>
@@ -152,8 +25,14 @@
 			</div>
 			<!-- Kiểm tra user đã đăng nhập và là chủ của organization này -->
 			<div th:if="${isOwner}">
-				<button id="toggleJobForm" class="follow-btn">Thêm thông tin tuyển dụng</button>
-				<button id="toggleJobForm2" class="follow-btn">Sửa thông tin công ty</button>
+				<form th:action="@{/organization/{orgId}/getCVs(orgId=${organization.id})}" method="get">
+					<button id="toggleJobForm" class="follow-btn">Quản lý CV
+						đã ứng tuyển</button>
+				</form>
+				<button id="toggleJobForm" class="follow-btn">Thêm thông
+					tin tuyển dụng</button>
+				<button id="toggleJobForm2" class="follow-btn">Sửa thông
+					tin công ty</button>
 			</div>
 		</div>
 
@@ -175,7 +54,8 @@
 						<div class="job-location" th:text="${job.location.name}"></div>
 						<div class="job-date" th:text="${job.createdDate}"></div>
 					</div>
-					<form th:action="@{/jobrequests/{id}(id=${job.id})}" method="get" style="display: inline;">
+					<form th:action="@{/jobrequests/{id}(id=${job.id})}" method="get"
+						style="display: inline;">
 						<button type="submit" class="apply-btn">Chi Tiết</button>
 					</form>
 
@@ -187,7 +67,9 @@
 			<h2 class="section-title">Thông tin liên hệ</h2>
 			<div class="contact-info">
 				<div>
-					<p><strong>Địa chỉ công ty:</strong></p>
+					<p>
+						<strong>Địa chỉ công ty:</strong>
+					</p>
 					<p th:text="${organization.location}"></p>
 				</div>
 			</div>
@@ -238,45 +120,49 @@
 	<div class="overlay" id="formOverlay"></div>
 	<div id="jobPostForm">
 		<h3>Thêm thông tin tuyển dụng</h3>
-		<form id="requirementsForm" th:action="@{/jobrequests/registerJob}" method="post">
-			<input type="hidden" id="organizationId" name="organizationId" th:value="${organization.id}">
+		<form id="requirementsForm" th:action="@{/jobrequests/registerJob}"
+			method="post">
+			<input type="hidden" id="organizationId" name="organizationId"
+				th:value="${organization.id}">
 
 			<div class="form-group">
-				<label for="namejob">Tên công việc cần tuyển dụng*</label>
-				<input type="text" class="form-control" id="namejob" name="title" required>
+				<label for="namejob">Tên công việc cần tuyển dụng*</label> <input
+					type="text" class="form-control" id="namejob" name="title" required>
 			</div>
 
 			<div class="form-group">
-				<label for="industry">Mảng ngành nghề</label>
-				<select class="form-control" id="jobRoleId" name="jobRoleId" required>
+				<label for="industry">Mảng ngành nghề</label> <select
+					class="form-control" id="jobRoleId" name="jobRoleId" required>
 					<option selected disabled>Chọn Ngành Nghề Tuyển Dụng</option>
-					<option th:each="alLJobRole : ${alLJobRole}" th:value="${alLJobRole.id}"
-						th:text="${alLJobRole.title}"></option>
+					<option th:each="alLJobRole : ${alLJobRole}"
+						th:value="${alLJobRole.id}" th:text="${alLJobRole.title}"></option>
 				</select>
 			</div>
 			<div class="form-group">
-				<label for="locationCode">Địa điểm làm việc*</label>
-				<select class="form-control" id="locationCode" name="locationCode" required>
+				<label for="locationCode">Địa điểm làm việc*</label> <select
+					class="form-control" id="locationCode" name="locationCode" required>
 					<option selected disabled>Chọn địa điểm</option>
-					<option th:each="location : ${locations}" th:value="${location.code}" th:text="${location.name}">
-					</option>
+					<option th:each="location : ${locations}"
+						th:value="${location.code}" th:text="${location.name}"></option>
 				</select>
 			</div>
 			<div class="form-group">
-				<label for="experience">Yêu cầu kinh nghiệm*</label>
-				<input type="number" class="form-control" id="experience" name="experience" min="0" required
-					placeholder="Nhập số năm kinh nghiệm">
-				<small class="form-text text-muted">Nhập số năm kinh nghiệm (0 hoặc nhiều hơn).</small>
+				<label for="experience">Yêu cầu kinh nghiệm*</label> <input
+					type="number" class="form-control" id="experience"
+					name="experience" min="0" required
+					placeholder="Nhập số năm kinh nghiệm"> <small
+					class="form-text text-muted">Nhập số năm kinh nghiệm (0
+					hoặc nhiều hơn).</small>
 			</div>
 
 			<div class="form-group">
-				<label for="salary">Lương Cơ bản ($) *</label>
-				<select class="form-control" id="salaryOption" name="salaryOption" required
+				<label for="salary">Lương Cơ bản ($) *</label> <select
+					class="form-control" id="salaryOption" name="salaryOption" required
 					onchange="toggleSalaryInput()">
 					<option value="0">Thỏa thuận</option>
 					<option value="1">Nhập lương</option>
-				</select>
-				<input type="number" class="form-control mt-2" id="salary" name="salary" required style="display: none;"
+				</select> <input type="number" class="form-control mt-2" id="salary"
+					name="salary" required style="display: none;"
 					placeholder="Nhập lương" min="0">
 
 				<div class="form-group">
@@ -286,7 +172,8 @@
 				</div>
 				<div class="form-group">
 					<label for="requirementsCandidate">Yêu cầu ứng viên*</label>
-					<textarea id="requirementsCandidate" name="requirementsCandidate" required
+					<textarea id="requirementsCandidate" name="requirementsCandidate"
+						required
 						placeholder="Nhập yêu cầu ứng viên (mỗi dòng là một gạch đầu dòng)"></textarea>
 				</div>
 				<div class="form-group">
@@ -295,8 +182,9 @@
 						placeholder="Nhập quyền lợi ứng viên (mỗi dòng là một gạch đầu dòng)"></textarea>
 				</div>
 				<div class="form-group">
-					<label for="deadlineApplication">Hạn nộp hồ sơ*</label>
-					<input type="date" id="deadlineApplication" name="deadlineApplication" required>
+					<label for="deadlineApplication">Hạn nộp hồ sơ*</label> <input
+						type="date" id="deadlineApplication" name="deadlineApplication"
+						required>
 				</div>
 			</div>
 

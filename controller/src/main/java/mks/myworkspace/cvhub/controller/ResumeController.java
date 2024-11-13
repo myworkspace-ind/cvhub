@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import mks.myworkspace.cvhub.controller.model.CvDTO;
 import mks.myworkspace.cvhub.entity.CV;
@@ -210,40 +211,6 @@ public class ResumeController  extends BaseController  {
         mav.addObject("cv", cv);
         return mav;
     }
-   
-	@RequestMapping(value = { "/profile/applications" }, method = RequestMethod.GET)
-	public ModelAndView viewAppliedJobs() {
-	    ModelAndView mav = new ModelAndView("signInOut/appliedJobs");
-	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	    User currentUser = userService.findUserByEmail(auth.getName());
-
-	    // Lấy danh sách các JobApplication của người dùng
-	    List<JobApplication> applications = jobApplicationService.getApplicationsByUser(currentUser);
-	  
-	    // Thêm danh sách vào model
-	    mav.addObject("applications", applications);
-	    return mav;
-	}
-	@PostMapping("/applyJob/{jobRequestId}")
-	public ModelAndView applyForJob(@PathVariable Long jobRequestId) {
-	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	    User currentUser = userService.findUserByEmail(auth.getName());
-	    ModelAndView mav = new ModelAndView("redirect:/signInOut/appliedJobs");
-	    // Kiểm tra xem người dùng đã ứng tuyển chưa
-	    boolean hasApplied = jobApplicationService.hasUserApplied(currentUser, jobRequestId);
-	    if (hasApplied) {
-
-	        mav.addObject("errorMessage", "Bạn đã ứng tuyển vào công việc này.");
-	        return mav;
-	    }
-	    
-	    JobRequest jobRequest = jobRequestService.getRepo().findById(jobRequestId).orElse(null);
-	    if (jobRequest != null) {
-	        jobApplicationService.AddJobApplication(currentUser, jobRequest);
-	    }
-	    
-	    return mav;
-	}
 	@GetMapping("/renderCVPrimary/{id}")
     public ModelAndView renderPrimaryCV(@PathVariable Long id) {
         ModelAndView mav = new ModelAndView("uploadCV/renderCV");
@@ -265,4 +232,48 @@ public class ResumeController  extends BaseController  {
         mav.addObject("cv", cv);
         return mav;
     }
+	@RequestMapping(value = { "/profile/applications" }, method = RequestMethod.GET)
+	public ModelAndView viewAppliedJobs() {
+	    ModelAndView mav = new ModelAndView("signInOut/appliedJobs");
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    User currentUser = userService.findUserByEmail(auth.getName());
+
+	    // Lấy danh sách các JobApplication của người dùng
+	    List<JobApplication> applications = jobApplicationService.getApplicationsByUser(currentUser);
+	  
+	    // Thêm danh sách vào model
+	    mav.addObject("applications", applications);
+	    return mav;
+	}
+	@PostMapping("/applyJob/{jobRequestId}")
+	public ModelAndView applyForJob(@PathVariable Long jobRequestId,RedirectAttributes redirectAttributes) {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    User currentUser = userService.findUserByEmail(auth.getName());
+	    ModelAndView mav = new ModelAndView("redirect:/profile/applications");
+	    // Kiểm tra xem người dùng đã ứng tuyển chưa
+	    boolean hasApplied = jobApplicationService.hasUserApplied(currentUser, jobRequestId);
+	    if (hasApplied) {
+
+	    	 redirectAttributes.addFlashAttribute("errorMessage", "Bạn đã ứng tuyển vào công việc này.");
+	        return mav;
+	    }
+	    
+	    JobRequest jobRequest = jobRequestService.getRepo().findById(jobRequestId).orElse(null);
+	    if (jobRequest != null) {
+	        jobApplicationService.AddJobApplication(currentUser, jobRequest);
+	    }
+	    
+	    return mav;
+	}
+	@PostMapping("/profile/applications/delete/{id}")
+	public ModelAndView deleteApplication(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+	    ModelAndView mav = new ModelAndView("redirect:/profile/applications");
+	    try {
+	        jobApplicationService.deleteApplicationById(id);
+	        redirectAttributes.addFlashAttribute("successMessage", "Đã xóa đơn ứng tuyển thành công.");
+	    } catch (Exception e) {
+	        redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi xóa đơn ứng tuyển: " + e.getMessage());
+	    }
+	    return mav;
+	}
 }

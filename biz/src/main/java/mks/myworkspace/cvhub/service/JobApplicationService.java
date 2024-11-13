@@ -14,4 +14,5 @@ public interface JobApplicationService {
 	boolean hasUserApplied(User user, Long jobRequestId);
 	List<JobApplication> getApplicationsByJobRequest(JobRequest jobRequest);
 	List<JobApplication> findAll();
+	void deleteApplicationById(Long id);
 }
