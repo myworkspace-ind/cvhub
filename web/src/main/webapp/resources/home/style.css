@@ -13,19 +13,23 @@ header {
 
 nav {
 	display: flex;
-	justify-content: space-between;
+	justify-content: space-between;					
 	align-items: center;
 	max-width: 1200px;
 	margin: 0 auto;
 	padding: 0 20px;
 }
 
-.logo {
+.logo a {
 	font-size: 24px;
 	font-weight: bold;
 	color: #00b14f;
 }
 
+.logo a:hover{
+	text-decoration: none;
+}
+ 
 .nav-links {
 	list-style: none;
 	display: flex;
