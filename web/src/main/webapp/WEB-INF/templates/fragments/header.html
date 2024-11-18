@@ -1,26 +1,78 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<link rel="stylesheet"
-	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
 </head>
+
 <body>
 	<header>
 		<nav class="navbar" th:fragment="header">
 			<div class="logo"><a th:href="@{home}">CVHub</a></div>
 			<ul class="nav-links">
 				<li><a href="#">Việc làm</a></li>
-				<li><a href="#">Công ty</a></li>
-				<li><a th:href="@{uploadCV}">Tạo CV</a></li>
-				<li><a href="#">Blog</a></li>
-			</ul>
-			<div class="auth-buttons">
-				<button class="login">Đăng nhập</button>
-				<button class="signup">Đăng ký</button>
-			</div>
+				<li><a th:href="@{/uploadCV}">Tạo CV</a></li>
+
+				</li>
+
+				<!-- Nút đăng ký tuyển dụng cho ROLE_USER -->
+				<li th:if="${#request.isUserInRole('USER')}">
+					<a th:href="@{/showRegister}">Đăng ký tuyển dụng</a>
+				</li>
+				<!-- Nút quản lý cho ROLE_ADMIN -->
+				<li th:if="${#request.isUserInRole('ADMIN')}">
+					<a th:href="@{/organization(id=${session.userId})}">
+						Quản lý tuyển dụng
+					</a>
+				</li>
+
+				<div class="auth-buttons">
+					<!-- Khi chưa đăng nhập -->
+					<th:block th:unless="${#httpServletRequest.remoteUser}">
+						<a class="login btn" th:href="@{/login}">Đăng nhập</a>
+						<a class="signup btn" th:href="@{/register}">Đăng ký</a>
+					</th:block>
+					<div class="profile-info" th:if="${#request.userPrincipal != null}">
+						<div class="profile-trigger">
+							<div class="avatar">
+								<span th:text="${#strings.substring(#request.userPrincipal.name,0,1)}"></span>
+							</div>
+							<span class="username" th:text="${#request.userPrincipal.name}"></span>
+						</div>
+
+						<div class="profile-dropdown" id="profileDropdown">
+							<div class="dropdown-content">
+								<script type="text/javascript" th:src="@{/resources/home/profile-dropdown.js}"></script>
+									<a th:href="@{/profile/edit}" class="menu-item">
+										<i class="fas fa-user-edit"></i>
+										Chỉnh sửa thông tin cá nhân
+									</a>
+									<a th:href="@{/profile/cv/manage}" class="menu-item">
+										<i class="fas fa-file-alt"></i>
+										Quản lý CV
+									</a>
+									<a th:href="@{/profile/applications}" class="menu-item">
+										<i class="fas fa-briefcase"></i>
+										Việc làm đã ứng tuyển
+									</a>
+									<div class="divider"></div>
+									<a th:href="@{/logout}" class="menu-item logout">
+										<i class="fas fa-sign-out-alt"></i>
+										Đăng xuất
+									</a>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+
 		</nav>
 	</header>
+	<script th:src="@{/resources/home/b.js}"></script>
+
 
 </body>
-</html>	
+
+</html>
