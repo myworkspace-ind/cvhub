@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.Organization;
 
 @Repository
@@ -17,4 +16,6 @@ public interface OrganizationRepository extends JpaRepository<Organization,Long>
 	byte[] getImageByLogoId(@Param("logoId") UUID logoId);
 	@Query("SELECT o.id From Organization o WHERE o.title = :title")
 	Long getIdByTitle(@Param("title") String title);
+	@Query("SELECT o FROM Organization o WHERE o.user.id = :userId")
+	Organization findByUserId(@Param("userId") Long userId);
 }
