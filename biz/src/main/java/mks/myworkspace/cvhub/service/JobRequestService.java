@@ -20,4 +20,5 @@ public interface JobRequestService {
 			Integer experience, Integer salary, String jobDescription, String requirementsCandidate,
 			String benefitCandidate, LocalDate deadlineApplication);
 	void deleteJobRequest(JobRequest jobRequest);
+	List<JobRequest> findAllByOrganizationId(Long id);
 }
