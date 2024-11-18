@@ -9,8 +9,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -41,7 +43,9 @@ import lombok.Setter;
     private String summary;
     private String detail;
     private String location;
-
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 	public Organization( String title, UUID logoID, byte[] logo, String website, String summary, String detail,
 			String location) {
 		super();
