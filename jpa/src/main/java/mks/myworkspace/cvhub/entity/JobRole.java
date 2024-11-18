@@ -32,6 +32,7 @@ public class JobRole {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String title;
+	private int seqno;
 	private String description;
 	public JobRole(String title, String description) {
 		super();
@@ -46,4 +47,6 @@ public class JobRole {
 	@Column(name = "modified_dte")
 	@UpdateTimestamp
 	Date modified;
+	
+	
 }
