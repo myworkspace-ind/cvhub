@@ -13,7 +13,7 @@ IF "%TOMCAT_HOME%"=="" (
 REM Copy resources from web module to sakai module
 copy .\web\src\main\webapp\WEB-INF\app-config.properties .\tool\src\main\webapp\WEB-INF
 copy .\web\src\main\webapp\WEB-INF\springapp-servlet.xml .\tool\src\main\webapp\WEB-INF
-copy .\web\src\main\webapp\WEB-INF\applicationContext.xml .\tool\src\main\webapp\WEB-INF
+REM copy .\web\src\main\webapp\WEB-INF\applicationContext.xml .\tool\src\main\webapp\WEB-INF
 
 mkdir .\tool\src\main\webapp\WEB-INF\templates\fragments
 xcopy .\web\src\main\webapp\WEB-INF\templates\fragments .\tool\src\main\webapp\WEB-INF\templates\fragments /S /Y
@@ -22,6 +22,6 @@ xcopy .\web\src\main\webapp\WEB-INF\templates\*.* .\tool\src\main\webapp\WEB-INF
 REM mkdir .\tool\src\main\webapp\resources
 REM xcopy .\web\src\main\webapp\resources .\tool\src\main\webapp\resources /S /Y
 
-CALL mvn clean package sakai:deploy -Dmaven.tomcat.home=%TOMCAT_HOME% -Dsakai.cleanup=true -Dmaven.test.skip=true -f pom-sakai.xml
+CALL mvn clean package sakai:deploy -Dmaven.tomcat.home=%TOMCAT_HOME% -Dmaven.test.skip=true -f pom-sakai.xml
 
 @PAUSE
