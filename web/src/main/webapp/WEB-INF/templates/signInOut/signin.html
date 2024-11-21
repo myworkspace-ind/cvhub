@@ -13,8 +13,14 @@
 <body>
 	<div th:replace="~{fragments/header :: header}"></div>
 	<div class="login-container">
-		<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-		<div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+		<div th:if="${message}" class="alert alert-success">
+    <span th:text="${message}"></span>
+    <button type="button" class="close" onclick="this.parentElement.style.display='none';">×</button>
+</div>
+<div th:if="${error}" class="alert alert-danger">
+    <span th:text="${error}"></span>
+    <button type="button" class="close" onclick="this.parentElement.style.display='none';">×</button>
+</div>
 		<div class="welcome-text">
 			<h1>Chào mừng bạn đã quay trở lại</h1>
 			<p>Cùng xây dựng một hồ sơ nổi bật và nhận được các cơ hội sự nghiệp lý tưởng</p>
@@ -43,7 +49,7 @@
 			</div>
 
 			<div class="signup-link">
-				Bạn chưa có tài khoản? <a th:href="@{user/showRegister}">Đăng ký ngay</a>
+				Bạn chưa có tài khoản? <a th:href="@{register}">Đăng ký ngay</a>
             </div>
 
             <div class=" copyright">

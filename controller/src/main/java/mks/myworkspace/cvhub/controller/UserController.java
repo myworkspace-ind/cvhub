@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +37,7 @@ public class UserController {
     
     @Autowired
     private CvService cvService;
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @GetMapping("/profile/edit")
     public ModelAndView showPersonalSettings(Model model) {
@@ -56,7 +58,57 @@ public class UserController {
         mav.setViewName("/signInOut/editUser");
         return mav;
     }
+    @GetMapping("/change-password")
+    public ModelAndView showChangePasswordPagee() {
+        ModelAndView mav = new ModelAndView("/signInOut/changePassword");
+        return mav;
+    }
+    @PostMapping("/profile/changepassword")
+    public ModelAndView changePassword(@RequestParam("oldPassword") String oldPassword,
+                                     @RequestParam("newPassword") String newPassword,
+                                     @RequestParam("confirmPassword") String confirmPassword) {
+        ModelAndView mav = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = userService.findUserByEmail(auth.getName());
 
+        // Kiểm tra mật khẩu cũ
+        if (!passwordEncoder.matches(oldPassword, currentUser.getPassword())) {
+            mav.addObject("error", "Mật khẩu cũ không chính xác");
+            mav.setViewName("/signInOut/editUser");
+            mav.addObject("user", currentUser);
+            mav.addObject("userSettings", currentUser);
+            return mav;
+        }
+        if (passwordEncoder.matches(newPassword, currentUser.getPassword())) {
+            mav.addObject("error", "Mật khẩu mới không được giống mật khẩu cũ");
+            mav.setViewName("/signInOut/editUser");
+            mav.addObject("user", currentUser);
+            mav.addObject("userSettings", currentUser);
+            return mav;
+        }
+
+        // Kiểm tra mật khẩu mới và xác nhận
+        if (!newPassword.equals(confirmPassword)) {
+            mav.addObject("error", "Mật khẩu mới và xác nhận mật khẩu không khớp");
+            mav.setViewName("/signInOut/editUser");
+            mav.addObject("user", currentUser);
+            mav.addObject("userSettings", currentUser);
+            return mav;
+        }
+
+        try {
+            currentUser.setPassword(passwordEncoder.encode(newPassword));
+            userService.getRepo().save(currentUser);
+            mav.addObject("success", "Thay đổi mật khẩu thành công");
+        } catch (Exception e) {
+            mav.addObject("error", "Có lỗi xảy ra khi thay đổi mật khẩu");
+        }
+        mav.addObject("user", currentUser);
+        mav.addObject("userSettings", currentUser);
+
+        mav.setViewName("/signInOut/editUser");
+        return mav;
+    }
     @PostMapping("/profile/edit")
     public ModelAndView updatePersonalSettings(@ModelAttribute UserDTO settings, 
                                        RedirectAttributes redirectAttributes) {

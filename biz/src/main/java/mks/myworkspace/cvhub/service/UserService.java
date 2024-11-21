@@ -7,8 +7,12 @@ import mks.myworkspace.cvhub.repository.UserRepository;
 
 @Service
 public interface UserService {
-	UserRepository getRepo();
-	User createUser(String fullName, String email, String password, String phone) throws Exception;
-	boolean isEmailExists(String email);
-	User findUserByEmail(String email);
+    UserRepository getRepo();
+    
+    User createUser(String fullName, String email, String password, String phone) throws Exception;
+    
+    boolean isEmailExists(String email);
+    
+    User findUserByEmail(String email);
+    
 }
