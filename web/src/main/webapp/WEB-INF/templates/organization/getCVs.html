@@ -111,19 +111,21 @@ body {
 		<div class="row">
 			<div class="col-md-12">
 				<div class="filter-section">
-					<form class="form-horizontal">
-						<div class="row">
+					<div class="row">
+						<form
+							th:action="@{'/organization/' + ${organizationId} + '/getCVs/option'}"	
+							method="get" style="display: inline;">
 							<div class="col-md-3">
 								<div class="form-group">
-									<label>Trạng thái</label> <select class="form-control">
-										<option>Tất cả trạng thái</option>
-										<option>Chưa xem</option>
-										<option>Đã xem</option>
-										<option>Đã liên hệ</option>
-										<option>Đã từ chối</option>
+									<label>Trạng thái</label> 
+									<select name="status" class="form-control">
+										<option value="ALL">Tất cả trạng thái</option>
+										<option value="APPROVED">Đã liên hệ</option>
+										<option value="DENY">Đã từ chối</option>
 									</select>
 								</div>
 							</div>
+
 							<div class="col-md-3">
 								<div class="form-group">
 									<label>Vị trí tuyển dụng</label> <select class="form-control">
@@ -147,8 +149,8 @@ body {
 									</button>
 								</div>
 							</div>
-						</div>
-					</form>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -158,7 +160,7 @@ body {
 			<div class="col-md-12">
 
 				<!-- Single CV Card -->
-				<div class="cv-card" th:each="cvs : ${cvs}">
+				<div class="cv-card" th:each="cvs : ${jobApplications}">
 					<div class="cv-header">
 						<div class="row">
 							<div class="col-md-8">
@@ -168,12 +170,12 @@ body {
 											alt="Profile Picture" class="cv-avatar">
 									</div>
 									<div class="media-body">
-										<h4 class="candidate-name" th:text="${cvs.fullName}">Tên
+										<h4 class="candidate-name" th:text="${cvs.user.fullName}">Tên
 											ứng viên</h4>
 										<p>
-											<i class="fa fa-envelope"></i> <span th:text="${cvs.email}">Email</span>
-											&nbsp;&nbsp; <i class="fa fa-phone"></i> <span
-												th:text="${cvs.phone}">Phone</span>
+											<i class="fa fa-envelope"></i> <span
+												th:text="${cvs.user.email}">Email</span> &nbsp;&nbsp; <i
+												class="fa fa-phone"></i> <span th:text="${cvs.user.phone}">Phone</span>
 										</p>
 									</div>
 								</div>
@@ -182,24 +184,33 @@ body {
 					</div>
 
 					<div class="action-buttons">
-						<form th:action="@{'/renderCVPrimary/' + ${cvs.id}}" method="get"
-							style="display: inline;">
+						<form th:action="@{'/renderCVPrimary/' + ${cvs.user.id}}"
+							method="get" style="display: inline;">
 							<button class="btn btn-info">
 								<i class="fa fa-eye"></i> Xem CV
 							</button>
 						</form>
-						<button class="btn btn-success">
-							<i class="fa fa-phone"></i> Liên hệ
-						</button>
-						<button class="btn btn-warning">
-							<i class="fa fa-calendar"></i> Hẹn phỏng vấn
-						</button>
-						<form th:action="@{'/renderCVPrimary/' + ${cvs.id}}" method="post"
-							style="display: inline;">
+						<form
+							th:action="@{/{orgId}/getCVs/setStatusApprove/{cvId}(orgId=${organizationId},cvId=${cvs.id})}"
+							method="post" style="display: inline;">
+							<button class="btn btn-success">
+								<i class="fa fa-phone"></i> Liên hệ
+							</button>
+						</form>
+						<form
+							th:action="@{/{orgId}/getCVs/setStatusApprove/{cvId}(orgId=${organizationId},cvId=${cvs.id})}"
+							method="post" style="display: inline;">
+							<button class="btn btn-warning">
+								<i class="fa fa-calendar"></i> Hẹn phỏng vấn
+							</button>
+						</form>
+						<form
+							th:action="@{/{orgId}/getCVs/setStatus/{cvId}(orgId=${organizationId},cvId=${cvs.id})}"
+							method="post" style="display: inline;">
 							<button class="btn btn-danger">
 								<i class="fa fa-times"></i> Từ chối
 							</button>
-						</form> 
+						</form>
 						<div class="btn-group">
 							<button type="button" class="btn btn-default dropdown-toggle"
 								data-toggle="dropdown">
