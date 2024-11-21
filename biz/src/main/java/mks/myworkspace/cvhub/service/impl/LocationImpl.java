@@ -21,7 +21,7 @@ public class LocationImpl implements LocationService {
 	@Getter
 	@Autowired
 	LocationRepository repo;
-	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
+	public final Logger logger = LoggerFactory.getLogger(this.getClass());
 	public List<Location> fetchLocationsFromAPI() {
 	    try {
 	        // 1. Tạo RestTemplate
@@ -49,6 +49,5 @@ public class LocationImpl implements LocationService {
 	        return new ArrayList<>();
 	    }
 	}
-
-	}
+}
 	

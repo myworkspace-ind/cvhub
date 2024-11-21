@@ -25,7 +25,11 @@ public class CV {
 
     private String fullName;
     @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+    @ManyToOne
     @JoinColumn(name = "jobrole_id")
+
     private JobRole jobRole;
     
     private String email;
@@ -56,7 +60,12 @@ public class CV {
 	private UUID logoID;
 	@Lob
 	private byte[] logo;
-
+	
+	 @Column(name = "isprimary",nullable = false)
+	    private boolean isprimary = false;
+	 @Column(nullable = false)
+	    private boolean selected = false;
+	
     @CreationTimestamp
     @Column(name="created_date", updatable = false)
     private Date createdDate;
