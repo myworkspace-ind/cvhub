@@ -112,4 +112,10 @@ public class JobRequestImpl implements JobRequestService {
 		getRepo().delete(jobRequest);
 		
 	}
+
+	@Override
+	public List<JobRequest> findAllByOrganizationId(Long id) {
+		// TODO Auto-generated method stub
+		return repo.findByOrganizationId(id);
+	}
 }
