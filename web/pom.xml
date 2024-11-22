@@ -308,7 +308,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
 					<warSourceDirectory>${basedir}/src/main/webapp</warSourceDirectory>
-					<ouputDirectory>${project.build.directory}</ouputDirectory>
+<!--					<ouputDirectory>${project.build.directory}</ouputDirectory>-->
 				</configuration>
 			</plugin>
 		</plugins>
