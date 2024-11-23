@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/api/src/bundle" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/api/src/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/biz/src/bundle" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/biz/src/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/biz/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/common/src/bundle" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/common/src/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/controller/src/bundle" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/controller/src/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/controller/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/impl/src/bundle" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/impl/src/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/impl/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jpa/src/bundle" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jpa/src/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jpa/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/pack/src/bundle" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/pack/src/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/pack/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/bundle" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tool/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tool/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/web/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/web/src/main/resources" charset="UTF-8" />
+  </component>
+</project>
