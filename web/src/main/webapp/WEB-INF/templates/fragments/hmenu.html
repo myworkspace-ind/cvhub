@@ -1,5 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <!-- Fragment: Horizontal menu -->
+<script th:src="@{/resources/report_duy/report_duy.js}"></script>
+<link rel="stylesheet" th:href="@{/resources/report_duy/style.css}">
 <ul class="navIntraTool actionToolbar">
   <li>  
       <span title="List jobs" th:class="${isSelectedHome != null && isSelectedHome ? 'current' : ''}">
@@ -21,14 +23,18 @@
         <a th:href="@{/configuration}">Configuration</a>
       </span>
   </li>
- <li> 
-     <span title="Report">
-       <a id="report" th:href="@{/report}">Report</a>
-     </span>
- </li>
+<li class="dropdown">
+<span title="Report">
+    <a id="report" href="javascript:void(0);">Report</a>
+</span>
+    <ul class="dropdown-menu">
+        <li><a th:href="@{/report_duy}">Sales Report</a></li>
+    </ul>
+</li>
  <li> 
      <span title="About">
        <a id="about" href="#">About</a>
      </span>
+
  </li>
 </ul>

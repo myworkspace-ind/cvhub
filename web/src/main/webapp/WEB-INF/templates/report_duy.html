@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>The generated source code Web Application for Sakai</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet"
+          href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <!--    <link rel="stylesheet" th:href="@{/resources/searchCondition/style.css}" />-->
+    <link rel="stylesheet" th:href="@{/resources/search_tuan_22110450/style.css}"/>
+    <link rel="stylesheet" th:href="@{/resources/home/style.css}"/>
+    <link rel="stylesheet" th:href="@{/resources/home/jobRequest.css}"/>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="container">
+    <div class="row">
+        <!-- Cột bên trái chứa h2 và p -->
+        <div class="col-md-6 left-content">
+            <h2>Job List</h2>
+            <p>Báo cáo số lượng việc làm: </p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <select id="timePeriod" class="form-control">
+                    <option value="today">Hôm nay</option>
+                    <option value="week">Tuần này</option>
+                    <option value="month">Tháng này</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <input type="text" id="searchKeyword" class="form-control" placeholder="Enter keyword">
+            </div>
+            <div class="col-md-4">
+                <button id="searchButton" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default card-table">
+        <div class="card-table-header panel-heading">
+            <div class="box-type-keyword-below__content">
+                <div class="box-type-keyword-below__title">Tìm kiếm theo:</div>
+                <div class="box-type-keyword-below__list">
+                    <div class="box-type-keyword-below__list--item" data-type-keyword="1" onclick="toggleCheck(this)">
+                        <i class="glyphicon glyphicon-ok check-icon"></i>
+                        Tên việc làm
+                    </div>
+                    <div class="box-type-keyword-below__list--item" data-type-keyword="2" onclick="toggleCheck(this)">
+                        <i class="glyphicon glyphicon-ok check-icon"></i>
+                        Tên công ty
+                    </div>
+                    <!--                    <div class="box-type-keyword-below__list&#45;&#45;item" data-type-keyword="">-->
+                    <!--                        Cả hai-->
+                    <!--                    </div>-->
+                </div>
+                <div class="select-sort-advanced">
+                    <select id="sort-advanced" name="sort-advanced" tabindex="-1" class="select2-hidden-accessible"
+                            aria-hidden="true">
+                        <option value="top_related" sort-value="top_related" class="option-item-sort" selected="">
+                            Search by AI
+                        </option>
+                        <option value="new" sort-value="new" class="option-item-sort">
+                            Ngày đăng
+                        </option>
+                        <option value="up_top" sort-value="up_top" class="option-item-sort">
+                            Ngày cập nhật
+                        </option>
+                        <option value="high_salary" sort-value="high_salary" class="option-item-sort">
+                            Lương cao đến thấp
+                        </option>
+                        <option value="urgent" sort-value="urgent" class="option-item-sort">
+                            Cần tuyển gấp
+                        </option>
+                    </select>
+
+                    <select name="location" id="locationSelect" class="option-item-sort" style="width: 190px">
+                        <option value="0">Tất cả tỉnh/thành phố</option>
+
+                    </select>
+
+                    <select name="industry" id="jobRoleSelect" class="option-item-sort">
+                        <option value="0">Tất cả ngành nghề</option>
+
+                        </option>
+                    </select>
+                    <script type="text/javascript"
+                            th:src="@{/resources/search_tuan_22110450/search_tuan.js}"></script>
+                    <script type="text/javascript"
+                            th:src="@{/resources/searchCondition/searchProvince.js}"></script>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body card-table-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle table-nowrap mb-0 table-borderless">
+                    <thead class="table-light">
+                    <tr>
+                        <th class="align-middle" scope="col">Logo</th>
+                        <th class="align-middle" scope="col">Job Title</th>
+                        <th class="align-middle" scope="col">Company Name</th>
+                        <th class="align-middle" scope="col">Location</th>
+                        <th class="align-middle" scope="col">Job Role</th>
+                        <th class="align-middle" scope="col">Experience</th>
+                        <th class="align-middle" scope="col">Salary</th>
+                        <th class="align-middle" scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="job-table-body">
+                    <!-- Duyệt qua danh sách sản phẩm -->
+                    <tr th:each="job : ${jobrequests}">
+                        <td><img
+                                th:src="@{/images/{logoId}(logoId=${job.organization.logoID})}"
+                                alt="Logo" class="img-responsive"></td>
+                        <td th:text="${job.title}"></td>
+                        <td th:text="${job.organization.title}"></td>
+                        <td th:text="${job.location.name}"></td>
+                        <td th:text="${job.jobRole.title}"></td>
+                        <td th:text="${job.experience}"></td>
+                        <td th:text="${job.salary}"></td>
+                        <td>
+                            <button class="btn btn-success">Chi tiết</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><img
+                                src="https://cdn-new.topcv.vn/unsafe/150x/https://static.topcv.vn/company_logos/cong-ty-tnhh-mtv-khach-san-quoc-te-binh-minh-637358ca163c4.jpg"
+                                alt="Logo" class="img-responsive"></td>
+                        <td>Java Developer (Middle/Senior)</td>
+                        <td>SECURE FINANCIAL CORP</td>
+                        <td>Tuyên Quang</td>
+                        <td>3 years</td>
+                        <td>$1000</td>
+                        <td></td>
+                        <td>
+                            <button class="btn btn-success">Chi tiết</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <nav aria-label="Page navigation" class="mt-5">
+        <ul class="pagination justify-content-center">
+            <!-- Previous button -->
+            <li class="page-item"
+                th:classappend="${currentPage == 0} ? 'disabled'"><a
+                    class="page-link"
+                    th:href="${currentPage > 0} ? @{/jobrequests(page=${currentPage - 1})} : '#'"
+                    aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+            </a></li>
+
+            <!-- Page numbers -->
+            <li class="page-item"
+                th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${pageNum == currentPage} ? 'active'"><a
+                    class="page-link" th:href="@{/jobrequests(page=${pageNum})}"
+                    th:text="${pageNum + 1}"></a></li>
+
+            <!-- Next button -->
+            <li class="page-item"
+                th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                <a class="page-link"
+                   th:href="${currentPage < totalPages - 1} ? @{/jobrequests(page=${currentPage + 1})} : '#'"
+                   aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+</body>
+<th:block th:include="fragments/javascript"></th:block>
+</html>
