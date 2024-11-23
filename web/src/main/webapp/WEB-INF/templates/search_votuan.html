@@ -27,7 +27,7 @@
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="Enter text" id="searchKeyword">
                 <span class="input-group-btn">
-                        <button id="searchButton" class="btn btn-default" type="button" onclick="searchJobs">Search</button>
+                        <button id="searchButton" class="btn btn-default" type="button" onclick="searchJobs()">Search</button>
                     </span>
             </div>
 
@@ -52,9 +52,9 @@
                 </div>
                 <div class="select-sort-advanced">
                     <select id="sort-advanced" name="sort-advanced" tabindex="-1" class="select2-hidden-accessible"
-                            aria-hidden="true">
-                        <option value="top_related" sort-value="top_related" class="option-item-sort" selected="">
-                            Search by AI
+                            aria-hidden="true" onchange = "searchJobs()">
+                        <option value="top_related" sort-value="new" class="option-item-sort" selected="">
+                            Sắp xếp
                         </option>
                         <option value="new" sort-value="new" class="option-item-sort">
                             Ngày đăng
@@ -65,17 +65,17 @@
                         <option value="high_salary" sort-value="high_salary" class="option-item-sort">
                             Lương cao đến thấp
                         </option>
-                        <option value="urgent" sort-value="urgent" class="option-item-sort">
-                            Cần tuyển gấp
+                        <option value="experientia" sort-value="experientia" class="option-item-sort">
+                            Kinh nghiệm thấp đến cao
                         </option>
                     </select>
 
-                    <select name="location" id="locationSelect" class="option-item-sort" style="width: 190px">
+                    <select name="location" id="locationSelect" class="option-item-sort" style="width: 190px" onchange = "searchJobs()">
                         <option value="0">Tất cả tỉnh/thành phố</option>
 
                     </select>
 
-                    <select name="industry" id="jobRoleSelect" class="option-item-sort">
+                    <select name="industry" id="jobRoleSelect" class="option-item-sort" onchange = "searchJobs()">
                         <option value="0">Tất cả ngành nghề</option>
 
                         </option>
@@ -172,11 +172,24 @@
         const keyword = document.getElementById('searchKeyword').value;
         const location = document.getElementById('locationSelect').value;
         const industry = document.getElementById('jobRoleSelect').value;
-        const items = document.querySelectorAll('.box-type-keyword-below__list--item');
-        const selectedItem = Array.from(items).find(item => item.classList.contains('selected'))?.getAttribute('data-type-keyword');
+        const sort = document.getElementById('sort-advanced').value;
+        // const items = document.querySelectorAll('.box-type-keyword-below__list--item');
+        // const selectedItem = Array.from(items).find(item => item.classList.contains('selected'))?.getAttribute('data-type-keyword');
 
-        const params = new URLSearchParams({ keyword, location, industry, type: selectedItem });
-        fetch(`/cvhub-web/search_job?${params}`)
+        // Tìm phần tử có class 'selected'
+        const selectedItem = document.querySelector('.box-type-keyword-below__list--item.selected');
+        // Gán giá trị bool
+        let bool;
+        if (selectedItem) {
+            const keyword = selectedItem.getAttribute('data-type-keyword');
+            bool = keyword === "2" ? 1 : 0;
+        } else {
+            console.log("Không có phần tử nào được chọn.");
+            bool = 0; // Hoặc giá trị mặc định
+        }
+
+        const params = new URLSearchParams({ keyword, location, industry, sort, bool });
+        fetch(`/cvhub-web/search_job_sort_tuan?${params}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Failed to fetch data');
