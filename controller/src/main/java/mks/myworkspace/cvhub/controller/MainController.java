@@ -24,6 +24,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.slf4j.Slf4j;
@@ -47,4 +49,58 @@ public class MainController extends BaseController {
 
 		return mav;
 	}
+
+	/**
+	 * Handles requests for the Report tab and Report's subtabs.
+	 *
+	 * @return
+	 */
+	@GetMapping("/report")
+	public ModelAndView displayReport(@RequestParam(value = "subtab", defaultValue = "jobs") String subtab) {
+		ModelAndView mav = new ModelAndView("main");
+
+		mav.addObject("isSelectedReport", true);
+		mav.addObject("activeSubtab", subtab);
+
+		switch (subtab) {
+		case "applicants":
+			mav.addObject("subtabView", "fragments/reportSubtabs/applicantReport :: content");
+			break;
+		case "users":
+			mav.addObject("subtabView", "fragments/reportSubtabs/userReport :: content");
+			break;
+		case "organizations":
+			mav.addObject("subtabView", "fragments/reportSubtabs/organizationReport :: content");
+			break;
+		default:
+			mav.addObject("subtabView", "fragments/reportSubtabs/jobReport :: content");
+		}
+
+		return mav;
+	}
+
+	@GetMapping("/report/{subtab}")
+	public ModelAndView handleSubtabs(@PathVariable String subtab) {
+		ModelAndView mav = new ModelAndView("main");
+		
+		mav.addObject("isSelectedReport", true);
+		mav.addObject("activeSubtab", subtab);
+
+		switch (subtab) {
+		case "applicants":
+			mav.addObject("subtabView", "fragments/reportSubtabs/applicantReport :: content");
+			break;
+		case "users":
+			mav.addObject("subtabView", "fragments/reportSubtabs/userReport :: content");
+			break;
+		case "organizations":
+			mav.addObject("subtabView", "fragments/reportSubtabs/organizationReport :: content");
+			break;
+		default:
+			mav.addObject("subtabView", "fragments/reportSubtabs/jobReport :: content");
+		}
+
+		return mav;
+	}
+
 }

@@ -1,0 +1,39 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="content">
+	<div class="oR-header-container">
+		<h3>Organizations Report</h3>
+
+		<div class="oR-header-filter">
+			<label for="timePeriod">Hiển thị theo:</label>
+			
+			<select name="timePeriod" id="timePeriod">
+				<option value="today">Hôm nay</option>
+				<option value="this_week">Tuần này</option>
+				<option value="this_month">Tháng này</option>
+				<option value="this_year">Năm này</option>
+			</select>
+
+			<button type="submit" class="oR-button">Lọc</button>
+		</div>
+	</div>
+
+	<table class="oR-table">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Name</th>
+				<th>Created Date</th>
+				<th>Status</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>1</td>
+				<td>Organization A</td>
+				<td>2024-11-23</td>
+				<td>Active</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

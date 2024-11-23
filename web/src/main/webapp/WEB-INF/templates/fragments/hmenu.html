@@ -22,7 +22,7 @@
       </span>
   </li>
  <li> 
-     <span title="Report">
+      <span title="Report" th:class="${isSelectedReport != null && isSelectedReport ? 'current' : ''}">
        <a id="report" th:href="@{/report}">Report</a>
      </span>
  </li>

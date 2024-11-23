@@ -1,0 +1,23 @@
+.page-header {
+    margin: calc(16px + 5px) 0;
+    padding: 0 0 4px 0;
+    border-bottom: 1px solid #7c8c96;
+}
+
+.subtabs {
+    display: flex;
+    gap: 16px;
+    padding: 8px 0;
+}
+
+.subtab {
+    text-decoration: none;
+    color: black;
+    font-size: 14px;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+.subtab:hover {
+    color: #3498db;
+}
