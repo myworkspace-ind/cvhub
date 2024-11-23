@@ -17,6 +17,7 @@
             <groupId>mks.myworkspace.cvhub</groupId>
             <artifactId>cvhub-api</artifactId>
 <!--             <version>${module.version}</version> -->
+        	<version>23.2</version>
         </dependency>
 		<dependency>
             <groupId>mks.myworkspace.cvhub</groupId>

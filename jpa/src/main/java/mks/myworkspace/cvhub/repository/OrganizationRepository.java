@@ -1,8 +1,12 @@
 package mks.myworkspace.cvhub.repository;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +22,8 @@ public interface OrganizationRepository extends JpaRepository<Organization,Long>
 	Long getIdByTitle(@Param("title") String title);
 	@Query("SELECT o FROM Organization o WHERE o.user.id = :userId")
 	Organization findByUserId(@Param("userId") Long userId);
+	
+	@Query("SELECT o FROM Organization o WHERE o.createdDate >= :startDate")
+    Page<Organization> findAllCreatedDateStartFrom(@Param("startDate") Date startDate, @Param("pageRequest") Pageable pageable);
+    Page<Organization> findAll(@Param("pageRequest") Pageable pageable);
 }

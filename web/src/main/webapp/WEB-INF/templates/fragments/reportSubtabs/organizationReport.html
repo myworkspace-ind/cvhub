@@ -1,39 +1,49 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <div th:fragment="content">
+
 	<div class="oR-header-container">
 		<h3>Organizations Report</h3>
 
 		<div class="oR-header-filter">
-			<label for="timePeriod">Hiển thị theo:</label>
-			
-			<select name="timePeriod" id="timePeriod">
-				<option value="today">Hôm nay</option>
-				<option value="this_week">Tuần này</option>
-				<option value="this_month">Tháng này</option>
-				<option value="this_year">Năm này</option>
-			</select>
+			<form id="filterForm" th:action="@{/report/organizations}">
+				<label for="timePeriod">Hiển thị theo:</label> <select
+					name="timePeriod" id="timePeriod">
+					<option value="today">Hôm nay</option>
+					<option value="this_week">Tuần này</option>
+					<option value="this_month">Tháng này</option>
+					<option value="this_year">Năm này</option>
+				</select>
 
-			<button type="submit" class="oR-button">Lọc</button>
+				<button type="submit" class="oR-button" id="filterButton">Lọc</button>
+			</form>
 		</div>
 	</div>
 
 	<table class="oR-table">
 		<thead>
 			<tr>
-				<th>ID</th>
-				<th>Name</th>
+				<th>Logo</th>
+				<th>Website</th>
+				<th>Organization Name</th>
+				<th>Detail</th>
+				<th>Location</th>
 				<th>Created Date</th>
-				<th>Status</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td>1</td>
-				<td>Organization A</td>
-				<td>2024-11-23</td>
-				<td>Active</td>
+			<tr th:each="org : ${organizations}">
+				<td><img th:src="@{/images/{logoId}(logoId=${org.logoID})}"
+					alt="Logo" class="img-responsive"></td>
+				<td><a th:href="${org.website}" th:text="${org.website}"
+					target="_blank"></a></td>
+				<td th:text="${org.title}"></td>
+				<td th:text="${org.detail}"></td>
+				<td th:text="${org.location}"></td>
+				<td th:text="${org.createdDate}"></td>
 			</tr>
 		</tbody>
 	</table>
+
+
 </div>
