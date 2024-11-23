@@ -35,6 +35,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -125,7 +126,7 @@ public class MainController extends BaseController {
 	public ModelAndView handleSubtabs(@PathVariable String subtab,
 			@RequestParam(value = "timePeriod", defaultValue = "today") String period,
 			@RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "limit", defaultValue = "10") int limit) {
+			@RequestParam(value = "limit", defaultValue = "5") int limit) {
 
 		ModelAndView mav = new ModelAndView("main");
 
@@ -147,7 +148,8 @@ public class MainController extends BaseController {
 			Page<Organization> orgRequestPage = organizationService.getRepo().findAllCreatedDateStartFrom(startDate, pageRequest);
 			List<Organization> organizations = orgRequestPage.getContent();
 			int totalPages = orgRequestPage.getTotalPages();
-
+			
+			mav.addObject("period", period);
 			mav.addObject("organizations", organizations);
 			mav.addObject("totalPages", totalPages);
 			mav.addObject("currentPage", page);

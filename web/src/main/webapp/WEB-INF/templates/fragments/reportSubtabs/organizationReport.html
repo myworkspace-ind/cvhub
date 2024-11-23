@@ -9,10 +9,10 @@
 			<form id="filterForm" th:action="@{/report/organizations}">
 				<label for="timePeriod">Hiển thị theo:</label> <select
 					name="timePeriod" id="timePeriod">
-					<option value="today">Hôm nay</option>
-					<option value="this_week">Tuần này</option>
-					<option value="this_month">Tháng này</option>
-					<option value="this_year">Năm này</option>
+					<option value="today" th:selected="${period == 'today'}">Hôm nay</option>
+					<option value="this_week" th:selected="${period == 'this_week'}">Tuần này</option>
+					<option value="this_month" th:selected="${period == 'this_month'}">Tháng này</option>
+					<option value="this_year" th:selected="${period == 'this_year'}">Năm này</option>
 				</select>
 
 				<button type="submit" class="oR-button" id="filterButton">Lọc</button>
