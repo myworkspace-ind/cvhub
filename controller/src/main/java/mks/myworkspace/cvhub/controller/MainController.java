@@ -24,6 +24,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.slf4j.Slf4j;
@@ -47,4 +48,15 @@ public class MainController extends BaseController {
 
 		return mav;
 	}
+	
+	@GetMapping("/main/report/organization")
+	public ModelAndView displayReportOrganization (HttpServletRequest request, HttpSession httpSession) {
+		ModelAndView mav =  new  ModelAndView("");
+		initSession(request, httpSession);
+		return mav;
+	}
+	
+	
+	
+	
 }
