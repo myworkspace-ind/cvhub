@@ -4,9 +4,12 @@
     <file url="file://$PROJECT_DIR$/api/src/bundle" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/api/src/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/api/src/main/java" charset="UTF-8" />
+<<<<<<< HEAD
     <file url="file://$PROJECT_DIR$/biz/src/bundle" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/biz/src/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/biz/src/main/java" charset="UTF-8" />
+=======
+>>>>>>> remotes/origin/dev_hungnv
     <file url="file://$PROJECT_DIR$/common/src/bundle" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common/src/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common/src/main/java" charset="UTF-8" />
@@ -16,9 +19,12 @@
     <file url="file://$PROJECT_DIR$/impl/src/bundle" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/impl/src/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/impl/src/main/java" charset="UTF-8" />
+<<<<<<< HEAD
     <file url="file://$PROJECT_DIR$/jpa/src/bundle" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jpa/src/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jpa/src/main/java" charset="UTF-8" />
+=======
+>>>>>>> remotes/origin/dev_hungnv
     <file url="file://$PROJECT_DIR$/pack/src/bundle" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/pack/src/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/pack/src/main/java" charset="UTF-8" />

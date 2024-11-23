@@ -2,6 +2,10 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+<<<<<<< HEAD
+=======
+      <profile default="true" name="Default" enabled="true" />
+>>>>>>> remotes/origin/dev_hungnv
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -9,11 +13,17 @@
         <module name="cvhub-impl" />
         <module name="cvhub-common" />
         <module name="cvhub-web" />
+<<<<<<< HEAD
         <module name="cvhub-biz" />
         <module name="cvhub-tool" />
         <module name="cvhub-api" />
         <module name="cvhub-pack" />
         <module name="cvhub-jpa" />
+=======
+        <module name="cvhub-tool" />
+        <module name="cvhub-api" />
+        <module name="cvhub-pack" />
+>>>>>>> remotes/origin/dev_hungnv
         <module name="cvhub-controller" />
       </profile>
     </annotationProcessing>
@@ -22,11 +32,17 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="cvhub" options="--add-exports=java.xml/com.sun.org.apache.xml.internal.serializer=ALL-UNNAMED --add-exports=java.xml/com.sun.org.apache.xml.internal.utils=ALL-UNNAMED" />
       <module name="cvhub-api" options="--add-exports=java.xml/com.sun.org.apache.xml.internal.serializer=ALL-UNNAMED --add-exports=java.xml/com.sun.org.apache.xml.internal.utils=ALL-UNNAMED" />
+<<<<<<< HEAD
       <module name="cvhub-biz" options="--add-exports=java.xml/com.sun.org.apache.xml.internal.serializer=ALL-UNNAMED --add-exports=java.xml/com.sun.org.apache.xml.internal.utils=ALL-UNNAMED" />
       <module name="cvhub-common" options="--add-exports=java.xml/com.sun.org.apache.xml.internal.serializer=ALL-UNNAMED --add-exports=java.xml/com.sun.org.apache.xml.internal.utils=ALL-UNNAMED" />
       <module name="cvhub-controller" options="--add-exports=java.xml/com.sun.org.apache.xml.internal.serializer=ALL-UNNAMED --add-exports=java.xml/com.sun.org.apache.xml.internal.utils=ALL-UNNAMED" />
       <module name="cvhub-impl" options="--add-exports=java.xml/com.sun.org.apache.xml.internal.serializer=ALL-UNNAMED --add-exports=java.xml/com.sun.org.apache.xml.internal.utils=ALL-UNNAMED" />
       <module name="cvhub-jpa" options="--add-exports=java.xml/com.sun.org.apache.xml.internal.serializer=ALL-UNNAMED --add-exports=java.xml/com.sun.org.apache.xml.internal.utils=ALL-UNNAMED" />
+=======
+      <module name="cvhub-common" options="--add-exports=java.xml/com.sun.org.apache.xml.internal.serializer=ALL-UNNAMED --add-exports=java.xml/com.sun.org.apache.xml.internal.utils=ALL-UNNAMED" />
+      <module name="cvhub-controller" options="--add-exports=java.xml/com.sun.org.apache.xml.internal.serializer=ALL-UNNAMED --add-exports=java.xml/com.sun.org.apache.xml.internal.utils=ALL-UNNAMED" />
+      <module name="cvhub-impl" options="--add-exports=java.xml/com.sun.org.apache.xml.internal.serializer=ALL-UNNAMED --add-exports=java.xml/com.sun.org.apache.xml.internal.utils=ALL-UNNAMED" />
+>>>>>>> remotes/origin/dev_hungnv
       <module name="cvhub-pack" options="--add-exports=java.xml/com.sun.org.apache.xml.internal.serializer=ALL-UNNAMED --add-exports=java.xml/com.sun.org.apache.xml.internal.utils=ALL-UNNAMED" />
       <module name="cvhub-tool" options="--add-exports=java.xml/com.sun.org.apache.xml.internal.serializer=ALL-UNNAMED --add-exports=java.xml/com.sun.org.apache.xml.internal.utils=ALL-UNNAMED" />
     </option>
