@@ -12,17 +12,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -84,4 +85,54 @@ public class Report_Duy22110295 extends BaseController{
         mav.addObject("locations", locations);
         return mav;
     }
+
+    @GetMapping("/jobrequestsbytime/filter")
+    public ModelAndView filterJobRequests(@RequestParam String timePeriod,
+                                          @RequestParam(value = "page", defaultValue = "0") int page,
+                                          @RequestParam(value = "limit", defaultValue = "10") int limit) {
+        ModelAndView mav = new ModelAndView("report_duy");
+        LocalDateTime startDate;
+
+        switch (timePeriod) {
+            case "today":
+                startDate = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
+                break;
+            case "week":
+                startDate = LocalDateTime.now().minusDays(LocalDateTime.now().getDayOfWeek().getValue() - 1)
+                        .truncatedTo(ChronoUnit.DAYS);
+                break;
+            case "month":
+                startDate = LocalDateTime.now().withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS);
+                break;
+            default:
+                startDate = LocalDateTime.MIN;
+        }
+
+        Date startDateAsDate = java.sql.Timestamp.valueOf(startDate);
+
+        Pageable pageRequest = PageRequest.of(page, limit, Sort.by("createdDate").descending());
+        // Lấy dữ liệu từ repository
+        Page<JobRequest> jobRequestPage = jobRequestRepository.findByCreatedDateAfter(startDateAsDate, pageRequest);
+
+// In ra console để kiểm tra
+        System.out.println("===== Job Requests Fetched =====");
+        jobRequestPage.getContent().forEach(job -> {
+            System.out.println("ID: " + job.getId());
+            System.out.println("Title: " + job.getTitle());
+            System.out.println("Created Date: " + job.getCreatedDate());
+            System.out.println("Organization: " + job.getOrganization().getTitle());
+            System.out.println("Location: " + job.getLocation().getName());
+            System.out.println("Job Role: " + job.getJobRole().getTitle());
+            System.out.println("----------------------------------");
+        });
+
+
+        mav.addObject("jobrequests", jobRequestPage.getContent());
+        mav.addObject("totalPages", jobRequestPage.getTotalPages());
+        mav.addObject("currentPage", page);
+        mav.addObject("timePeriod", timePeriod);
+        return mav;
+    }
+
+
 }
