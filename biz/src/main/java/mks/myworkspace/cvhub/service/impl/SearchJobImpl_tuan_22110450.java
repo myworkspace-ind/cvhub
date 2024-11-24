@@ -45,9 +45,9 @@ public class SearchJobImpl_tuan_22110450 implements SearchJobService_tuan_221104
 	private Sort getSortOrder(String sort) {
 		switch (sort) {
 			case "new":
-				return Sort.by(Sort.Direction.DESC, "deadlineApplication");
+				return Sort.by(Sort.Direction.ASC, "createdDate");
 			case "up_top":
-				return Sort.by(Sort.Direction.DESC, "deadlineApplication");
+				return Sort.by(Sort.Direction.ASC, "modified");
 			case "high_salary":
 				return Sort.by(Sort.Direction.DESC, "salary");
 			case "experientia":
