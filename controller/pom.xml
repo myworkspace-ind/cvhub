@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>cvhub</artifactId>
 		<groupId>mks.myworkspace.cvhub</groupId>
-		<version>23.2</version>
+		<version>23.0</version>
 	</parent>
 <!-- 	<groupId>mks.myworkspace.cvhub</groupId> -->
 	<artifactId>cvhub-controller</artifactId>
@@ -23,28 +23,16 @@
             <artifactId>cvhub-common</artifactId>
             <version>${module.version}</version>
         </dependency>
-        
 		<dependency>
             <groupId>mks.myworkspace.cvhub</groupId>
             <artifactId>cvhub-impl</artifactId>
 <!--             <version>${module.version}</version> -->
         </dependency>
 		<dependency>
-            <groupId>mks.myworkspace.cvhub</groupId>
-            <artifactId>cvhub-biz</artifactId>
-             <version>${module.version}</version> 
-        </dependency>
-		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-            <version>1.18.32</version>
 		</dependency>
-		<dependency>
-    		<groupId>commons-io</groupId>
-    		<artifactId>commons-io</artifactId>
-    		<version>2.11.0</version>
-		</dependency>
-		
+
 		<!-- spring libraries -->
 		<dependency>
             <groupId>org.springframework</groupId>
@@ -68,27 +56,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
         </dependency>
-        <dependency>
-        <groupId>org.apache.poi</groupId>
-        <artifactId>poi</artifactId>
-        <version>5.2.3</version> <!-- Kiểm tra phiên bản mới nhất -->
-    </dependency>
-    <dependency>
-        <groupId>org.apache.poi</groupId>
-        <artifactId>poi-ooxml</artifactId>
-        <version>5.2.3</version> <!-- Kiểm tra phiên bản mới nhất -->
-    </dependency>
-    <!-- PDFBox -->
-    
-        <!-- Support JPA -->
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-commons</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-jpa</artifactId>
-		</dependency>
+		
 		<!-- Gson -->
 <!--         <dependency> -->
 <!--             <groupId>com.google.code.gson</groupId> -->
@@ -127,28 +95,6 @@
         </dependency>
 
 
-		<dependency>
-			<groupId>mks.myworkspace.cvhub</groupId>
-			<artifactId>cvhub-jpa</artifactId>
-			<version>23.2</version>
-		</dependency>
-		<dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-            <version>5.5.7</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-            <version>5.5.7</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-taglibs</artifactId>
-            <version>5.5.7</version>
-        </dependency>
 	</dependencies>
 	<build>
 		<!-- configure the build to use the standard maven structure -->
