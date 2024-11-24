@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>MyWorkspace Platform - Main page</title>
+    <th:block th:include="fragments/head"></th:block>
+</head>
+<body>
+    <th:block th:include="fragments/hmenu"></th:block>
+    
+    <table id="userTable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.email}"></td>
+        </tr>
+    </tbody>
+	</table>
+	<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+	<script>
+	    $(document).ready(function() {
+	        $('#userTable').DataTable();
+	    });
+	</script>
+
+    
+    <th:block th:include="fragments/about_dialog"></th:block>
+</body>
+<th:block th:include="fragments/javascript"></th:block>
+</html>
