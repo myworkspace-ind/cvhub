@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>The generated source code Web Application for Sakai</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" th:href="@{/resources/searchCondition/style.css}" />
+<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
+<link rel="stylesheet" th:href="@{/resources/home/jobRequest.css}" />
+</head>
+<body>
+	
+   <div class="container">
+    <div class="mt-5">
+        <h2 class="mb-3">Files</h2>
+        <div class="row">
+            <th:block th:each="file : ${cvFiles}">     
+            	<div class="col-md-2 text-center">
+					 <span th:if="${file.fileType.startsWith('image')}" class="mr-3">
+                        <!-- Hiển thị hình ảnh từ đường dẫn -->
+                        <img th:src="@{${file.filePath}}" alt="Image" width="100" height="100" />
+                    </span>
+
+                    <!-- Hiển thị tên file -->
+                    <span th:text="${file.fileName}"></span>
+                  
+                    <!-- Tạo link tải xuống nếu là PDF -->
+                    <th:block th:if="${file.fileType == 'application/pdf'}">
+                        <a th:href="@{${file.filePath}}" class="btn btn-sm btn-primary ml-3" download>Download</a>
+                    </th:block>
+				
+				</div>       
+                    <!-- Kiểm tra nếu file là hình ảnh -->
+                   
+ 
+            </th:block>
+    </div>
+    </div>
+</div>
+
+
+
+</body>
+<th:block th:include="fragments/javascript"></th:block>
+</html>
