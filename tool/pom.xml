@@ -4,12 +4,12 @@
 	<parent>
 		<artifactId>cvhub</artifactId>
 		<groupId>mks.myworkspace.cvhub</groupId>
-		<version>23.0</version>
+		<version>23.2</version>
         <relativePath>../pom.xml</relativePath>
 	</parent>
 	<groupId>mks.myworkspace.cvhub</groupId>
 	<artifactId>cvhub-tool</artifactId>
-<!-- 	<version>23.0</version> -->
+<!-- 	<version>23.2</version> -->
 	<packaging>war</packaging>
 
 	<dependencies>
@@ -114,7 +114,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
 					<warSourceDirectory>${basedir}/src/main/webapp</warSourceDirectory>
-					<ouputDirectory>${project.build.directory}</ouputDirectory>
+					<outputDirectory>${project.build.directory}</outputDirectory>
 				</configuration>
 			</plugin>
 		</plugins>
