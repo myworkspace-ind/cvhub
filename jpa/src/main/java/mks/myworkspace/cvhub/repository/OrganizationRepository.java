@@ -23,4 +23,5 @@ public interface OrganizationRepository extends JpaRepository<Organization,Long>
 	Organization findByUserId(@Param("userId") Long userId);
 	Page<Organization> findAll(@Param("pageRequest") Pageable pageRequest );
 	List<Organization> findByTitleContaining(String title);
+	Page<Organization> findByTitleContaining(@Param("pageRequest") Pageable pageRequest, String title);
 }
