@@ -10,7 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b94438c5-ade5-4c22-8a8a-599497b4c6c4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/controller/src/main/java/mks/myworkspace/cvhub/controller/CandidateReportController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/src/main/webapp/WEB-INF/templates/jobApplycationReport.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/biz/src/main/java/mks/myworkspace/cvhub/service/JobApplicationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/biz/src/main/java/mks/myworkspace/cvhub/service/JobApplicationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/biz/src/main/java/mks/myworkspace/cvhub/service/impl/JobApplicationImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/biz/src/main/java/mks/myworkspace/cvhub/service/impl/JobApplicationImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/src/main/java/mks/myworkspace/cvhub/controller/CandidateReportController.java" beforeDir="false" afterPath="$PROJECT_DIR$/controller/src/main/java/mks/myworkspace/cvhub/controller/JobApplyReportController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jpa/src/main/java/mks/myworkspace/cvhub/repository/JobApplicationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/jpa/src/main/java/mks/myworkspace/cvhub/repository/JobApplicationRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,25 +54,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev__binh2&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/binh/HCMUTE/CNPM/Project/github.com/myworkspace-ind/cvhub&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.14648438&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.javacompiler&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "dev__binh2",
+    "last_opened_file_path": "C:/Users/binh/HCMUTE/CNPM/Project/github.com/myworkspace-ind/cvhub/web/src/main/webapp/WEB-INF/templates",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.14648438",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.projectsettings.compiler.javacompiler",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\binh\HCMUTE\CNPM\Project\github.com\myworkspace-ind\cvhub\web\src\main\webapp\WEB-INF\templates" />
+    </key>
+  </component>
   <component name="RunManager" selected="Tomcat Server.Tomcat 9.0.96">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="cvhub" />
@@ -305,7 +316,8 @@
       <workItem from="1732206699364" duration="40000" />
       <workItem from="1732206782949" duration="469000" />
       <workItem from="1732340687482" duration="1828000" />
-      <workItem from="1732363191361" duration="463000" />
+      <workItem from="1732363191361" duration="776000" />
+      <workItem from="1732423100741" duration="5682000" />
     </task>
     <servers />
   </component>
