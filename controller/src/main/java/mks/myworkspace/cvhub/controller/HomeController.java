@@ -81,7 +81,7 @@ public class HomeController extends BaseController {
 	
 	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
 
-	/**
+	/**	
 	 * This method is called when binding the HTTP parameter to bean (or model).
 	 * 
 	 * @param binder
