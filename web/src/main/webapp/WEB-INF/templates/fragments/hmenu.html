@@ -1,34 +1,46 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <!-- Fragment: Horizontal menu -->
+<head>
+    <th:block th:include="fragments/head"></th:block>
+    <style>
+		 .dropdown:hover .dropdown-menu {
+		   display: block;
+		 }
+	</style>
+</head>
 <ul class="navIntraTool actionToolbar">
-  <li>  
+ 	<li>  
       <span title="List jobs" th:class="${isSelectedHome != null && isSelectedHome ? 'current' : ''}">
         <a th:href="@{/job}">Job</a>
       </span>
-  </li>
-  <li>  
+ 	</li>
+ 	<li>  
       <span title="List employee">
         <a th:href="@{/employee}">Employee</a>
       </span>
-  </li>
-  <li>  
+ 	</li>
+ 	<li>  
       <span title="Resources" th:class="${isSelectedResources != null && isSelectedResources ? 'current' : ''}">
         <a th:href="@{/resources}">Employer</a>
       </span>
-  </li>
-  <li>
+ 	</li>
+ 	<li>
       <span title="Configuration" th:class="${isSelectedConfiguration != null && isSelectedConfiguration ? 'current' : ''}">
         <a th:href="@{/configuration}">Configuration</a>
       </span>
-  </li>
- <li> 
-     <span title="Report">
-       <a id="report" th:href="@{/report}">Report</a>
+ 	</li>
+	<li> 
+     <span title="Report" class="dropdown">
+       <a id="report" href="#">Report</a>
+       <ul class="dropdown-menu">
+         <li><a th:href="@{/report/user}">Report User</a></li>
+       </ul>
      </span>
- </li>
- <li> 
+	</li>
+	<li> 
      <span title="About">
        <a id="about" href="#">About</a>
      </span>
- </li>
+	</li>
 </ul>
+</html>
