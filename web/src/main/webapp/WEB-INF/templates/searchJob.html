@@ -55,7 +55,7 @@
 				<li class="page-item"
 					th:classappend="${currentPage == 0} ? 'disabled'"><a
 					class="page-link"
-					th:href="${currentPage > 0} ? @{/jobrequests(page=${currentPage - 1})} : '#'"
+					th:href="${currentPage > 0} ? @{/jobrequests_kn(page=${currentPage - 1})} : '#'"
 					aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 				</a></li>
 
@@ -63,14 +63,14 @@
 				<li class="page-item"
 					th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
 					th:classappend="${pageNum == currentPage} ? 'active'"><a
-					class="page-link" th:href="@{/jobrequests(page=${pageNum})}"
+					class="page-link" th:href="@{/jobrequests_kn(page=${pageNum})}"
 					th:text="${pageNum + 1}"></a></li>
 
 				<!-- Next button -->
 				<li class="page-item"
 					th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
 					<a class="page-link"
-					th:href="${currentPage < totalPages - 1} ? @{/jobrequests(page=${currentPage + 1})} : '#'"
+					th:href="${currentPage < totalPages - 1} ? @{/jobrequests_kn(page=${currentPage + 1})} : '#'"
 					aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 				</a>
 				</li>
