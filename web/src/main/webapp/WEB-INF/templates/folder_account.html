@@ -15,7 +15,7 @@
 	<div class="container">
 		<h1 class="text-center mb-4">User Folders</h1>
 		<div class="row">
-			<th:block th:each="folder : ${userFolders}">
+			<th:block th:each="folder : ${cvFiles}">
 				<div class="col-md-2 text-center">
 					<!-- Icon thư mục -->
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -33,10 +33,6 @@
 			</th:block>
 		</div>
 	</div>
-
-
-
-
 </body>
 <th:block th:include="fragments/javascript"></th:block>
 </html>

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
@@ -22,62 +23,60 @@ import mks.myworkspace.cvhub.service.FolderUserService;
 @Service
 public class FolderUserImpl  implements FolderUserService {
 
-	 private static final String ROOT_DIR = "../../../../../../../../web/src/main/webapp/resources/";
-	
-	 @Autowired
-	 private ResourceLoader resourceLoader;
-	 
-	 
+	  @Autowired
+	    private ResourceLoader resourceLoader;
+	  
 	 
 
 	    @Override
-	    public List<String> getUserFolders() {
-	    	  Resource resource = resourceLoader.getResource("classpath:main/webapp/resources/userCV");
+	    public List<String> getUserFolders() {  	  
+	    	Resource resource = resourceLoader.getResource("resources/userCV");
+	    	 List<String> subFolders = new ArrayList<>();
+	         try {
+	             File rootFolder = resource.getFile(); // Lấy đối tượng File
+	             if (rootFolder.exists() && rootFolder.isDirectory()) {
+	                 // Lấy danh sách thư mục con
+	                 File[] directories = rootFolder.listFiles(File::isDirectory);
 
-	          try {
-	              File file = resource.getFile();
-	              System.out.println("File path: " + file.getAbsolutePath());
-	          } catch (IOException e) {
-	              System.out.println("Không tìm thấy tệp: " + e.getMessage());
-	          }
-	    	
-	    	
-	    	File rootFolder = new File(ROOT_DIR);
-	    	
-	        
-	    	if (!rootFolder.exists()) {
-	    	
-	    	    rootFolder.mkdirs(); // Tạo thư mục gốc nếu chưa tồn tại
-	    	   
-	    	}
-	    	
-	    	// Lấy danh sách thư mục con
-	    	File[] directories = rootFolder.listFiles(File::isDirectory);
-	    
-	    	if (directories == null || directories.length == 0) {
-	    		System.out.println(Arrays.toString(directories));
-	    	   
-	    	}
+	                 if (directories != null) {
+	                     for (File dir : directories) {
+	                         subFolders.add(dir.getName()); // Lấy tên từng thư mục con
+	                     }
+	                 }
+	             } else {
+	                 System.out.println("Thư mục không tồn tại hoặc không phải là thư mục.");
+	             }
 
-	    	// Chuyển danh sách thư mục thành danh sách tên
-	    	List<String> folderNames = Arrays.stream(directories)
-	    	        .map(File::getName)
-	    	        .collect(Collectors.toList());
+	         } catch (IOException e) {
+	             System.out.println("Không tìm thấy tệp: " + e.getMessage());
+	         }
 
-	    	return folderNames;
+	         return subFolders;
 
 	    }
 
 	    @Override
 	    public List<String> getFilesByUser(String username) {
-	        File userFolder = new File(ROOT_DIR + "/" + username);
-	        if (!userFolder.exists()) {
-	            return Collections.emptyList();
+	        // Đường dẫn tới thư mục của username
+	        String userFolderPath = "resources/userCV/" + username;
+
+	        // Lấy tài nguyên
+	        Resource resource = resourceLoader.getResource(userFolderPath);
+
+	        List<String> fileNames = new ArrayList<>();
+	        try {
+	            // Lấy danh sách file trong thư mục
+	            File userFolder = resource.getFile();
+	            System.out.print(userFolder);
+	            if (userFolder.exists() && userFolder.isDirectory()) {
+	                fileNames = Arrays.asList(userFolder.list());
+	            }
+	        } catch (IOException e) {
+	            System.out.println("Không tìm thấy tệp hoặc thư mục: " + e.getMessage());
 	        }
 
-	        // Lấy danh sách tệp trong thư mục
-	        String[] files = userFolder.list((current, name) -> new File(current, name).isFile());
-	        return files != null ? Arrays.asList(files) : Collections.emptyList();
-	    }	
+	        return fileNames;
+	    }
+	    
  
 }

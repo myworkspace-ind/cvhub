@@ -65,6 +65,7 @@ public class FolderAccountPhuHao extends BaseController{
 	    	
 	    	ModelAndView mav = new ModelAndView("folder_account_detail");
 	    	List<String> files = fileSystemService.getFilesByUser(username);
+	    	System.out.print(files);
 		    mav.addObject("username", username);   
 	        mav.addObject("cvFiles", files);
 	        
@@ -76,7 +77,7 @@ public class FolderAccountPhuHao extends BaseController{
 		
 			ModelAndView mav = new ModelAndView("folder_account");
 			List<String> folders = fileSystemService.getUserFolders();  
-			System.out.print(folders);
+			
 	        mav.addObject("cvFiles", folders);
 
 	        return mav;
