@@ -30,8 +30,6 @@ public class SearchJobImpl_tuan_22110450 implements SearchJobService_tuan_221104
 		Sort sorting = getSortOrder(sort); // Xác định thứ tự sắp xếp
 		Pageable pageable = PageRequest.of(page, size, sorting);
 
-//		// Sử dụng phương thức tìm kiếm tùy chỉnh trong repository
-//		return jobRepository.findBySearchCriteria(locationCD, industryCD, keyword, keyword, sorting);
 		// Sử dụng phương thức tìm kiếm tùy chỉnh trong repository
 		try {
 
@@ -42,57 +40,7 @@ public class SearchJobImpl_tuan_22110450 implements SearchJobService_tuan_221104
 			return null;
 		}
 
-//		String jpql = buildQuery(keyword, locationCD, industryCD, sorting, search);
-//		return executeQuery(jpql, keyword, locationCD, industryCD);
 	}
-
-//	@Override
-//	public List<JobRequest> searchJobRequest(String keyword, int locationCD, Long industryCD) {
-//		String jpql = buildQuery(keyword, locationCD, industryCD);
-//		return executeQuery(jpql, keyword, locationCD, industryCD);
-//	}
-
-//	private List<JobRequest> executeQuery(String jpql, String keyword, int locationCD, Long industryCD) {
-//		TypedQuery<JobRequest> query = entityManager.createQuery(jpql, JobRequest.class);
-//		if (keyword != null && !keyword.isEmpty()) {
-//			query.setParameter("keyword", "%" + keyword.toLowerCase() + "%");
-//		}
-//		if (locationCD > 0) {
-//			query.setParameter("locationCD", locationCD);
-//		}
-//		if (industryCD > 0) {
-//			query.setParameter("industryCD", industryCD);
-//		}
-//
-//		return query.getResultList();
-//	}
-//
-//	private String buildQuery(String keyword, int locationCD, Long industryCD, Sort sort, boolean search) {
-//		StringBuilder queryBuilder = new StringBuilder("SELECT jr FROM JobRequest jr");
-//		List<String> conditions = new ArrayList<>();
-//
-//		if (keyword != null && !keyword.isEmpty() && search) {
-//			// tim theo ten job voi search la true
-//			conditions.add("LOWER(jr.title) LIKE LOWER(:keyword)");
-//		}
-//		else{
-//			// tim theo ten cong ty voi search là false
-//			conditions.add("LOWER(jr.title) LIKE LOWER(:keyword)");
-//		}
-//		if (locationCD > 0) {
-//			conditions.add("jr.location.id = :locationCD");
-//		}
-//		if (industryCD > 0) {
-//			conditions.add("jr.jobRole.id = :industryCD");
-//		}
-//
-//		if (!conditions.isEmpty()) {
-//			queryBuilder.append(" WHERE ");
-//			queryBuilder.append(String.join(" AND ", conditions));
-//		}
-//
-//		return queryBuilder.toString();
-//	}
 
 	private Sort getSortOrder(String sort) {
 		switch (sort) {

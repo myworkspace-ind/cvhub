@@ -142,8 +142,6 @@ public class Search_Tuan_22110450 extends BaseController {
     @ResponseBody // Dùng @ResponseBody để trả về dữ liệu JSON
     public ResponseEntity<Map<String, Object>> searchJobsSort(@ModelAttribute JobSearch_tuan_DTO jobSearchDTO, HttpServletRequest request,
                                                               HttpSession httpSession) {
-//        return searchJobImpl.searchJobRequest(jobSearchDTO.getKeyword(),
-//                jobSearchDTO.getLocation(), jobSearchDTO.getIndustry(), jobSearchDTO.getSort(), jobSearchDTO.isBool(), jobSearchDTO.getPage(), jobSearchDTO.getSize());
         Page<JobRequest> jobPage = searchJobImpl.searchJobRequest(jobSearchDTO.getKeyword(),
                 jobSearchDTO.getLocation(), jobSearchDTO.getIndustry(), jobSearchDTO.getSort(), jobSearchDTO.isBool(), jobSearchDTO.getPage(), jobSearchDTO.getSize());
 
