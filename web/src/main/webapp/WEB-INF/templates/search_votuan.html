@@ -6,11 +6,15 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet"
           href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <!--    <link rel="stylesheet" th:href="@{/resources/searchCondition/style.css}" />-->
+<!--        <link rel="stylesheet" th:href="@{/resources/searchCondition/style.css}" />-->
+
+<!--    <th:block th:include="fragments/head"></th:block>-->
+
     <link rel="stylesheet" th:href="@{/resources/search_tuan_22110450/style.css}"/>
     <link rel="stylesheet" th:href="@{/resources/home/style.css}"/>
     <link rel="stylesheet" th:href="@{/resources/home/jobRequest.css}"/>
 </head>
+<!--<th:block th:include="fragments/hmenu"></th:block>-->
 <body>
 
 <div th:replace="~{fragments/header :: header}"></div>
@@ -27,7 +31,7 @@
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="Enter text" id="searchKeyword">
                 <span class="input-group-btn">
-                        <button id="searchButton" class="btn btn-default" type="button" onclick="searchJobs">Search</button>
+                        <button id="searchButton" class="btn btn-default" type="button" onclick="searchJobs(0)">Search</button>
                     </span>
             </div>
 
@@ -52,9 +56,9 @@
                 </div>
                 <div class="select-sort-advanced">
                     <select id="sort-advanced" name="sort-advanced" tabindex="-1" class="select2-hidden-accessible"
-                            aria-hidden="true">
-                        <option value="top_related" sort-value="top_related" class="option-item-sort" selected="">
-                            Search by AI
+                            aria-hidden="true" onchange = "searchJobs(0)">
+                        <option value="top_related" sort-value="new" class="option-item-sort" selected="">
+                            Sắp xếp
                         </option>
                         <option value="new" sort-value="new" class="option-item-sort">
                             Ngày đăng
@@ -65,17 +69,17 @@
                         <option value="high_salary" sort-value="high_salary" class="option-item-sort">
                             Lương cao đến thấp
                         </option>
-                        <option value="urgent" sort-value="urgent" class="option-item-sort">
-                            Cần tuyển gấp
+                        <option value="experientia" sort-value="experientia" class="option-item-sort">
+                            Kinh nghiệm thấp đến cao
                         </option>
                     </select>
 
-                    <select name="location" id="locationSelect" class="option-item-sort" style="width: 190px">
+                    <select name="location" id="locationSelect" class="option-item-sort" style="width: 190px" onchange = "searchJobs(0)">
                         <option value="0">Tất cả tỉnh/thành phố</option>
 
                     </select>
 
-                    <select name="industry" id="jobRoleSelect" class="option-item-sort">
+                    <select name="industry" id="jobRoleSelect" class="option-item-sort" onchange = "searchJobs(0)">
                         <option value="0">Tất cả ngành nghề</option>
 
                         </option>
@@ -103,80 +107,52 @@
                     </tr>
                     </thead>
                     <tbody id="job-table-body">
-                    <!-- Duyệt qua danh sách sản phẩm -->
-                    <tr th:each="job : ${jobrequests}">
-                        <td><img
-                                th:src="@{/images/{logoId}(logoId=${job.organization.logoID})}"
-                                alt="Logo" class="img-responsive"></td>
-                        <td th:text="${job.title}"></td>
-                        <td th:text="${job.organization.title}"></td>
-                        <td th:text="${job.location.name}"></td>
-                        <td th:text="${job.jobRole.title}"></td>
-                        <td th:text="${job.experience}"></td>
-                        <td th:text="${job.salary}"></td>
-                        <td>
-                            <button class="btn btn-success">Chi tiết</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><img
-                                src="https://cdn-new.topcv.vn/unsafe/150x/https://static.topcv.vn/company_logos/cong-ty-tnhh-mtv-khach-san-quoc-te-binh-minh-637358ca163c4.jpg"
-                                alt="Logo" class="img-responsive"></td>
-                        <td>Java Developer (Middle/Senior)</td>
-                        <td>SECURE FINANCIAL CORP</td>
-                        <td>Tuyên Quang</td>
-                        <td>3 years</td>
-                        <td>$1000</td>
-                        <td></td>
-                        <td>
-                            <button class="btn btn-success">Chi tiết</button>
-                        </td>
-                    </tr>
+<!--                    nội dung hiển thị ở đây-->
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <nav aria-label="Page navigation" class="mt-5">
-        <ul class="pagination justify-content-center">
-            <!-- Previous button -->
-            <li class="page-item"
-                th:classappend="${currentPage == 0} ? 'disabled'"><a
-                    class="page-link"
-                    th:href="${currentPage > 0} ? @{/jobrequests(page=${currentPage - 1})} : '#'"
-                    aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-            </a></li>
-
-            <!-- Page numbers -->
-            <li class="page-item"
-                th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
-                th:classappend="${pageNum == currentPage} ? 'active'"><a
-                    class="page-link" th:href="@{/jobrequests(page=${pageNum})}"
-                    th:text="${pageNum + 1}"></a></li>
-
-            <!-- Next button -->
-            <li class="page-item"
-                th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
-                <a class="page-link"
-                   th:href="${currentPage < totalPages - 1} ? @{/jobrequests(page=${currentPage + 1})} : '#'"
-                   aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+    <div id="pagination" class="pagination justify-content-center"></div>
 </div>
+
 <script>
-    document.getElementById('searchButton').addEventListener('click', searchJobs);
-    function searchJobs() {
+    let currentPage = 0; // Biến lưu số trang hiện tại
+    const pageSize = 5; // Số lượng công việc mỗi trang
+
+    document.getElementById('searchButton').addEventListener('click', function () {
+        searchJobs(0); // Khi nhấn nút tìm kiếm, luôn bắt đầu từ trang đầu tiên
+    });
+
+    function searchJobs(page) {
         const keyword = document.getElementById('searchKeyword').value;
         const location = document.getElementById('locationSelect').value;
         const industry = document.getElementById('jobRoleSelect').value;
-        const items = document.querySelectorAll('.box-type-keyword-below__list--item');
-        const selectedItem = Array.from(items).find(item => item.classList.contains('selected'))?.getAttribute('data-type-keyword');
+        const sort = document.getElementById('sort-advanced').value;
 
-        const params = new URLSearchParams({ keyword, location, industry, type: selectedItem });
-        fetch(`/cvhub-web/search_job?${params}`)
+        // Tìm phần tử có class 'selected'
+        const selectedItem = document.querySelector('.box-type-keyword-below__list--item.selected');
+        let bool;
+        if (selectedItem) {
+            const keyword = selectedItem.getAttribute('data-type-keyword');
+            bool = keyword === "2" ? 1 : 0;
+        } else {
+            console.log("Không có phần tử nào được chọn.");
+            bool = 0; // Giá trị mặc định
+        }
+
+        const params = new URLSearchParams({
+            keyword,
+            location,
+            industry,
+            sort,
+            bool,
+            page,
+            size: pageSize,
+        });
+
+        fetch(`/cvhub-web/search_job_sort_tuan?${params}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Failed to fetch data');
@@ -189,8 +165,9 @@
                 const tableBody = document.querySelector('#job-table-body');
                 tableBody.innerHTML = ''; // Xóa tất cả dữ liệu cũ trong bảng
 
-                if (data && data.length > 0) {
-                    data.forEach(job => {
+                // Hiển thị danh sách công việc
+                if (data.jobs && data.jobs.length > 0) {
+                    data.jobs.forEach(job => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
                         <td><img
@@ -203,14 +180,17 @@
                         <td>${job.experience}</td>
                         <td>${job.salary}</td>
                         <td>
-                            <button class="btn btn-success">Chi tiết</button>
+                            <a href="/cvhub-web/jobrequests/${job.id}" class="btn btn-success">Chi tiết</a>
                         </td>
                     `;
-                        tableBody.appendChild(row); // Thêm dòng vào bảng
+                        tableBody.appendChild(row);
                     });
                 } else {
                     tableBody.innerHTML = '<tr><td colspan="8">Không có công việc nào phù hợp.</td></tr>';
                 }
+
+                // Cập nhật phân trang
+                renderPagination(data.currentPage, data.totalPages);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -219,6 +199,38 @@
             });
     }
 
+    function renderPagination(currentPage, totalPages) {
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = ''; // Xóa nội dung phân trang cũ
+
+        // Nút Previous
+        if (currentPage > 0) {
+            const prevButton = document.createElement('button');
+            prevButton.textContent = 'Previous';
+            prevButton.innerHTML = '<span class="glyphicon glyphicon-chevron-left"></span>'; // Icon
+            prevButton.classList.add('btn', 'btn-primary', 'page-item', 'page-link');
+            prevButton.addEventListener('click', () => searchJobs(currentPage - 1));
+            pagination.appendChild(prevButton);
+        }
+
+        // Hiển thị thông tin trang
+        const pageInfo = document.createElement('span');
+        pageInfo.textContent = ` Page ${currentPage + 1} of ${totalPages} `;
+        pageInfo.classList.add('mx-2', 'page-info');
+        pagination.appendChild(pageInfo);
+
+        // Nút Next
+        if (currentPage + 1 < totalPages) {
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Next';
+            nextButton.innerHTML = '<span class="glyphicon glyphicon-chevron-right"></span>'; // Icon
+            nextButton.classList.add('btn', 'btn-primary', 'page-item', 'page-link');
+            nextButton.addEventListener('click', () => searchJobs(currentPage + 1));
+            pagination.appendChild(nextButton);
+        }
+    }
+
+    searchJobs(0);
 </script>
 </body>
 <th:block th:include="fragments/javascript"></th:block>
