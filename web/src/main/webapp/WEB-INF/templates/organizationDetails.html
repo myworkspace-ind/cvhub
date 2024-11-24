@@ -29,8 +29,10 @@
 					<button id="toggleJobForm" class="follow-btn">Quản lý CV
 						đã ứng tuyển</button>
 				</form>
-				<button id="toggleJobForm" class="follow-btn">Thêm thông
-					tin tuyển dụng</button>
+				<!--thêm vào ngày 24/11/2024 để tạo action mở form addJobPosting.html-->
+				<form th:action="@{/organization/{orgId}/addJobPosting(orgId=${organization.id})}" method="get">
+					<button id="toggleJobForm" class="follow-btn">Thêm thông tin tuyển dụng</button>
+				</form>
 				<button id="toggleJobForm2" class="follow-btn">Sửa thông
 					tin công ty</button>
 			</div>

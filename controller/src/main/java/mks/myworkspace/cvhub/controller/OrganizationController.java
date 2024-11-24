@@ -227,6 +227,24 @@ public class OrganizationController extends BaseController {
 			return mav;
 		}
 	}
+	
+	// hàm thêm vào ngày 24/11/2024 để tạo chức năng hiển thị form addJobPosting.html
+	@RequestMapping(value = { "/organization/{id}/addJobPosting" }, method = RequestMethod.GET)
+	public ModelAndView AddJobPostings(@ModelAttribute OrganizationDTO organizationDTO, @PathVariable("id") long id,
+			HttpServletRequest request, HttpSession httpSession) {
+		try {
+			// Chuyển hướng đến trang tổ chức
+			ModelAndView mav = new ModelAndView("organization/addJobPosting.html");
+			return mav;
+		}
+		catch (Exception e) {
+			// Xử lý lỗi
+			ModelAndView mav = new ModelAndView("error");
+			mav.addObject("errorMessage", "Có lỗi xảy ra khi add job posting: " + e.getMessage());
+			return mav;
+		}
+	}
+	
 	public static List<User> removeDuplicatesManually(List<User> list) {
         List<User> result = new ArrayList<>();
         for (User item : list) {
