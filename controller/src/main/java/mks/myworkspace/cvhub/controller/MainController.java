@@ -76,10 +76,6 @@ public class MainController extends BaseController {
 
 		ModelAndView mav = new ModelAndView("organization/organizationReport");
 		Page<Organization> organizationPage = organizationService.getRepo().findAll(PageRequest.of(page, size));
-		// Organization organization =
-		// organizationService.getRepo().findById(id).orElse(null);
-		// List<Organization> organization =organizationService.getRepo().findAll();
-		// mav.addObject("organizations", organization);
 		mav.addObject("organizations", organizationPage.getContent());
 		mav.addObject("currentPage", page); // Trang hiện tại
 		mav.addObject("totalPages", organizationPage.getTotalPages()); // Tổng số trang
@@ -91,7 +87,7 @@ public class MainController extends BaseController {
 	  public ModelAndView searchOrganizations(@RequestParam(value = "companyName", required = false) String companyName, 
 	 @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, HttpServletRequest request,
 	  HttpSession httpSession) { ModelAndView mav = new ModelAndView("organization/organizationReport");
-	 // Sử dụng giá trị companyName để tìm kiếm tổ chức 
+
 	 List<Organization>searchResults = organizationService.searchByTitle(companyName);
 	 Page<Organization> organizationPage = new PageImpl<>(searchResults,PageRequest.of(page, size), searchResults.size()); // Thêm kết quả vào
 	 mav.addObject("organizations", organizationPage.getContent());
