@@ -108,4 +108,9 @@ h2 {
   background-color: #218838; /* Màu khi hover */
 }
 
-
+.pagination {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    flex-grow: 1; /* Đảm bảo chiếm đủ không gian trung tâm */
+}
