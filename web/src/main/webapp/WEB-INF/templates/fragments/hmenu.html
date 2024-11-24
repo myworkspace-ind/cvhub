@@ -1,22 +1,25 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <!-- Fragment: Horizontal menu -->
-<ul class="navIntraTool actionToolbar">
-  <li>  
+
+<div class="d-flex justify-content-between">
+  <!-- Left-aligned menu items -->
+  <ul class="navIntraTool actionToolbar">
+    <li>  
       <span title="List jobs" th:class="${isSelectedHome != null && isSelectedHome ? 'current' : ''}">
         <a th:href="@{/job}">Job</a>
       </span>
-  </li>
-  <li>  
+    </li>
+    <li>  
       <span title="List employee">
         <a th:href="@{/employee}">Employee</a>
       </span>
-  </li>
-  <li>  
+    </li>
+    <li>  
       <span title="Resources" th:class="${isSelectedResources != null && isSelectedResources ? 'current' : ''}">
         <a th:href="@{/resources}">Employer</a>
       </span>
-  </li>
-  <li>
+    </li>
+    <li>
       <span title="Configuration" th:class="${isSelectedConfiguration != null && isSelectedConfiguration ? 'current' : ''}">
         <a th:href="@{/configuration}">Configuration</a>
       </span>
@@ -32,3 +35,19 @@
      </span>
  </li>
 </ul>
+  
+  <!-- Right-aligned dropdown button -->
+  <ul class="nav mt-2 me-3">
+    <li class="dropdown">
+      <button button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        username
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><a class="dropdown-item small" href="#">View Profile</a></li>
+        <li><a class="dropdown-item small" href="#">Setting</a></li>
+        <li><a class="dropdown-item small" href="#">Log out</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
