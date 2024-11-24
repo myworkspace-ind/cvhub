@@ -180,3 +180,78 @@
                 max-width: 100%;
             }
         }
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 14px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.alert::before {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.alert-success::before {
+    content: "\f058"; /* FontAwesome check circle icon */
+    color: #28a745;
+}
+
+.alert-danger::before {
+    content: "\f057"; /* FontAwesome times circle icon */
+    color: #dc3545;
+}
+
+/* Animation cho alert */
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.alert {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Thêm nút đóng alert */
+.alert .close {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.7;
+    background: none;
+    border: none;
+    font-size: 20px;
+}
+
+.alert .close:hover {
+    opacity: 1;
+}
