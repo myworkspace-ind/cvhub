@@ -21,7 +21,9 @@ package mks.myworkspace.cvhub.controller;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -138,11 +140,19 @@ public class Search_Tuan_22110450 extends BaseController {
 
     @RequestMapping(value = "/search_job_sort_tuan", method = RequestMethod.GET)
     @ResponseBody // Dùng @ResponseBody để trả về dữ liệu JSON
-    public List<JobRequest> searchJobsSort(@ModelAttribute JobSearch_tuan_DTO jobSearchDTO, HttpServletRequest request,
-                                           HttpSession httpSession) {
-        return searchJobImpl.searchJobRequest(jobSearchDTO.getKeyword(),
-                jobSearchDTO.getLocation(), jobSearchDTO.getIndustry(), jobSearchDTO.getSort(), jobSearchDTO.isBool());
+    public ResponseEntity<Map<String, Object>> searchJobsSort(@ModelAttribute JobSearch_tuan_DTO jobSearchDTO, HttpServletRequest request,
+                                                              HttpSession httpSession) {
+//        return searchJobImpl.searchJobRequest(jobSearchDTO.getKeyword(),
+//                jobSearchDTO.getLocation(), jobSearchDTO.getIndustry(), jobSearchDTO.getSort(), jobSearchDTO.isBool(), jobSearchDTO.getPage(), jobSearchDTO.getSize());
+        Page<JobRequest> jobPage = searchJobImpl.searchJobRequest(jobSearchDTO.getKeyword(),
+                jobSearchDTO.getLocation(), jobSearchDTO.getIndustry(), jobSearchDTO.getSort(), jobSearchDTO.isBool(), jobSearchDTO.getPage(), jobSearchDTO.getSize());
 
+        Map<String, Object> response = new HashMap<>();
+        response.put("jobs", jobPage.getContent());
+        response.put("currentPage", jobPage.getNumber());
+        response.put("totalPages", jobPage.getTotalPages());
+        response.put("totalItems", jobPage.getTotalElements());
+        return ResponseEntity.ok(response);
     }
 
 }

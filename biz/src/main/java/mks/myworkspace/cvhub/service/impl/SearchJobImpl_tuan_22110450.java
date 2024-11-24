@@ -5,6 +5,9 @@ import mks.myworkspace.cvhub.repository.JobRequestRepository_tuan_22110450;
 import mks.myworkspace.cvhub.service.SearchJobService;
 import mks.myworkspace.cvhub.service.SearchJobService_tuan_22110450;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -23,15 +26,16 @@ public class SearchJobImpl_tuan_22110450 implements SearchJobService_tuan_221104
 	private JobRequestRepository_tuan_22110450 jobRepository;
 
 	@Override
-	public List<JobRequest> searchJobRequest(String keyword, int locationCD, Long industryCD, String sort, boolean search) {
+	public Page<JobRequest> searchJobRequest(String keyword, int locationCD, Long industryCD, String sort, boolean search, int page, int size) {
 		Sort sorting = getSortOrder(sort); // Xác định thứ tự sắp xếp
+		Pageable pageable = PageRequest.of(page, size, sorting);
 
 //		// Sử dụng phương thức tìm kiếm tùy chỉnh trong repository
 //		return jobRepository.findBySearchCriteria(locationCD, industryCD, keyword, keyword, sorting);
 		// Sử dụng phương thức tìm kiếm tùy chỉnh trong repository
 		try {
 
-			return jobRepository.findBySearchCriteria(locationCD, industryCD, keyword, keyword, search, sorting);
+			return jobRepository.findBySearchCriteria(locationCD, industryCD, keyword, keyword, search, pageable);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

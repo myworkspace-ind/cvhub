@@ -13,4 +13,6 @@ public class JobSearch_tuan_DTO {
     private Long industry;
     private String sort;
     private boolean bool; // true tim kiem theo ten job false tim kiem theo ten cong ty
+    private int page;
+    private int size;
 }
