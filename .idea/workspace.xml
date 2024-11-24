@@ -10,13 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b94438c5-ade5-4c22-8a8a-599497b4c6c4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/web/src/main/webapp/WEB-INF/templates/jobApplycationReport.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/biz/src/main/java/mks/myworkspace/cvhub/service/JobApplicationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/biz/src/main/java/mks/myworkspace/cvhub/service/JobApplicationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/biz/src/main/java/mks/myworkspace/cvhub/service/impl/JobApplicationImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/biz/src/main/java/mks/myworkspace/cvhub/service/impl/JobApplicationImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/src/main/java/mks/myworkspace/cvhub/controller/CandidateReportController.java" beforeDir="false" afterPath="$PROJECT_DIR$/controller/src/main/java/mks/myworkspace/cvhub/controller/JobApplyReportController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jpa/src/main/java/mks/myworkspace/cvhub/repository/JobApplicationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/jpa/src/main/java/mks/myworkspace/cvhub/repository/JobApplicationRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/main/webapp/WEB-INF/templates/jobApplycationReport.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/webapp/WEB-INF/templates/jobApplycationReport.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -317,7 +312,7 @@
       <workItem from="1732206782949" duration="469000" />
       <workItem from="1732340687482" duration="1828000" />
       <workItem from="1732363191361" duration="776000" />
-      <workItem from="1732423100741" duration="5682000" />
+      <workItem from="1732423100741" duration="6860000" />
     </task>
     <servers />
   </component>
