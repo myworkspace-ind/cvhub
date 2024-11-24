@@ -3,20 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>The generated source code Web Application for Sakai</title>
-
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
-
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-
-
-    <!--    <link rel="stylesheet" th:href="@{/resources/searchCondition/style.css}" />-->
     <link rel="stylesheet" th:href="@{/resources/search_tuan_22110450/style.css}"/>
     <link rel="stylesheet" th:href="@{/resources/home/style.css}"/>
     <link rel="stylesheet" th:href="@{/resources/home/jobRequest.css}"/>
-
-
-
 </head>
 <body>
 
@@ -30,9 +21,9 @@
         </div>
     </div>
 
+    <!-- Filter Form -->
     <form id="searchForm" method="GET" th:action="@{/jobrequestsbytime/filter}">
         <div class="row mb-3">
-
             <div class="col-md-4">
                 <label for="timePeriod">Thời gian:</label>
                 <select id="timePeriod" name="timePeriod" class="form-control">
@@ -41,47 +32,70 @@
                     <option value="month" th:attr="selected=${timePeriod == 'month'}">Tháng này</option>
                 </select>
             </div>
-
             <div class="col-md-4 text-center">
                 <button type="submit" id="searchButton" class="btn btn-primary btn-block">Tìm kiếm</button>
             </div>
         </div>
     </form>
 
+    <!-- Job Request Table -->
     <div class="table-responsive">
         <table id="jobDataTable" class="table table-hover table-bordered">
             <thead class="table-light">
-            <tr>
-                <th>Logo</th>
-                <th>Job Title</th>
-                <th>Company Name</th>
-                <th>Location</th>
-                <th>Job Role</th>
-                <th>Experience(Year)</th>
-                <th>Salary</th>
-                <th>Action</th>
-            </tr>
+                <tr>
+                    <th>Logo</th>
+                    <th>Job Title</th>
+                    <th>Company Name</th>
+                    <th>Location</th>
+                    <th>Job Role</th>
+                    <th>Experience(Year)</th>
+                    <th>Salary</th>
+                    <th>Action</th>
+                </tr>
             </thead>
-            <tbody id="job-table-body" th:each="job : ${jobrequests}">
-            <tr>
-                <td>
-                    <img
-                        th:src="@{/images/{logoId}(logoId=${job.organization.logoID})}"
-                        alt="Logo" class="img-responsive">
-                </td>
-                <td th:text="${job.title}"></td>
-                <td th:text="${job.organization.title}"></td>
-                <td th:text="${job.location.name}"></td>
-                <td th:text="${job.jobRole.title}"></td>
-                <td th:text="${job.experience}"></td>
-                <td th:text="${job.salary}"></td>
-                <td>
-                    <a th:href="@{/jobrequests/{id}(id=${job.id})}" class="btn btn-info btn-sm">View</a>
-                </td>
-            </tr>
+            <tbody th:each="job : ${jobrequests}">
+                <tr>
+                    <td>
+                        <img th:src="@{/images/{logoId}(logoId=${job.organization.logoID})}" alt="Logo" class="img-responsive">
+                    </td>
+                    <td th:text="${job.title}"></td>
+                    <td th:text="${job.organization.title}"></td>
+                    <td th:text="${job.location.name}"></td>
+                    <td th:text="${job.jobRole.title}"></td>
+                    <td th:text="${job.experience}"></td>
+                    <td th:text="${job.salary}"></td>
+                    <td>
+                        <a th:href="@{/jobrequests/{id}(id=${job.id})}" class="btn btn-info btn-sm">Chi tiết</a>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation" class="mt-5">
+        <ul class="pagination justify-content-center">
+            <!-- Previous button -->
+            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link" th:href="@{ /jobrequestsbytime/filter(page=${currentPage - 1}, timePeriod=${timePeriod}) }" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <!-- Page numbers -->
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${pageNum == currentPage} ? 'active'">
+                <a class="page-link" th:href="@{ /jobrequestsbytime/filter(page=${pageNum}, timePeriod=${timePeriod}) }" th:text="${pageNum + 1}"></a>
+            </li>
+
+            <!-- Next button -->
+            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                <a class="page-link" th:href="@{ /jobrequestsbytime/filter(page=${currentPage + 1}, timePeriod=${timePeriod}) }" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
 </div>
 
 <!-- Scripts -->
@@ -93,8 +107,10 @@
         // Initialize DataTable
         $('#jobDataTable').DataTable({
             "paging": true,
-            "searching": true,
-            "info": true
+            "searching": false,
+            "info": false,
+            "lengthChange": false  
+
         });
 
         // Submit form on search button click

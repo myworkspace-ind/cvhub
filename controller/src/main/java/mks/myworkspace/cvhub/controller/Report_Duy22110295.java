@@ -114,18 +114,19 @@ public class Report_Duy22110295 extends BaseController{
         // Lấy dữ liệu từ repository
         Page<JobRequest> jobRequestPage = jobRequestRepository.findByCreatedDateAfter(startDateAsDate, pageRequest);
 
-// In ra console để kiểm tra
-        System.out.println("===== Job Requests Fetched =====");
-        jobRequestPage.getContent().forEach(job -> {
-            System.out.println("ID: " + job.getId());
-            System.out.println("Title: " + job.getTitle());
-            System.out.println("Created Date: " + job.getCreatedDate());
-            System.out.println("Organization: " + job.getOrganization().getTitle());
-            System.out.println("Location: " + job.getLocation().getName());
-            System.out.println("Job Role: " + job.getJobRole().getTitle());
-            System.out.println("----------------------------------");
-        });
+		/*
+		 * // In ra console để kiểm tra
+		 * System.out.println("===== Job Requests Fetched =====");
+		 * jobRequestPage.getContent().forEach(job -> { System.out.println("ID: " +
+		 * job.getId()); System.out.println("Title: " + job.getTitle());
+		 * System.out.println("Created Date: " + job.getCreatedDate());
+		 * System.out.println("Organization: " + job.getOrganization().getTitle());
+		 * System.out.println("Location: " + job.getLocation().getName());
+		 * System.out.println("Job Role: " + job.getJobRole().getTitle());
+		 * System.out.println("----------------------------------"); });
+		 */
 
+		//System.out.println("page total: " + jobRequestPage.getTotalPages());
 
         mav.addObject("jobrequests", jobRequestPage.getContent());
         mav.addObject("totalPages", jobRequestPage.getTotalPages());
