@@ -168,7 +168,13 @@ public class SakaiProxyImpl implements SakaiProxy {
     
 	@Override
 	public boolean isUserRoleSwapped() {
-		return securityService.isUserRoleSwapped();
+		try {
+			return securityService.isUserRoleSwapped();
+		} catch (IdUnusedException e) {
+			log.error("Could not call method isUserRoleSwapped()", e);
+		}
+		
+		return false;
 	}
 
 	/**

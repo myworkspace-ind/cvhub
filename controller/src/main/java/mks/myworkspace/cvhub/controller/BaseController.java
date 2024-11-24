@@ -31,7 +31,6 @@ import javax.servlet.http.HttpSession;
 
 import org.sakaiproject.component.cover.ComponentManager;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -43,7 +42,6 @@ import mks.myworkspace.cvhub.logic.SakaiProxy;
  * Handles requests for the application home page.
  */
 @Slf4j
-@SessionAttributes({"userDisplayName", "userEid", "userEmail"})
 public class BaseController {
 
     @Setter
