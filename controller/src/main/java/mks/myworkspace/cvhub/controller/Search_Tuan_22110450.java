@@ -21,12 +21,17 @@ package mks.myworkspace.cvhub.controller;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import mks.myworkspace.cvhub.controller.model.JobSearch_tuan_DTO;
+import mks.myworkspace.cvhub.service.*;
+import mks.myworkspace.cvhub.service.impl.SearchJobImpl_tuan_22110450;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
@@ -57,10 +62,6 @@ import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
 import mks.myworkspace.cvhub.repository.JobRequestRepository;
-import mks.myworkspace.cvhub.service.JobRoleService;
-import mks.myworkspace.cvhub.service.LocationService;
-import mks.myworkspace.cvhub.service.OrganizationService;
-import mks.myworkspace.cvhub.service.SearchJobService;
 
 /**
  * Handles requests for the application home page.
@@ -78,6 +79,8 @@ public class Search_Tuan_22110450 extends BaseController {
     SearchJobService searchjobService;
     @Autowired
     private JobRequestRepository jobRequestRepository;
+    @Autowired
+    private SearchJobService_tuan_22110450 searchJobImpl;
 
     public final Logger logger = LoggerFactory.getLogger(this.getClass());;
 
@@ -133,6 +136,21 @@ public class Search_Tuan_22110450 extends BaseController {
         return searchjobService.searchJobRequest(jobSearchDTO.getKeyword(),
                 jobSearchDTO.getLocation(), jobSearchDTO.getIndustry());
 
+    }
+
+    @RequestMapping(value = "/search_job_sort_tuan", method = RequestMethod.GET)
+    @ResponseBody // Dùng @ResponseBody để trả về dữ liệu JSON
+    public ResponseEntity<Map<String, Object>> searchJobsSort(@ModelAttribute JobSearch_tuan_DTO jobSearchDTO, HttpServletRequest request,
+                                                              HttpSession httpSession) {
+        Page<JobRequest> jobPage = searchJobImpl.searchJobRequest(jobSearchDTO.getKeyword(),
+                jobSearchDTO.getLocation(), jobSearchDTO.getIndustry(), jobSearchDTO.getSort(), jobSearchDTO.isBool(), jobSearchDTO.getPage(), jobSearchDTO.getSize());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("jobs", jobPage.getContent());
+        response.put("currentPage", jobPage.getNumber());
+        response.put("totalPages", jobPage.getTotalPages());
+        response.put("totalItems", jobPage.getTotalElements());
+        return ResponseEntity.ok(response);
     }
 
 }

@@ -156,3 +156,31 @@ body{
 .right-content {
     text-align: right; /* Căn lề phải cho input và button */
 }
+
+/* Nút phân trang */
+#pagination button {
+    margin: 0 5px;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#pagination button:hover {
+    background-color: #0056b3; /* Màu hover */
+    color: #fff;
+}
+
+/* Thông tin trang */
+.page-info {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Bố cục phân trang */
+#pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
