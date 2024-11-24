@@ -1,6 +1,11 @@
 package mks.myworkspace.cvhub.service.impl;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,4 +54,54 @@ public class UserImpl implements UserService {
 		// TODO Auto-generated method stub
 		return repo.findById(id).get();
 	}
+	
+	@Override
+    public Page<User> findUsersByPeriod(String period, Pageable pageable) {
+        Date startOfPeriod = calculateStartOfPeriod(period);
+        return repo.findUsersByCreationDateWithRoleUser(startOfPeriod, pageable);
+    }
+
+    private Date calculateStartOfPeriod(String period) {
+        Calendar calendar = Calendar.getInstance();
+
+        switch (period.toLowerCase()) {
+            case "today":
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                break;
+
+            case "week":
+            	// Mặc định sẽ lấy ngày Chủ nhật là ngày đầu tiên nên phải cấu hình lại
+            	calendar.setFirstDayOfWeek(Calendar.MONDAY);
+                calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                break;
+
+            case "month":
+                calendar.set(Calendar.DAY_OF_MONTH, 1);
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                break;
+
+            case "year":
+                calendar.set(Calendar.DAY_OF_YEAR, 1);
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                break;
+
+            default:
+                throw new IllegalArgumentException("Invalid period: " + period);
+        }
+
+        return calendar.getTime();
+    }
 }

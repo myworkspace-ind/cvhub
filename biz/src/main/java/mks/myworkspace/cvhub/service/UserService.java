@@ -1,5 +1,7 @@
 package mks.myworkspace.cvhub.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import mks.myworkspace.cvhub.entity.User;
@@ -12,4 +14,6 @@ public interface UserService {
 	boolean isEmailExists(String email);
 	User findUserByEmail(String email);
 	User getUser(Long id);
+	
+	Page<User> findUsersByPeriod(String period, Pageable pageable);
 }

@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.Organization;
 
 @Repository
@@ -23,4 +22,5 @@ public interface OrganizationRepository extends JpaRepository<Organization,Long>
 	Organization findByUserId(@Param("userId") Long userId);
 	Page<Organization> findAll(@Param("pageRequest") Pageable pageRequest );
 	List<Organization> findByTitleContaining(String title);
+	Page<Organization> findByTitleContaining(@Param("pageRequest") Pageable pageRequest, String title);
 }

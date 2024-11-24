@@ -3,7 +3,8 @@
 <ul class="navIntraTool actionToolbar">
   <li>  
       <span title="List jobs" th:class="${isSelectedHome != null && isSelectedHome ? 'current' : ''}">
-        <a th:href="@{/job}">Job</a>
+         <!--<a th:href="@{/job}">Job</a> -->
+		<a th:href="@{/searchJob}">Job</a>
       </span>
   </li>
   <li>  
@@ -31,4 +32,19 @@
        <a id="about" href="#">About</a>
      </span>
  </li>
-</ul>
+ <li> 
+     <span title="About">
+       <a id="about" th:href="@{/main/folder-account}">Folder Account</a>
+     </span>
+ </li>
+ <li> 
+     <span title="About">
+       <a id="about" th:href="@{/main/dev_phuhao}">Search Page</a>
+     </span>
+ </li>
+	</li>
+    <li>
+     <span title="dev_tuan_22110450">
+       <a id="dev_tuan_22110450" th:href="@{/search_tuan}">Search_tuan_22110450</a>
+     </span>
+    </li></ul>
