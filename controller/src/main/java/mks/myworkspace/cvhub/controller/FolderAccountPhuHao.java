@@ -63,7 +63,7 @@ public class FolderAccountPhuHao extends BaseController{
 	    @GetMapping("/folder-account/{username}")
 	    public ModelAndView getFilesByUser(@PathVariable String username) {
 	    	
-	    	ModelAndView mav = new ModelAndView("folder_account_detail");
+	    	ModelAndView mav = new ModelAndView("folder_account_detail_phuhao");
 	    	List<String> files = fileSystemService.getFilesByUser(username);
 	    	System.out.print(files);
 		    mav.addObject("username", username);   
@@ -75,7 +75,7 @@ public class FolderAccountPhuHao extends BaseController{
 	@GetMapping("/main/folder-account")
 	public ModelAndView FolderAccount(HttpServletRequest request, HttpSession httpSession) {
 		
-			ModelAndView mav = new ModelAndView("folder_account");
+			ModelAndView mav = new ModelAndView("folder_account_phuhao");
 			List<String> folders = fileSystemService.getUserFolders();  
 			
 	        mav.addObject("cvFiles", folders);
