@@ -227,6 +227,7 @@ public class OrganizationController extends BaseController {
 			return mav;
 		}
 	}
+	
 	public static List<User> removeDuplicatesManually(List<User> list) {
         List<User> result = new ArrayList<>();
         for (User item : list) {

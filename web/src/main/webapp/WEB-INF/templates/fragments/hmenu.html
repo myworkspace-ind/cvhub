@@ -21,30 +21,24 @@
         <a th:href="@{/configuration}">Configuration</a>
       </span>
   </li>
- <li class="nav-item dropdown">  
-     <span title="Report" >
-       <a id="report"  class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" th:href="@{/report}">Report</a>
-     </span>
-      <ul class="dropdown-menu">
-         <li><a class="dropdown-item" th:href="@{/report/candidate}">Candidate</a></li>
-         <li><a class="dropdown-item" th:href="@{/report/organiztion}">Organiztion</a></li>
-     </ul>
- </li>
- <li> 
+<li class="dropdown">
+  <span title="Report">
+    <a id="report" class="nav-link dropdown-toggle" role="button" aria-expanded="false">Report</a>
+    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-light">
+      <li><a class="dropdown-item small" th:href="@{/main/report/candidate}">Candidate</a></li>
+      <li><a class="dropdown-item small" th:href="@{/main/report/organization}">Organization</a></li>
+    </ul>
+  </span>
+</li>
+<li> 
      <span title="About">
        <a id="about" href="#">About</a>
      </span>
- </li>
+</li>
  
- 
-  <div class="btn-group">
-  <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-    Right-aligned but left aligned when large screen
-  </button>
-  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
-    <li><button class="dropdown-item" type="button">Action</button></li>
-    <li><button class="dropdown-item" type="button">Another action</button></li>
-    <li><button class="dropdown-item" type="button">Something else here</button></li>
-  </ul>
-	</div>
 </ul>
+
+
+
+ 
+      

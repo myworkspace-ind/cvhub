@@ -19,15 +19,31 @@
 
 package mks.myworkspace.cvhub.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.slf4j.Slf4j;
+import mks.myworkspace.cvhub.controller.model.OrganizationDTO;
+import mks.myworkspace.cvhub.entity.JobRequest;
+import mks.myworkspace.cvhub.entity.Location;
+import mks.myworkspace.cvhub.entity.Organization;
+import mks.myworkspace.cvhub.service.LocationService;
+import mks.myworkspace.cvhub.service.OrganizationService;
 
 /**
  * Handles requests for the application home page.
@@ -40,6 +56,11 @@ public class MainController extends BaseController {
 	 * 
 	 * @return
 	 */
+	@Autowired
+	OrganizationService organizationService;
+	@Autowired
+	LocationService locationService;
+
 	@GetMapping("/main")
 	public ModelAndView displayMain(HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("main");
@@ -48,15 +69,35 @@ public class MainController extends BaseController {
 
 		return mav;
 	}
-	
-	@GetMapping("/main/report/organization")
-	public ModelAndView displayReportOrganization (HttpServletRequest request, HttpSession httpSession) {
-		ModelAndView mav =  new  ModelAndView("");
-		initSession(request, httpSession);
+
+	@RequestMapping(value = { "/main/report/organization" }, method = RequestMethod.GET)
+	public ModelAndView displayReportOrganization(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size, HttpServletRequest request, HttpSession httpSession) {
+
+		ModelAndView mav = new ModelAndView("organization/organizationReport");
+		Page<Organization> organizationPage = organizationService.getRepo().findAll(PageRequest.of(page, size));
+		// Organization organization =
+		// organizationService.getRepo().findById(id).orElse(null);
+		// List<Organization> organization =organizationService.getRepo().findAll();
+		// mav.addObject("organizations", organization);
+		mav.addObject("organizations", organizationPage.getContent());
+		mav.addObject("currentPage", page); // Trang hiện tại
+		mav.addObject("totalPages", organizationPage.getTotalPages()); // Tổng số trang
 		return mav;
 	}
+
 	
-	
-	
-	
+	@GetMapping("searchOrganization")
+	  public ModelAndView searchOrganizations(@RequestParam(value = "companyName", required = false) String companyName, 
+	 @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, HttpServletRequest request,
+	  HttpSession httpSession) { ModelAndView mav = new ModelAndView("organization/organizationReport");
+	 // Sử dụng giá trị companyName để tìm kiếm tổ chức 
+	 List<Organization>searchResults = organizationService.searchByTitle(companyName);
+	 Page<Organization> organizationPage = new PageImpl<>(searchResults,PageRequest.of(page, size), searchResults.size()); // Thêm kết quả vào
+	 mav.addObject("organizations", organizationPage.getContent());
+	 mav.addObject("currentPage", page); // Trang hiện tại
+	 mav.addObject("totalPages", organizationPage.getTotalPages()); // Tổng sốtrang 
+	 mav.addObject("size", size);  // Kích thước mỗi trang 
+	 return mav; }
+	 
 }
