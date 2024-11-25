@@ -21,6 +21,11 @@
         <a th:href="@{/configuration}">Configuration</a>
       </span>
   </li>
+  <li>
+      <span title="listbusiness" th:class="${isSelectedConfiguration != null && isSelectedConfiguration ? 'current' : ''}">
+        <a th:href="@{/organization/list}">Doanh Nghiệp</a>
+      </span>
+  </li>
  <li> 
      <span title="Report">
        <a id="report" th:href="@{/report}">Report</a>
