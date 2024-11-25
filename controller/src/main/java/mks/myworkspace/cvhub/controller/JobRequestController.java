@@ -1,6 +1,7 @@
 package mks.myworkspace.cvhub.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,8 @@ import mks.myworkspace.cvhub.service.JobRequestService;
 import mks.myworkspace.cvhub.service.JobRoleService;
 import mks.myworkspace.cvhub.service.LocationService;
 import mks.myworkspace.cvhub.service.OrganizationService;
+import mks.myworkspace.cvhub.entity.JobApplication;
+import mks.myworkspace.cvhub.service.JobApplicationService;
 
 import java.util.List;
 
@@ -143,5 +146,23 @@ public class JobRequestController {
 	        mav.addObject("errorMessage", "Có lỗi xảy ra khi xóa thông tin công việc: " + e.getMessage());
 	    }
 	    return mav;
+	}
+	@RequestMapping("/job")
+	public class JobApplicationController {
+
+	    @Autowired
+	    private JobApplicationService jobApplicationService;
+
+	    @GetMapping("/{jobRequestId}/applications")
+	    public String showJobApplications(@PathVariable Long jobRequestId, Model model) {
+	        // Lấy danh sách ứng viên cho công việc với jobRequestId
+	        List<JobApplication> jobApplications = jobApplicationService.getApplicationsForJobRequest(jobRequestId);
+
+	        // Truyền dữ liệu vào model
+	        model.addAttribute("jobApplications", jobApplications);
+
+	        // Trả về view hiển thị danh sách ứng viên
+	        return "jobApplications"; 
+	    }
 	}
 }

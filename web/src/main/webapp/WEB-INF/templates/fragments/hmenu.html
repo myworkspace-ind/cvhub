@@ -26,6 +26,12 @@
         <a th:href="@{/organization/list}">Doanh Nghiệp</a>
       </span>
   </li>
+  <li>
+    <span title="userProfile" th:class="${isSelectedUser != null && isSelectedUser ? 'current' : ''}">
+        <a th:href="@{/user/profile}">Người dùng</a>
+    </span>
+</li>
+  
  <li> 
      <span title="Report">
        <a id="report" th:href="@{/report}">Report</a>

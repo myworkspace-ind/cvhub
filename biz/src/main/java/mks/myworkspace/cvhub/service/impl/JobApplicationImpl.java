@@ -39,10 +39,7 @@ public class JobApplicationImpl implements JobApplicationService{
 		List<JobApplication> applications = getApplicationsByUser(user);
 	    return applications.stream().anyMatch(app -> app.getJobRequest().getId().equals(jobRequestId));
 	}
-	@Override
-	public List<JobApplication> getApplicationsByJobRequest(JobRequest jobRequest) {
-		return repo.findByUserAndJobRequest(jobRequest);
-	}
+	
 	@Override
 	public List<JobApplication> findAll() {
 		// TODO Auto-generated method stub
@@ -52,5 +49,10 @@ public class JobApplicationImpl implements JobApplicationService{
 	public void deleteApplicationById(Long id) {
 		repo.deleteById(id);
 		
+	}
+	public List<JobApplication> getApplicationsForJobRequest(Long jobRequestId) {
+		JobRequest jobRequest = new JobRequest();
+		jobRequest.setId(jobRequestId); // Tạo đối tượng JobRequest với jobRequestId
+		return repo.findByUserAndJobRequest(jobRequest);
 	}
 }
