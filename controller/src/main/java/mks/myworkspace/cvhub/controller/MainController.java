@@ -47,4 +47,12 @@ public class MainController extends BaseController {
 
 		return mav;
 	}
+	@GetMapping("/main/user")
+	public ModelAndView displayUser(HttpServletRequest request, HttpSession httpSession) {
+		ModelAndView mav = new ModelAndView("user_profile");
+
+		initSession(request, httpSession);
+
+		return mav;
+	}
 }
