@@ -1,275 +1,435 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tạo Tin Tuyển Dụng - CVHub</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f7f7f7;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVHub - Quản lý tin đăng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
 
-    .container {
-      max-width: 1200px;
-      margin: 20px auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+        .header {
+            background-color: #8A2BE2;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 1.5em;
+            display: flex;
+            border-radius: 5px;
+        }
 
-    header {
-      display: flex;
-      align-items: center;
-      background-color: #6200ea;
-      color: white;
-      padding: 10px;
-      border-radius: 5px;
-    }
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-    header h1 {
-      flex-grow: 1;
-      font-size: 24px;
-    }
+        .sidebar {
+            width: 20%;
+            background-color: #ffffff;
+            border-right: 1px solid #ccc;
+            padding: 10px;
+        }
 
-    nav ul {
-      list-style: none;
-      display: flex;
-      padding: 0;
-    }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
 
-    nav ul li {
-      margin-right: 15px;
-    }
+        .sidebar ul li {
+            margin: 15px 0;
+        }
 
-    nav ul li a {
-      color: white;
-      text-decoration: none;
-    }
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+        }
 
-    h3 {
-      color: #333;
-      margin-top: 30px;
-    }
+        .sidebar ul li a:hover {
+            color: #8A2BE2;
+        }
 
-    label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 5px;
-    }
+        .content {
+            width: 80%;
+            padding: 20px;
+            background-color: #fff;
+            border-left: 1px solid #ccc;
+        }
 
-    input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 14px;
-    }
+        .form-group {
+            margin-bottom: 15px;
+        }
 
-    .button-group {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-    }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
 
-    button {
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
 
-    button.save {
-      background-color: #6200ea;
-      color: white;
-    }
+        .form-group button {
+            padding: 10px 15px;
+            background-color: #8A2BE2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
-    button.preview {
-      background-color: #ccc;
-      color: #333;
-    }
+        .form-group button:hover {
+            background-color: #6A1BBE;
+        }
 
-    .add-button, .circle-button {
-      color: #007bff;
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 14px;
-      text-decoration: underline;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
 
-    .add-button:hover, .circle-button:hover {
-      text-decoration: none;
-    }
+        table th,
+        table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
 
-    .added-fields {
-      margin-top: 10px;
-    }
+        table th {
+            background-color: #f4f4f4;
+        }
 
-    .added-address {
-      margin-top: 10px;
-    }
-    
-    .modal {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      padding: 20px;
-      z-index: 1000;
-      max-width: 500px;
-      border-radius: 8px;
-    }
+        header h1 {
+            flex-grow: 1;
+            font-size: 24px;
+        }
 
-    .modal-header {
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
+        nav ul {
+            list-style: none;
+            display: flex;
+            padding: 0;
+        }
 
-    .modal-close {
-      background: none;
-      border: none;
-      font-size: 20px;
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      cursor: pointer;
-    }
+        nav ul li {
+            margin-right: 15px;
+        }
 
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 999;
-    }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
 
-    .modal-open {
-      display: block;
-    }
+        h3 {
+            color: #333;
+            margin-top: 30px;
+        }
 
-    .modal p {
-      margin: 10px 0;
-    }
-  </style>
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button.save {
+            background-color: #6200ea;
+            color: white;
+        }
+
+        button.preview {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        .add-button,
+        .circle-button {
+            color: #007bff;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: underline;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .add-button:hover,
+        .circle-button:hover {
+            text-decoration: none;
+        }
+
+        .added-fields {
+            margin-top: 10px;
+        }
+
+        .added-address {
+            margin-top: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            z-index: 1000;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+
+        .modal-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .modal-open {
+            display: block;
+        }
+
+        .modal p {
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>CVHub - Tạo Tin Tuyển Dụng</h1>
-    <nav>
-      <ul>
-        <li><a href="#">Quản lý đăng tuyển</a></li>
-        <li><a href="#">Tạo tin tuyển dụng</a></li>
-      </ul>
-    </nav>
-  </header>
-  <div class="container">
-    <form id="jobForm">
-      <!-- Thông tin cơ bản -->
-      <h3>Thông tin cơ bản</h3>
-      <label for="job-title">Tiêu đề tin tuyển dụng *</label>
-      <input type="text" id="job-title" name="job-title" placeholder="Nhập tiêu đề">
 
-      <label for="industry">Ngành nghề *</label>
-      <select id="industry" name="industry">
-        <option value="">Chọn ngành nghề</option>
-        <option value="it">Công nghệ thông tin</option>
-        <option value="sales">Kinh doanh</option>
-      </select>
+<div class="header">
+    CVHub - Quản lý tin đăng
+</div>
 
-      <!-- Địa chỉ -->
-      <h3>Địa chỉ</h3>
-      <div id="address-fields">
-        <label for="address1">Địa chỉ 1 *</label>
-        <input type="text" id="address1" name="address[]" placeholder="Nhập địa chỉ">
-      </div>
-      <button type="button" class="add-button" onclick="addAddress()">+ Thêm địa chỉ</button>
-      <p id="address-limit-msg" style="color: red; display: none;">Chỉ có thể thêm tối đa 5 địa chỉ.</p>
+<div class="container">
+    <div class="sidebar">
+        <ul>
+            <li><a href="#" id="createPost">Tạo tin tuyển dụng</a></li>
+            <li><a href="#" id="managePosts">Quản lý tin đăng</a></li>
+        </ul>
+    </div>
 
-      <!-- Yêu cầu chung -->
-      <h3>Yêu cầu chung</h3>
-      <div id="requirement-fields">
-        <label for="job-type">Hình thức làm việc *</label>
-        <select id="job-type" name="job-type">
-          <option value="">Chọn hình thức làm việc</option>
-          <option value="fulltime">Toàn thời gian</option>
-          <option value="parttime">Bán thời gian</option>
-        </select>
-        <label for="level">Cấp bậc *</label>
-        <select id="level" name="level">
-          <option value="">Chọn cấp bậc</option>
-          <option value="intern">Thực tập</option>
-          <option value="staff">Nhân viên</option>
-          <option value="manager">Quản lý</option>
-        </select>
-        <label for="salary-min">Lương tối thiểu *</label>
-          <input type="number" id="salary-min" name="salary-min" placeholder="Triệu VND">
-        <label for="salary-max">Lương tối đa *</label>
-          <input type="number" id="salary-max" name="salary-max" placeholder="Triệu VND">
-        <button type="button" class="circle-button" onclick="addRequirementField('Thời gian thử việc')">+ Thời gian thử việc</button>
-        <button type="button" class="circle-button" onclick="addRequirementField('Yêu cầu bằng cấp')">+ Yêu cầu bằng cấp</button>
-        <button type="button" class="circle-button" onclick="addRequirementField('Yêu cầu giới tính')">+ Yêu cầu giới tính</button>
-        <button type="button" class="circle-button" onclick="addRequirementField('Yêu cầu độ tuổi')">+ Yêu cầu độ tuổi</button>
-      </div>
-      <div class="added-fields" id="added-requirements"></div>
-      <div id="added-requirements"></div>
-      <p id="error-msg" class="error" style="display: none;">Mục này đã được thêm!</p>
-      
-      <!-- Công việc chi tiết -->
-      <h3>Công việc chi tiết</h3>
-      <label for="job-description">Mô tả công việc *</label>
-      <textarea id="job-description" name="job-description" rows="5"></textarea>
-      <label for="job-requirements">Yêu cầu công việc *</label>
-      <textarea id="job-requirements" name="job-requirements" rows="5"></textarea>
-      <button type="button" class="add-button" onclick="selectPreviousJob()">+ Chọn từ tin đã tạo</button>
-      <p id="previous-job-msg" style="color: green; display: none;">Chi tiết công việc đã được thêm.</p>
+    <div class="content" id="contentArea">
+        <!-- Content will be dynamically loaded here -->
+        <p>Chọn một mục từ menu bên trái để bắt đầu.</p>
+    </div>
+</div>
 
-      <!-- Thông tin người liên hệ -->
-      <h3>Thông tin người liên hệ</h3>
-      <label for="contact-name">Họ và tên *</label>
-      <input type="text" id="contact-name" name="contact-name" placeholder="Nhập họ và tên">
+<script>
+    // Select the content area
+    const contentArea = document.getElementById('contentArea');
 
-      <label for="email">Email nhận hồ sơ *</label>
-      <input type="email" id="email" name="email" placeholder="Nhập email">
+    // Function to load "Tạo tin tuyển dụng" form
+    const loadCreatePostForm = () => {
+        contentArea.innerHTML = `
+        <div class="container">
+            <form id="jobForm">
+                <!-- Thông tin cơ bản -->
+                <h3>Thông tin cơ bản</h3>
+                <label for="job-title">Tiêu đề tin tuyển dụng *</label>
+                <input type="text" id="job-title" name="job-title" placeholder="Nhập tiêu đề">
 
-      <label for="phone">Điện thoại *</label>
-      <input type="tel" id="phone" name="phone" placeholder="Nhập số điện thoại">
+                <label for="industry">Ngành nghề *</label>
+                <select id="industry" name="industry">
+                    <option value="">Chọn ngành nghề</option>
+                    <option value="it">Công nghệ thông tin</option>
+                    <option value="sales">Kinh doanh</option>
+                </select>
 
-      <label for="adrpv">Địa chỉ người phỏng vấn *</label>
-      <input type="text" id="adrpv" name="adrpv" placeholder="Nhập địa chỉ">
-      
-      <!-- Nút -->
-      <div class="button-group">
-        <button type="button" class="preview" onclick="previewForm()">Xem trước</button>
-        <button type="submit" class="save">Lưu</button>
-      </div>
-    </form>
-  </div>
+                <!-- Địa chỉ -->
+                <h3>Địa chỉ</h3>
+                <div id="address-fields">
+                    <label for="address1">Địa chỉ 1 *</label>
+                    <input type="text" id="address1" name="address[]" placeholder="Nhập địa chỉ">
+                </div>
+                <button type="button" class="add-button" onclick="addAddress()">+ Thêm địa chỉ</button>
+                <p id="address-limit-msg" style="color: red; display: none;">Chỉ có thể thêm tối đa 5 địa chỉ.</p>
 
-  <!-- Modal -->
-  <div id="modal-overlay" class="modal-overlay"></div>
-  <div id="modal" class="modal">
-    <button class="modal-close" onclick="closeModal()">×</button>
-    <div class="modal-header">Xem trước nội dung</div>
-    <div id="modal-content"></div>
-  </div>
-  
-  <script>
-    let addressCount = 1;
+                <!-- Yêu cầu chung -->
+                <h3>Yêu cầu chung</h3>
+                <div id="requirement-fields">
+                    <label for="job-type">Hình thức làm việc *</label>
+                    <select id="job-type" name="job-type">
+                        <option value="">Chọn hình thức làm việc</option>
+                        <option value="fulltime">Toàn thời gian</option>
+                        <option value="parttime">Bán thời gian</option>
+                    </select>
+
+                    <label for="level">Cấp bậc *</label>
+                    <select id="level" name="level">
+                        <option value="">Chọn cấp bậc</option>
+                        <option value="intern">Thực tập</option>
+                        <option value="staff">Nhân viên</option>
+                        <option value="manager">Quản lý</option>
+                    </select>
+
+                    <label for="salary-min">Lương tối thiểu *</label>
+                    <input type="number" id="salary-min" name="salary-min" placeholder="Triệu VND">
+
+                    <label for="salary-max">Lương tối đa *</label>
+                    <input type="number" id="salary-max" name="salary-max" placeholder="Triệu VND">
+
+                    <button type="button" class="circle-button" onclick="addRequirementField('Thời gian thử việc')">+ Thời gian thử việc</button>
+                    <button type="button" class="circle-button" onclick="addRequirementField('Yêu cầu bằng cấp')">+ Yêu cầu bằng cấp</button>
+                    <button type="button" class="circle-button" onclick="addRequirementField('Yêu cầu giới tính')">+ Yêu cầu giới tính</button>
+                    <button type="button" class="circle-button" onclick="addRequirementField('Yêu cầu độ tuổi')">+ Yêu cầu độ tuổi</button>
+                </div>
+                <div class="added-fields" id="added-requirements"></div>
+                <p id="error-msg" class="error" style="display: none;">Mục này đã được thêm!</p>
+                
+                <!-- Công việc chi tiết -->
+                <h3>Công việc chi tiết</h3>
+                <label for="job-description">Mô tả công việc *</label>
+                <textarea id="job-description" name="job-description" rows="5"></textarea>
+
+                <label for="job-requirements">Yêu cầu công việc *</label>
+                <textarea id="job-requirements" name="job-requirements" rows="5"></textarea>
+
+                <button type="button" class="add-button" onclick="selectPreviousJob()">+ Chọn từ tin đã tạo</button>
+                <p id="previous-job-msg" style="color: green; display: none;">Chi tiết công việc đã được thêm.</p>
+
+                <!-- Thông tin người liên hệ -->
+                <h3>Thông tin người liên hệ</h3>
+                <label for="contact-name">Họ và tên *</label>
+                <input type="text" id="contact-name" name="contact-name" placeholder="Nhập họ và tên">
+
+                <label for="email">Email nhận hồ sơ *</label>
+                <input type="email" id="email" name="email" placeholder="Nhập email">
+
+                <label for="phone">Điện thoại *</label>
+                <input type="tel" id="phone" name="phone" placeholder="Nhập số điện thoại">
+
+                <label for="adrpv">Địa chỉ người phỏng vấn *</label>
+                <input type="text" id="adrpv" name="adrpv" placeholder="Nhập địa chỉ">
+                
+                <!-- Nút -->
+                <div class="button-group">
+                    <button type="button" class="preview" onclick="previewForm()">Xem trước</button>
+                    <button type="submit" class="save">Lưu</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Modal -->
+        <div id="modal-overlay" class="modal-overlay"></div>
+        <div id="modal" class="modal">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div class="modal-header">Xem trước nội dung</div>
+            <div id="modal-content"></div>
+        </div>
+        `;
+    };
+
+    // Function to load "Quản lý tin đăng" content
+    const loadManagePosts = () => {
+      contentArea.innerHTML = `
+        <h2>Quản lý tin đăng</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên tin đăng</th>
+                        <th>Thời hạn</th>
+                        <th>Lượt xem</th>
+                        <th>Lượt ứng tuyển</th>
+                        <th>Tỷ lệ phản hồi (%)</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Lao động kỹ thuật</td>
+                        <td>27/11/2024</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Chưa duyệt</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Công nghệ thông tin</td>
+                        <td>30/10/2024</td>
+                        <td>167</td>
+                        <td>30</td>
+                        <td>100</td>
+                        <td>Đã duyệt</td>
+                    </tr>
+                </tbody>
+            </table>
+      `;
+    };
+
+    // Event listeners for menu items
+    document.getElementById('createPost').addEventListener('click', (e) => {
+        e.preventDefault(); // Prevent default link behavior
+        loadCreatePostForm();
+    });
+
+    document.getElementById('managePosts').addEventListener('click', (e) => {
+        e.preventDefault(); // Prevent default link behavior
+        loadManagePosts();
+    });
+    
+        let addressCount = 1;
 
     function addAddress() {
       if (addressCount >= 5) {
@@ -386,6 +546,7 @@
       modal.classList.remove('modal-open');
       overlay.classList.remove('modal-open');
     }
-  </script>
+</script>
+
 </body>
 </html>
