@@ -1,0 +1,116 @@
+h2 {
+  text-align: center;
+  margin: 20px 0;
+  font-weight: bold;
+  font-size: 24px;
+  color: #333;
+}
+
+.employer-list-container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #f0f0f0;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.employer-card {
+  background: #f0f0f0;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  padding: 15px;
+  position: relative; /* Để nút chi tiết cố định ở góc */
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Tạo khoảng cách giữa các dòng */
+}
+
+.company-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.location-tag,
+.update-tag,
+.website-tag {
+  font-size: 14px;
+  color: #555;
+  margin: 0; /* Loại bỏ khoảng cách mặc định */
+  line-height: 1.5; /* Tăng khoảng cách dòng cho dễ đọc */
+}
+
+.view-details {
+  position: absolute;
+  bottom: 10px; /* Cách đáy 10px */
+  right: 10px; /* Cách phải 10px */
+  background-color: #28a745;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.view-details:hover {
+  background-color: #218838; /* Màu đậm hơn khi hover */
+}
+
+
+.employer-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+.company-logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+.search-container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.search-form {
+  display: flex;
+  gap: 10px; /* Khoảng cách giữa ô nhập và nút tìm kiếm */
+}
+
+.search-form input[type="text"] {
+  width: 300px; /* Độ rộng của ô nhập */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.search-form button {
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.search-form button:hover {
+  background-color: #218838; /* Màu khi hover */
+}
+
+.pagination {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    flex-grow: 1; /* Đảm bảo chiếm đủ không gian trung tâm */
+}
