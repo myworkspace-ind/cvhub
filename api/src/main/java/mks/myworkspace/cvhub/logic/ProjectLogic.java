@@ -20,7 +20,6 @@
 package mks.myworkspace.cvhub.logic;
 
 import java.util.List;
-
 import mks.myworkspace.cvhub.model.Item;
 
 /**
@@ -31,9 +30,30 @@ import mks.myworkspace.cvhub.model.Item;
  */
 public interface ProjectLogic {
 
-	/**
-	 * Get a list of Items
-	 * @return
-	 */
-	public List<Item> getItems();
+    /**
+     * Get a list of Items
+     * @return List of Items
+     */
+    public List<Item> getItems();
+
+    /**
+     * Get a single Item by ID
+     * @param id Item ID
+     * @return Item or null if not found
+     */
+    public Item getItemById(int id);
+
+    /**
+     * Add a new Item to the list
+     * @param item Item to add
+     * @return boolean indicating success
+     */
+    public boolean addItem(Item item);
+
+    /**
+     * Remove an Item by ID
+     * @param id Item ID
+     * @return boolean indicating success
+     */
+    public boolean removeItem(int id);
 }
