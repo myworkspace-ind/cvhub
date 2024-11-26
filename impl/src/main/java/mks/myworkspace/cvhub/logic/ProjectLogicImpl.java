@@ -19,45 +19,57 @@
 
 package mks.myworkspace.cvhub.logic;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
-
 import mks.myworkspace.cvhub.model.Item;
 
 /**
  * Implementation of {@link ProjectLogic}
  * 
+ * Handles the logic related to project items.
+ * 
  * @author Mike Jennings (mike_jennings@unc.edu), ThachLN@gmail.com
  *
  */
 @Service
-@Component
 @Slf4j
 public class ProjectLogicImpl implements ProjectLogic {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public List<Item> getItems() {
-		
-		List<Item> items = new ArrayList<Item>();
-		
-        items.add(new Item(1, "hello"));
-        items.add(new Item(2, "world"));
-		
-		return items;
-		
-	}
-	
-	/**
-	 * init - perform any actions required here for when this bean starts up
-	 */
-	public void init() {
-		log.info("init");
-	}
+    /**
+     * Retrieves a list of items.
+     * 
+     * @return List of {@link Item} objects
+     */
+    @Override
+    public List<Item> getItems() {
+        List<Item> items = new ArrayList<>();
+        
+        // Adding sample items (this could be replaced with actual business logic to retrieve items)
+        try {
+            items.add(new Item(1, "hello"));
+            items.add(new Item(2, "world"));
+            log.debug("Successfully created and added items: {}", items);
+        } catch (Exception e) {
+            log.error("Error occurred while creating items.", e);
+        }
+        
+        return items;
+    }
 
+    /**
+     * Initializes the ProjectLogic bean and performs any necessary setup.
+     * 
+     * This method is called when the bean is initialized by Spring.
+     */
+    public void init() {
+        try {
+            // Placeholder for any setup logic, e.g., database connections or initial configurations
+            log.info("ProjectLogic bean initialized successfully.");
+        } catch (Exception e) {
+            log.error("Initialization of ProjectLogic bean failed.", e);
+        }
+    }
 }
