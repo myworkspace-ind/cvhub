@@ -23,24 +23,27 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import mks.myworkspace.cvhub.controller.model.UserDTO;
 import mks.myworkspace.cvhub.service.UserService;
+import mks.myworkspace.cvhub.service.impl.EncodePasswordImpl;
 
 @Controller
 public class SignController extends BaseController {
     
     @Autowired
     private UserService userService;
-    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    //BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    EncodePasswordImpl encodePassword = new EncodePasswordImpl();
     // Login page
     @GetMapping("/login")
     public ModelAndView showLoginPage(
             @RequestParam(value = "error", required = false) String error,
             @RequestParam(value = "logout", required = false) String logout) {
-        
+        System.out.println(error);
         ModelAndView model = new ModelAndView();
         
         if (error != null) {
             model.addObject("error", "Email hoặc mật khẩu không chính xác!");
         }
+        System.out.println(error);
 
         if (logout != null) {
             model.addObject("message", "Bạn đã đăng xuất thành công!");
@@ -89,8 +92,8 @@ public class SignController extends BaseController {
             }
 
             // Register user
-            User user = userService.createUser(userDTO.getFullName(), userDTO.getEmail(), 
-            		passwordEncoder.encode(userDTO.getPassword()), userDTO.getPhone());
+            User user = userService.createUser(userDTO.getFullName(), userDTO.getEmail(),
+            		encodePassword.encode(userDTO.getPassword()), userDTO.getPhone());
 
             // Redirect to login with success message
             mav.setViewName("redirect:/login");
