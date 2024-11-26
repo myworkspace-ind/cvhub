@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,140 +47,124 @@ public class BaseController {
     @Getter
     SakaiProxy sakaiProxy = null;
 
-    @Setter    // Used for Sakai Tool
-    @Getter    // Used for Sakai Tool
+    @Setter
+    @Getter
     ProjectLogic projectLogic;
 
     @Value("${theme.root}")
     String themeRoot;
 
-    /** Default. */
-    final String mimeType = "application/octet-stream";
-    final String headerKey = "Content-Disposition";
-    
+    private static final String MIME_TYPE = "application/octet-stream";
+    private static final String HEADER_KEY = "Content-Disposition";
+    private static final String DEFAULT_USER_EID = "ThachLN";
+    private static final String DEFAULT_SITE_ID = "DefaultSite";
+    private static final String DEFAULT_USER_NAME = "Le Ngoc Thach";
+
     public String TMP_DIR = System.getProperty("java.io.tmpdir");
 
     /**
      * Store common data into session.
-     * <br/>
-     * themeRoot: Root URL of the theme<br/>
-     * currentSiteId:<br/>
-     * userDisplayName::<br/>
-     * userEid::<br/>
-     * userEmail:<br/>
-     * userFirstName:<br/>
-     * userLastName:<br/>
      * @param request Client HTTP request
      * @param httpSession Client HTTP session
      */
     void initSession(HttpServletRequest request, HttpSession httpSession) {
-        // Get username when login success
+        // Set the theme root in the session.
         httpSession.setAttribute("themeRoot", themeRoot);
-        
+
         if (sakaiProxy == null) {
-        	sakaiProxy = ComponentManager.get(SakaiProxy.class);
-        	log.debug("ComponentManager.get(SakaiProxy.class)=" + sakaiProxy);
+            sakaiProxy = ComponentManager.get(SakaiProxy.class);
+            log.debug("ComponentManager.get(SakaiProxy.class)={}", sakaiProxy);
         }
 
+        // Initialize session attributes from Sakai or use default values.
         if (sakaiProxy != null) {
-            httpSession.setAttribute("currentSiteId", sakaiProxy.getCurrentSiteId());
-            httpSession.setAttribute("userDisplayName", sakaiProxy.getCurrentUserDisplayName());
-            httpSession.setAttribute("userEid", sakaiProxy.getCurrentUserEid());
-            httpSession.setAttribute("userEmail", sakaiProxy.getCurrentUserEmail());
-            httpSession.setAttribute("userFirstName", sakaiProxy.getCurrentUserFirstName());
-            httpSession.setAttribute("userLastName", sakaiProxy.getCurrentUserLastName());
+            setSessionAttributesFromSakai(httpSession);
         } else {
-            // Demo for Web App
-            httpSession.setAttribute("currentSiteId", "Default");
-            httpSession.setAttribute("userDisplayName", "Le Ngoc Thach");
-            httpSession.setAttribute("userEid", "ThachLN");
-            httpSession.setAttribute("userEmail", "LNThach@gmail.com");
-            httpSession.setAttribute("userFirstName", "Thach");
-            httpSession.setAttribute("userLastName", "Le Ngoc Thach");            
+            setSessionAttributesForDemo(httpSession);
         }
     }
 
+    private void setSessionAttributesFromSakai(HttpSession session) {
+        session.setAttribute("currentSiteId", sakaiProxy.getCurrentSiteId());
+        session.setAttribute("userDisplayName", sakaiProxy.getCurrentUserDisplayName());
+        session.setAttribute("userEid", sakaiProxy.getCurrentUserEid());
+        session.setAttribute("userEmail", sakaiProxy.getCurrentUserEmail());
+        session.setAttribute("userFirstName", sakaiProxy.getCurrentUserFirstName());
+        session.setAttribute("userLastName", sakaiProxy.getCurrentUserLastName());
+    }
+
+    private void setSessionAttributesForDemo(HttpSession session) {
+        session.setAttribute("currentSiteId", DEFAULT_SITE_ID);
+        session.setAttribute("userDisplayName", DEFAULT_USER_NAME);
+        session.setAttribute("userEid", DEFAULT_USER_EID);
+        session.setAttribute("userEmail", "LNThach@gmail.com");
+        session.setAttribute("userFirstName", "Thach");
+        session.setAttribute("userLastName", "Le Ngoc Thach");
+    }
 
     public String getCurrentUserEid() {
-        return (sakaiProxy != null) ? sakaiProxy.getCurrentUserEid(): "ThachLN";
+        return sakaiProxy != null ? sakaiProxy.getCurrentUserEid() : DEFAULT_USER_EID;
     }
-
 
     public String getCurrentSiteId() {
-        return (sakaiProxy != null) ? sakaiProxy.getCurrentSiteId(): "DefaultSite";
+        return sakaiProxy != null ? sakaiProxy.getCurrentSiteId() : DEFAULT_SITE_ID;
     }
-    
+
     public String getCurrentUserEmail() {
-        return (sakaiProxy != null) ? sakaiProxy.getCurrentUserEmail(): "lnthach@gmail.com";
+        return sakaiProxy != null ? sakaiProxy.getCurrentUserEmail() : "lnthach@gmail.com";
     }
-    
+
     public String getCurrentUserDisplayName() {
-        return (sakaiProxy != null) ? sakaiProxy.getCurrentUserDisplayName(): "Le Ngoc Thach";
+        return sakaiProxy != null ? sakaiProxy.getCurrentUserDisplayName() : DEFAULT_USER_NAME;
     }
 
     /**
-     * Write the content of the file to HttpServletReponse with file name "fileName".
-     * @param file File download
-     * @param response some description
-     * @param fileName some description
-     * @throws IOException If something fails at I/O level.
+     * Write the content of the file to HttpServletResponse with the given file name.
+     * @param file The file to download.
+     * @param response The HttpServletResponse object.
+     * @param fileName The name of the file to be downloaded.
+     * @throws IOException If an I/O error occurs.
      */
     protected void writeDownloadContent(File file, HttpServletResponse response, String fileName)
             throws IOException {
-        long fileSize = file.length();
-        ServletOutputStream outStream = null;
-        InputStream fis = null;
-
-        response.setContentType(mimeType);
-        response.setContentLength((int) fileSize);
-        
-        // Set headers for the response.
-        String headerValue = String.format("attachment; filename=\"%s\"", fileName);
-        response.setHeader(headerKey, headerValue);
-        
-        writeDownloadContent(fis, response, fileName);
-
+        try (InputStream fis = new FileInputStream(file)) {
+            setResponseHeaders(response, fileName, file.length());
+            writeDownloadContent(fis, response);
+        }
     }
-    
-    protected void writeDownloadContent(InputStream is, HttpServletResponse response, String fileName)
+
+    /**
+     * Write the content from the InputStream to HttpServletResponse.
+     * @param is The InputStream containing the file content.
+     * @param response The HttpServletResponse object.
+     * @throws IOException If an I/O error occurs.
+     */
+    protected void writeDownloadContent(InputStream is, HttpServletResponse response)
             throws IOException {
-        long fileSize = 0;
-        ServletOutputStream outStream = null;
-
-
-        response.setContentType(mimeType);
-        
-        // Set headers for the response.
-        String headerValue = String.format("attachment; filename=\"%s\"", fileName);
-        response.setHeader(headerKey, headerValue);
-        
-        // Get output stream of the response
-        try {
-            outStream = response.getOutputStream();
+        try (ServletOutputStream outStream = response.getOutputStream()) {
             byte[] buffer = new byte[4096];
             int length;
 
             while ((length = is.read(buffer)) > 0) {
-                fileSize += length;
                 outStream.write(buffer, 0, length);
                 outStream.flush();
             }
-            
-            // response.setContentLength((int) fileSize);
         } catch (IOException ex) {
-            log.error("Could not read the attachment content.", ex);
-        } finally {
-            if (outStream != null) {
-                outStream.close();
-            } else {
-                // Do nothing
-            }
-
-            if (is != null) {
-                is.close();
-            } else {
-                // Do nothing
-            }
+            log.error("Error while writing content to the output stream.", ex);
+            throw ex;
         }
+    }
+
+    /**
+     * Set the response headers for file download.
+     * @param response The HttpServletResponse object.
+     * @param fileName The name of the file.
+     * @param fileSize The size of the file.
+     */
+    private void setResponseHeaders(HttpServletResponse response, String fileName, long fileSize) {
+        response.setContentType(MIME_TYPE);
+        response.setContentLength((int) fileSize);
+        String headerValue = String.format("attachment; filename=\"%s\"", fileName);
+        response.setHeader(HEADER_KEY, headerValue);
     }
 }
