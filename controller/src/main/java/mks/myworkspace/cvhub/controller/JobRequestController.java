@@ -109,7 +109,8 @@ public class JobRequestController {
 	            jobRequestDTO.getJobDescription(),
 	            jobRequestDTO.getRequirementsCandidate(),
 	            jobRequestDTO.getBenefitCandidate(),
-	            jobRequestDTO.getDeadlineApplication()
+	            jobRequestDTO.getDeadlineApplication(),
+	            jobRequestDTO.getCourseLink()
 	        );
 
 	        ModelAndView mav = new ModelAndView();

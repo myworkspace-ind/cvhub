@@ -52,6 +52,7 @@ public class JobRequest {
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
     private LocalDate deadlineApplication;
+    private String courseLink;
 
 
 	@CreationTimestamp

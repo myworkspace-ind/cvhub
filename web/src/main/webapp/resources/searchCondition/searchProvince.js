@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const jobRoleSelect = document.getElementById('jobRoleSelect');
         async function fetchLocations() {
             try {
-				/*const response = await fetch('https://provinces.open-api.vn/api/?depth=1');*/
-                const response = await fetch(_ctx + '/resources/master-data/provinces.json');
+				//const response = await fetch('https://provinces.open-api.vn/api/?depth=1');
+                const response = await fetch(_ctx + 'resources/master-data/provinces.json');
                 const locations = await response.json();
                 
                 locations.forEach(location => {

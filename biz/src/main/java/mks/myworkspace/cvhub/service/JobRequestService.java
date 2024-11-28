@@ -18,7 +18,7 @@ public interface JobRequestService {
 			Integer salary,Long organizationId,String jobDescription,String requirementsCandidate,String benefitCandidate,LocalDate deadlineApplication);
 	JobRequest updateJobRequest( JobRequest jobRequest,String title, int locationCode, Long jobRoleId,
 			Integer experience, Integer salary, String jobDescription, String requirementsCandidate,
-			String benefitCandidate, LocalDate deadlineApplication);
+			String benefitCandidate, LocalDate deadlineApplication, String courseLink);
 	void deleteJobRequest(JobRequest jobRequest);
 	List<JobRequest> findAllByOrganizationId(Long id);
 }

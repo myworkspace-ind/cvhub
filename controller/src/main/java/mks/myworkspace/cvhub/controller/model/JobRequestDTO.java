@@ -3,6 +3,7 @@ package mks.myworkspace.cvhub.controller.model;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -27,4 +28,5 @@ public class JobRequestDTO {
     private Organization organization;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate deadlineApplication;
+    private String courseLink;
 }

@@ -75,7 +75,7 @@ public class JobRequestImpl implements JobRequestService {
 	@Override
 	public JobRequest updateJobRequest( JobRequest jobRequest, String title, int locationCode, Long jobRoleId,
 			Integer experience, Integer salary, String jobDescription, String requirementsCandidate,
-			String benefitCandidate, LocalDate deadlineApplication) {
+			String benefitCandidate, LocalDate deadlineApplication, String courseLink) {
 
 
 // Validate input parameters
@@ -99,6 +99,7 @@ public class JobRequestImpl implements JobRequestService {
 		jobRequest.setRequirementsCandidate(requirementsCandidate);
 		jobRequest.setBenefitCandidate(benefitCandidate);
 		jobRequest.setDeadlineApplication(deadlineApplication);
+		jobRequest.setCourseLink(courseLink);
 
 // Save and return the updated JobRequest
 		return getRepo().save(jobRequest);
