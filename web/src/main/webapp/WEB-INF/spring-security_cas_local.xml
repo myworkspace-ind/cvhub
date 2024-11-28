@@ -55,8 +55,7 @@
         <authentication-provider>
             <password-encoder ref="passwordEncoder"/>
             <jdbc-user-service data-source-ref="dataSource"
-            	
-            users-by-username-query="
+            	 users-by-username-query="
                     SELECT sim.EID AS username, su.PW AS password, 1 AS enabled
                     FROM sakai_user_id_map sim
                     JOIN sakai_user su ON sim.USER_ID = su.USER_ID
@@ -66,6 +65,7 @@
                     FROM sakai_user_id_map sim
                     JOIN sakai_user su ON sim.USER_ID = su.USER_ID
                     WHERE sim.EID = ?"
+           
             />
         </authentication-provider>
     </authentication-manager>

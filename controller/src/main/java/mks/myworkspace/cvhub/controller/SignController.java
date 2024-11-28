@@ -37,13 +37,12 @@ public class SignController extends BaseController {
     public ModelAndView showLoginPage(
             @RequestParam(value = "error", required = false) String error,
             @RequestParam(value = "logout", required = false) String logout) {
-        System.out.println(error);
+
         ModelAndView model = new ModelAndView();
         
         if (error != null) {
             model.addObject("error", "Email hoặc mật khẩu không chính xác!");
         }
-        System.out.println(error);
 
         if (logout != null) {
             model.addObject("message", "Bạn đã đăng xuất thành công!");
