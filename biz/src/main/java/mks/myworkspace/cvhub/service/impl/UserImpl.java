@@ -16,6 +16,7 @@ public class UserImpl implements UserService {
 	UserRepository repo;
 //	 @Autowired
 //	private PasswordEncoder passwordEncoder;
+
 	@Override
 	@Transactional
 	public User createUser(String fullName, String email, String password, String phone) throws Exception {
