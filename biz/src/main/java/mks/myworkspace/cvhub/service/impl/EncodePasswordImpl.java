@@ -77,23 +77,4 @@ public class EncodePasswordImpl implements PasswordEncoder {
 	    }
 	}
 
-    // Phương thức main để kiểm tra mã hóa và so sánh mật khẩu
-    public static void main(String[] args) {
-        EncodePasswordImpl passwordEncoder = new EncodePasswordImpl();
-
-        String password = "123";
-        System.out.println("Original password: " + password);
-
-        // Mã hóa mật khẩu
-        String encodedPassword = passwordEncoder.encode(password);
-        System.out.println("Encoded password: " + encodedPassword);
-
-        // Kiểm tra nếu mật khẩu nhập vào khớp với mật khẩu đã mã hóa
-        boolean isMatch = passwordEncoder.matches(password, encodedPassword);
-        System.out.println("Password match: " + isMatch);
-
-        // Thử với mật khẩu không khớp
-        boolean isMatchFalse = passwordEncoder.matches("wrongPassword", encodedPassword);
-        System.out.println("Password match (incorrect password): " + isMatchFalse);
-    }
 }
