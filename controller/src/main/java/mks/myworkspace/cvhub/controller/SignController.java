@@ -23,13 +23,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import mks.myworkspace.cvhub.controller.model.UserDTO;
 import mks.myworkspace.cvhub.service.UserService;
+import mks.myworkspace.cvhub.service.impl.Pbkdf2PasswordEncoder;
 
 @Controller
 public class SignController extends BaseController {
     
     @Autowired
     private UserService userService;
-    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    Pbkdf2PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder();
     // Login page
     @GetMapping("/login")
     public ModelAndView showLoginPage(
@@ -68,7 +69,7 @@ public class SignController extends BaseController {
     }
 
     // Process registration
-    @PostMapping("/register")
+    /*@PostMapping("/register")
     public ModelAndView processRegistration(@ModelAttribute UserDTO userDTO, 
             BindingResult result, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
@@ -102,7 +103,21 @@ public class SignController extends BaseController {
         }
 
         return mav;
+    }*/
+    @PostMapping("/register")
+    public ModelAndView processRegistration(@ModelAttribute UserDTO userDTO, RedirectAttributes redirectAttributes) {
+        ModelAndView mav = new ModelAndView();
+        try {
+            userService.registerUserInSakai(userDTO.getFullName(), userDTO.getEmail(), passwordEncoder.encode(userDTO.getPassword()), userDTO.getPhone());
+            redirectAttributes.addFlashAttribute("successMessage", "Đăng ký thành công! Vui lòng đăng nhập.");
+            mav.setViewName("redirect:/login");
+        } catch (Exception e) {
+            mav.addObject("errorMessage", e.getMessage());
+            mav.setViewName("/signInOut/signup");
+        }
+        return mav;
     }
+
 
     // Helper method to get current logged in user
     protected User getCurrentUser() {
