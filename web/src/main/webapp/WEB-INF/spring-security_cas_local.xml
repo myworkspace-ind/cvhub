@@ -21,10 +21,9 @@
     <beans:bean id="dataSource" 
           class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <beans:property name="driverClassName" value="org.mariadb.jdbc.Driver"/>
-        <beans:property name="url" value="jdbc:mariadb://127.0.0.1:3306/sakai?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowPublicKeyRetrieval=true"/>
-        <beans:property name="username" value="sakai_user"/>
-        <beans:property name="password" value="Sakai!123"/>
-    </beans:bean>
+<beans:property name="url" value="jdbc:mariadb://127.0.0.1:3306/cvhub?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowPublicKeyRetrieval=true"/>
+        <beans:property name="username" value="cvhub_user"/>
+        <beans:property name="password" value="Cvhub!123"/>    </beans:bean>
 
     <http auto-config="true" use-expressions="true">
         <access-denied-handler error-page="/403" />
