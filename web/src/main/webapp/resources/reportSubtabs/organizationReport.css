@@ -1,7 +1,7 @@
 .oR-header-container {
 	display: flex;
 	align-items: center;
-	margin-bottom: 20px;
+	margin: 20px;
 }
 
 .oR-header-filter {
@@ -22,7 +22,7 @@
 }
 
 .oR-button {
-	padding: 10px 20px;
+	padding: 10px 15px;
 	background-color: #4CAF50;
 	color: white;
 	border: none;
@@ -39,18 +39,31 @@
 .oR-table {
 	width: 100%;
 	border-collapse: collapse;
-	margin-top: 20px;
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+	text-align: left;
 }
 
-.oR-table th, .oR-table td {
-	padding: 10px;
-	text-align: left;
+.oR-table th {
+	background-color: #4CAF50;
+	color: white;
+	padding: 12px;
 	border: 1px solid #ddd;
 }
 
+.oR-table td {
+	padding: 10px;
+	border: 1px solid #ddd;
+	background-color: #f9f9f9; /* Light grey for cells */
+}
+
+.oR-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
 .oR-table img {
-    max-height: 60px;
-    object-fit: cover;
+	max-height: 50px;
+	object-fit: cover;
 }
 
 body {
