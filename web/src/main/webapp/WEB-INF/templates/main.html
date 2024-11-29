@@ -8,14 +8,6 @@
 <body>
 	<th:block th:include="fragments/hmenu"></th:block>
 
-	<!-- Menu khác -->
-
-	<!-- Menu Report Content -->
-	<th:block th:if="${isSelectedReport}">
-		<th:block th:include="fragments/reportMenu"></th:block>
-		<div th:include="${subtabView}"></div>
-	</th:block>
-
 	<th:block th:include="fragments/about_dialog"></th:block>
 </body>
 <th:block th:include="fragments/common_javascript"></th:block>
