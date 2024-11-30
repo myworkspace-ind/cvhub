@@ -22,6 +22,7 @@ package mks.myworkspace.cvhub.logic;
 import java.util.List;
 
 import org.sakaiproject.authz.api.Role;
+import org.sakaiproject.exception.IdUnusedException;
 
 /**
  * An interface to abstract all Sakai related API calls in a central method that can be injected into our app.
@@ -105,7 +106,7 @@ public interface SakaiProxy {
 	/**
 	 * @return flag in case of the current user is switching to other roles.
 	 */
-	boolean isUserRoleSwapped();
+	boolean isUserRoleSwapped() throws IdUnusedException;
 	
 	List<Role> getRoles();
 	String getUserRole();

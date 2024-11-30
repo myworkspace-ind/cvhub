@@ -161,7 +161,7 @@ public class SakaiProxyImpl implements SakaiProxy {
     public AuthzGroupService authzGroupService = null;
     
 	@Override
-	public boolean isUserRoleSwapped() {
+	public boolean isUserRoleSwapped() throws IdUnusedException {
 		return securityService.isUserRoleSwapped();
 	}
 
