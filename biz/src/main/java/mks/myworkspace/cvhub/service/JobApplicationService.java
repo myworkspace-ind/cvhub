@@ -15,4 +15,6 @@ public interface JobApplicationService {
 	List<JobApplication> getApplicationsByJobRequest(JobRequest jobRequest);
 	List<JobApplication> findAll();
 	void deleteApplicationById(Long id);
+	JobApplication getApplicationsByJobApplicationId(Long id);
+	List<JobApplication> findJobApplicationByOption(Long organizationId, String option);
 }
