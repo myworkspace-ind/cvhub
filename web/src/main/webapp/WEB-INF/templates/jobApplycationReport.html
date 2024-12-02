@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>The generated source code Web Application for Sakai</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet"
+          href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <!--    <link rel="stylesheet" th:href="@{/resources/searchCondition/style.css}" />-->
+    <link rel="stylesheet" th:href="@{/resources/search_tuan_22110450/style.css}"/>
+    <link rel="stylesheet" th:href="@{/resources/home/style.css}"/>
+    <link rel="stylesheet" th:href="@{/resources/home/jobRequest.css}"/>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="container">
+    <div class="row">
+        <!-- Cột bên trái chứa h2 và p -->
+        <div class="col-md-6 left-content">
+            <h2>Job Application List</h2>
+        </div>
+
+        <!-- Cột bên phải chứa input và button -->
+        <div class="col-md-6 right-content">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Enter text" id="searchKeyword">
+                <span class="input-group-btn">
+                        <button id="searchButton" class="btn btn-default" type="button" onclick="searchJobs">Search</button>
+                    </span>
+            </div>
+
+        </div>
+    </div>
+    <div class="panel panel-default card-table">
+        <div class="card-table-header panel-heading">
+            <div class="box-type-keyword-below__content">
+                <form th:action="@{/jobapply/search}" method="get">
+                    <label for="filter">Chọn loại tìm kiếm:</label>
+                    <select id="filter" name="filter">
+                        <option value="1" th:selected="${selectedFilter == '1'}">Theo ngày</option>
+                        <option value="2" th:selected="${selectedFilter == '2'}">Theo tuần</option>
+                        <option value="3" th:selected="${selectedFilter == '3'}">Theo tháng</option>
+                    </select>
+                    <button type="submit">Tìm kiếm</button>
+                </form>
+            </div>
+        </div>
+        <div class="panel-body card-table-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle table-nowrap mb-0 table-borderless">
+                    <thead class="table-light">
+                    <tr>
+                        <th class="align-middle" scope="col">Job request id</th>
+                        <th class="align-middle" scope="col">User id</th>
+                        <th class="align-middle" scope="col">Status</th>
+                        <th class="align-middle" scope="col">Note</th>
+                        <th class="align-middle" scope="col">Created date</th>
+                        <th class="align-middle" scope="col">Modifed date</th>
+                    </tr>
+                    </thead>
+                    <tbody id="job-table-body">
+                    <!-- Duyệt qua danh sách sản phẩm -->
+                    <tr th:each="jobapp : ${jobAppList}">
+<!--                        <td><img-->
+<!--                                th:src="@{/images/{logoId}(logoId=${job.organization.logoID})}"-->
+<!--                                alt="Logo" class="img-responsive"></td>-->
+                        <td th:text="${jobapp.jobRequest.id}"></td>
+                        <td th:text="${jobapp.user.id}"></td>
+                        <td th:text="${jobapp.status}"></td>
+                        <td th:text="${jobapp.note}"></td>
+                        <td th:text="${jobapp.createdDate}"></td>
+                        <td th:text="${jobapp.modified}"></td>
+<!--                        <td>-->
+<!--                            <button class="btn btn-success">Chi tiết</button>-->
+<!--                        </td>-->
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <nav aria-label="Page navigation" class="mt-5">
+        <ul class="pagination justify-content-center">
+            <!-- Previous button -->
+            <li class="page-item"
+                th:classappend="${currentPage == 0} ? 'disabled'"><a
+                    class="page-link"
+                    th:href="${currentPage > 0} ? @{/jobapply/search(page=${currentPage - 1}, filter=${selectedFilter})} : '#'"
+                    aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+            </a></li>
+
+            <!-- Page numbers -->
+            <li class="page-item"
+                th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${pageNum == currentPage} ? 'active'"><a
+                    class="page-link" th:href="@{/jobapply/search(page=${pageNum}, filter=${selectedFilter})}"
+                    th:text="${pageNum + 1}"></a></li>
+
+            <!-- Next button -->
+            <li class="page-item"
+                th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                <a class="page-link"
+                   th:href="${currentPage < totalPages - 1} ? @{/jobapply/search(page=${currentPage + 1}, filter=${selectedFilter})} : '#'"
+                   aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+<th:block th:include="fragments/javascript"></th:block>
+</html>

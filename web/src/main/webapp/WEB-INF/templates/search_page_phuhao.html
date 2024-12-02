@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>The generated source code Web Application for Sakai</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" th:href="@{/resources/searchCondition/style.css}" />
+<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
+<link rel="stylesheet" th:href="@{/resources/home/jobRequest.css}" />
+</head>
+<body>
+
+	<div th:replace="~{fragments/header :: header}"></div>
+	<div class="container">
+		<!-- search  -->
+		<nav class="navbar" th:fragment="search">
+			<div class="container">
+				<h1>Tìm việc làm nhanh 24h, việc làm mới nhất trên toàn quốc.</h1>
+				<p class="subtitle">Tiếp cận 40,000+ tin tuyển dụng việc làm mới
+					ngày từ hàng nghìn doanh nghiệp uy tín tại Việt Nam</p>
+				<nav class="navbar" th:fragment="searchCondition">
+					<form class="search-form" action="search" method="GET">
+						<input type="text" name="keyword" placeholder="Software Developer">
+						<div class="select-wrapper">
+
+							<select name="location" id="locationSelect">
+								<option value="0">Tất cả tỉnh/thành phố</option>
+
+							</select>
+						</div>
+
+						<select name="industry" id="jobRoleSelect">
+							<option value="0">Tất cả ngành nghề</option>
+
+						</select>
+						<select name="limit" id="limit" class="form-select w-auto"
+							onchange="updateLimit()">
+							<option value="5" th:selected="${limit == 5}">5</option>
+							<option value="10" th:selected="${limit == 10}">10</option>
+							<option value="15" th:selected="${limit == 15}">15</option>
+							<option value="20" th:selected="${limit == 20}">20</option>
+						</select>
+						<script>
+							function updateLimit() {
+								// Lấy giá trị được chọn trong dropdown
+								const selectedLimit = document
+										.getElementById('limit').value;
+
+								// Lấy giá trị trang hiện tại (nếu có) từ URL
+								const urlParams = new URLSearchParams(
+										window.location.search);
+								const currentPage = urlParams.get('page') || 0; // Mặc định là 0 nếu không có `page`
+
+								// Điều hướng lại URL với giá trị `limit` mới
+								window.location.href = `/cvhub-web/main/dev_phuhao/jobrequests?page=${currentPage}&limit=${selectedLimit}`;
+							}
+						</script>
+						<button type="submit">Tìm kiếm</button>
+					</form>		
+			</div>
+		</nav>
+		<!-- search  -->
+		<script type="text/javascript"
+			th:src="@{/resources/searchCondition/searchProvince.js}"></script>
+		<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+			<table class="table table-bordered table-borderless  table-striped-columns" style="background-color:#fff;">
+			    <thead style="background-color: #4CAF50; color: #14593a;">
+			        <tr>
+			            <th class="text-center">Job Title</th>
+			            <th class="text-center">Company Name</th>
+			            <th class="text-center">Location</th>
+			            <th class="text-center">Job Role</th>
+			            <th class="text-center">Experience</th>
+			            <th class="text-center">Salary</th>
+			            <th class="text-center">Date</th>
+			            <th class="text-center">View Details</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+			        <tr th:each="job : ${jobrequests}">
+			            <td class="bg-white text-start fw-bold" th:text="${job.organization.title}"></td>
+			            <td class="bg-white text-start" th:text="${job.organization.title}"></td>
+			            <td class="bg-white text-start" th:text="${job.location.name}"></td>
+			            <td class="bg-white text-start" th:text="${job.jobRole.title}"></td>
+			            <td class="bg-white text-center" th:text="${job.experience}"></td>
+			            <td class="bg-white text-center text-success fw-semibold" th:text="${job.salary}"></td>
+			            <td class="bg-white text-center" th:text="${#dates.format(job.createdDate, 'dd MMM yyyy')}"></td>
+			            <td class="bg-white text-center">
+			            <button class="button text-bg-dark" th:onclick="'window.location.href=\'/cvhub-web/jobrequests/' + ${job.id} + '\';'">
+			            	View Details
+			            </button>
+			               
+			            </td>
+			        </tr>
+			    </tbody>
+			</table>
+
+		</div>
+		<nav aria-label="Page navigation" class="mt-5">
+			<ul class="pagination justify-content-center">
+				<!-- Nút Previous -->
+				<li class="page-item"
+					th:classappend="${currentPage == 0} ? 'disabled'"><a
+					class="page-link"
+					th:href="${currentPage > 0} ? @{/main/dev_phuhao/jobrequests(page=${currentPage - 1}, limit=${limit})} : '#'"
+					aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+				</a></li>
+
+				<!-- Số trang -->
+				<li class="page-item"
+					th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+					th:classappend="${pageNum == currentPage} ? 'active'"><a
+					class="page-link"
+					th:href="@{/main/dev_phuhao/jobrequests(page=${pageNum}, limit=${limit})}"
+					th:text="${pageNum + 1}"></a></li>
+
+				<!-- Nút Next -->
+				<li class="page-item"
+					th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+					<a class="page-link"
+					th:href="${currentPage < totalPages - 1} ? @{/main/dev_phuhao/jobrequests(page=${currentPage + 1}, limit=${limit})} : '#'"
+					aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+				</a>
+				</li>
+			</ul>
+			
+		</nav>
+	</div>
+</body>
+<th:block th:include="fragments/javascript"></th:block>
+</html>
