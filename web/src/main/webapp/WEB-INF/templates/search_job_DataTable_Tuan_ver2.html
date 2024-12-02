@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>The generated source code Web Application for Sakai</title>
+<!-- Latest compiled and minified CSS -->
+<!-- <link rel="stylesheet" -->
+<!-- 	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> -->
+<!--        <link rel="stylesheet" th:href="@{/resources/searchCondition/style.css}" />-->
+
+<th:block th:include="fragments/head"></th:block>
+
+<link rel="stylesheet"
+	th:href="@{/resources/search_tuan_22110450/style.css}" />
+<!-- <link rel="stylesheet" th:href="@{/resources/home/style.css}" /> -->
+<link rel="stylesheet" th:href="@{/resources/home/jobRequest.css}" />
+</head>
+<th:block th:include="fragments/hmenu"></th:block>
+<body>
+
+	<!-- 	<div th:replace="~{fragments/header :: header}"></div> -->
+	<div class="dashboard-page-content">
+		<div class="row mb-3 align-items-center justify-content-between">
+			<!-- Cột bên trái chứa h2 và p -->
+			<div class="col-md-3 mb-8 mb-md-0">
+				<h2>Job List</h2>
+				<p>Tìm kiếm công việc của bạn</p>
+			</div>
+
+			<div class="col-md-5 d-flex align-items-center justify-content-end">
+				<div class="box-type-keyword-below__title">Tìm kiếm theo:</div>
+				<div class="box-type-keyword-below__list ms-3">
+					<div id="search-for-name"
+						class="box-type-keyword-below__list--item" data-type-keyword="1"
+						onclick="toggleCheck(this)">
+						<i class="bi bi-check check-icon fs-4"></i> </i> Tên việc làm
+					</div>
+					<div class="box-type-keyword-below__list--item"
+						data-type-keyword="2" onclick="toggleCheck(this)">
+						<i class="bi bi-check check-icon fs-4"></i> Tên công ty
+					</div>
+				</div>
+			</div>
+
+			<!-- Cột bên phải chứa input và button -->
+			<div class="col-md-4 d-flex flex-wrap justify-content-md-end">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="Enter text"
+						id="searchKeyword"> <span class="input-group-btn">
+						<button id="searchButton" class="btn btn-primary" type="button"
+							onclick="searchJobs(0)">Search</button>
+					</span>
+				</div>
+
+			</div>
+		</div>
+		<div class="card mb-4 rounded-4 p-7">
+			<div class="card-header bg-transparent px-0 pt-0 pb-7">
+				<div class="box-type-keyword-below__content">
+					<div class="row justify-content-start align-items-center">
+						<!-- Sort dropdown -->
+						<div class="col-auto">
+							<select id="sort-advanced" name="sort-advanced" tabindex="-1"
+								class="select2-hidden-accessible form-select" aria-hidden="true"
+								onchange="searchJobs(0)">
+								<option value="top_related" sort-value="new"
+									class="option-item-sort" selected="">Sắp xếp</option>
+								<option value="new" sort-value="new" class="option-item-sort">Ngày
+									đăng</option>
+								<option value="up_top" sort-value="up_top"
+									class="option-item-sort">Ngày cập nhật</option>
+								<option value="high_salary" sort-value="high_salary"
+									class="option-item-sort">Lương cao đến thấp</option>
+								<option value="experientia" sort-value="experientia"
+									class="option-item-sort">Kinh nghiệm thấp đến cao</option>
+							</select>
+						</div>
+
+						<!-- Location dropdown -->
+						<div class="col-auto">
+							<select name="location" id="locationSelect"
+								class="option-item-sort form-select" onchange="searchJobs(0)">
+								<option value="0">Tất cả tỉnh/thành phố</option>
+							</select>
+						</div>
+
+						<!-- Industry dropdown -->
+						<div class="col-auto">
+							<select name="industry" id="jobRoleSelect"
+								class="option-item-sort form-select"
+								onchange="applyFilter(this.selectedOptions[0].textContent, this.value)">
+								<option value="0">Tất cả ngành nghề</option>
+							</select>
+						</div>
+
+						<!-- Selected filters display -->
+						<div id="selected-filters"
+							class="d-inline-flex flex-wrap gap-1 col-auto"></div>
+						<script type="text/javascript"
+							th:src="@{/resources/search_tuan_22110450/search_tuan.js}"></script>
+					</div>
+				</div>
+			</div>
+			<div class="card-body px-0 pt-7 pb-0">
+				<div class="table-responsive">
+					<table
+						class="table table-hover align-middle table-nowrap mb-0 table-borderless">
+						<thead class="table-light">
+							<tr>
+								<th class="align-middle" scope="col">Logo</th>
+								<th class="align-middle" scope="col">Job Title</th>
+								<th class="align-middle" scope="col">Company Name</th>
+								<th class="align-middle" scope="col">Location</th>
+								<th class="align-middle" scope="col">Job Role</th>
+								<th class="align-middle" scope="col">Experience</th>
+								<th class="align-middle" scope="col">Salary</th>
+								<th class="align-middle" scope="col">Posted</th>
+								<th class="align-middle" scope="col">Action</th>
+							</tr>
+						</thead>
+						<tbody id="job-table-body">
+							<!--                    nội dung hiển thị ở đây-->
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div id="pagination"
+			class="pagination justify-content-center d-flex align-items-center"></div>
+	</div>
+</body>
+<th:block th:include="fragments/javascript"></th:block>
+</html>
