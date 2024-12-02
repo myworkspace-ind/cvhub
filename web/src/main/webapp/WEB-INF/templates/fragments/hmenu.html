@@ -15,31 +15,41 @@
   <ul class="navIntraTool actionToolbar">
     <li>  
       <span title="List jobs" th:class="${isSelectedHome != null && isSelectedHome ? 'current' : ''}">
-         <!--<a th:href="@{/job}">Job</a> -->
-		<a th:href="@{/searchJob}">Job</a>
+        <a th:href="@{/job}">Job</a>
       </span>
-  </li>
-  <li>  
+ 	</li>
+ 	<li>  
       <span title="List employee">
         <a th:href="@{/employee}">Employee</a>
       </span>
-  </li>
-  <li>  
+ 	</li>
+ 	<li>  
       <span title="Resources" th:class="${isSelectedResources != null && isSelectedResources ? 'current' : ''}">
         <a th:href="@{/resources}">Employer</a>
       </span>
-  </li>
-  <li>
+ 	</li>
+ 	<li>
       <span title="Configuration" th:class="${isSelectedConfiguration != null && isSelectedConfiguration ? 'current' : ''}">
         <a th:href="@{/configuration}">Configuration</a>
       </span>
-  </li>
- <li> 
-     <span title="Report">
-       <a id="report" th:href="@{/report}">Report</a>
+ 	</li>
+	<li> 
+     <span title="Report" class="dropdown">
+        <a id="report" th:href="@{/report}">Report2</a>
+       <ul class="dropdown-menu">
+         <li><a th:href="@{/report/user}">Report User</a></li>
+       </ul>
      </span>
- </li>
- <li> 
+	</li>
+	<li class="dropdown"><span title="Report"> <a id="report"
+				href="javascript:void(0);">Report</a>
+		</span>
+			<ul class="dropdown-menu">
+				<li><a th:href="@{/report_duy}">Job Report</a></li>
+				<li><a th:href="@{/report/organization}">Organization Report</a></li>
+				<li><a th:href="@{/report/user}">User Report</a></li>
+			</ul></li>
+	<li> 
      <span title="About">
        <a id="about" href="#">About</a>
      </span>
@@ -58,9 +68,6 @@
      <span title="dev_tuan_22110450">
        <a id="dev_tuan_22110450" th:href="@{/search_tuan}">Search_tuan_22110450</a>
      </span>
-<<<<<<< HEAD
-    </li></ul>
-=======
     </li>
 </ul>
   <!-- Right-aligned dropdown button -->
@@ -81,55 +88,3 @@
 
 <script th:src="@{/resources/report_duy/report_duy.js}"></script>
 <link rel="stylesheet" th:href="@{/resources/report_duy/style.css}">
-
-
-<div class="d-flex justify-content-between">
-
-	<ul class="navIntraTool actionToolbar">
-		<li><span title="List jobs"
-			th:class="${isSelectedHome != null && isSelectedHome ? 'current' : ''}">
-				<a th:href="@{/job}">Job</a>
-		</span></li>
-		
-		<li><span title="List employee"> <a th:href="@{/employee}">Employee</a>
-		</span></li>
-		
-		<li><span title="Resources"
-			th:class="${isSelectedResources != null && isSelectedResources ? 'current' : ''}">
-				<a th:href="@{/resources}">Employer</a>
-		</span></li>
-		
-		<li><span title="Configuration"
-			th:class="${isSelectedConfiguration != null && isSelectedConfiguration ? 'current' : ''}">
-				<a th:href="@{/configuration}">Configuration</a>
-		</span></li>
-		
-		<li class="dropdown"><span title="Report"> <a id="report"
-				href="javascript:void(0);">Report</a>
-		</span>
-			<ul class="dropdown-menu">
-				<li><a th:href="@{/report_duy}">Job Report</a></li>
-				<li><a th:href="@{/report/organization}">Organization Report</a></li>
-				<li><a th:href="@{/report/user}">User Report</a></li>
-			</ul></li>
-
-		<li><span title="About"> <a id="about" href="#">About</a>
-		</span></li>
-	</ul>
-
-
-	<ul class="nav mt-2 me-3">
-		<li class="dropdown">
-			<button button class="btn btn-secondary btn-sm dropdown-toggle"
-				type="button" data-bs-toggle="dropdown" aria-expanded="false">
-				username</button>
-				
-			<ul class="dropdown-menu dropdown-menu-end">
-				<li><a class="dropdown-item small" href="#">View Profile</a></li>
-				<li><a class="dropdown-item small" href="#">Setting</a></li>
-				<li><a class="dropdown-item small" href="#">Log out</a></li>
-			</ul>
-		</li>
-	</ul>
-</div>
->>>>>>> c979e21b8b7d994f1a0c26bc91b41b408d6f546d
