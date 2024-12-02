@@ -1,0 +1,121 @@
+body{
+	background-color: #f5f5f5;
+}
+.box-type-keyword-below__content {
+	align-items: center;
+	display: flex;
+	gap: 12px;
+	padding: 0px 0;
+}
+
+.box-type-keyword-below__list {
+	align-content: flex-start;
+	align-items: flex-start;
+	border-right: 1px solid var(--Neutral-Neutral-30s, #b3b8bd);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	padding-right: 20px;
+}
+
+.box-type-keyword-below__list--item {
+	align-items: center;
+	background: #e3e6ea;
+	border: 1px solid #e3e6ea;
+	border-radius: 24px;
+	color: #263a4d;
+	cursor: pointer;
+	display: flex;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 500;
+	gap: 8px;
+	justify-content: center;
+	letter-spacing: .14px;
+	line-height: 22px;
+	padding: 3px 12px;
+	transition: .3s;
+}
+
+.box-type-keyword-below__list--item.selected {
+	border-color: green;
+	/* Viền màu xanh */
+	color: green;
+	/* Văn bản màu xanh */
+	background-color: white;
+	font-weight: bold; /* Làm chữ đậm */
+}
+
+.check-icon {
+	display: none;
+	margin-right: 10px;
+}
+
+.box-type-keyword-below__list--item.selected .check-icon {
+	display: inline-block;
+}
+
+.select-sort-advanced {
+	height: 36px;
+	position: relative;
+	display: flex;
+}
+
+.select-sort-advanced select {
+	align-items: center;
+	border: 1px solid #dfdfdf;
+	border-radius: 6px !important;
+	box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, .04);
+	color: #263a4d;
+	display: flex !important;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 600;
+	letter-spacing: .14px;
+	line-height: 22px;
+	padding: 7px 12px;
+	text-indent: 1px;
+	text-overflow: "";
+}
+
+.dashboard-page-content, .footer-dashboard {
+	padding: 30px 10%;
+}
+
+.dashboard-wrapper .card {
+	transform: translateY(0);
+	transition: all .3s;
+}
+
+.table-borderless thead {
+	height: 60px;
+	border: none;
+	/* Loại bỏ đường viền của các ô */
+}
+
+.table-borderless td, .table-borderless th {
+	border: none;
+	/* Loại bỏ đường viền của các ô */
+}
+
+.table-borderless tr:not(thead tr){
+	border-bottom: 1px solid #f5f5f5;
+	height: 80px;
+}
+
+.table-borderless img {
+	max-height: 50px;
+	border-radius: 5px;
+}
+
+.p-7 {
+	padding: 1.25rem !important;
+}
+
+.pb-7 {
+	padding-bottom: 1.25rem !important;
+}
+
+.pt-7 {
+	padding-top: 1.25rem !important;
+}
