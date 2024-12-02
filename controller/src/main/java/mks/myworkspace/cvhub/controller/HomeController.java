@@ -101,24 +101,34 @@ public class HomeController extends BaseController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/", "/home" ,"/searchJob"}, method = RequestMethod.GET)
 	public ModelAndView displayHome(HttpServletRequest request, 
 									HttpSession httpSession, 
 									@RequestParam(value = "page", defaultValue = "0") int page,
-						            @RequestParam(value ="limit", defaultValue = "10") int limit) {
-		ModelAndView mav = new ModelAndView("home");
+						            @RequestParam(value ="limit", defaultValue = "9") int limit) {
+		ModelAndView mav;
+
+		// Xác định view dựa trên URL
+		String requestURI = request.getRequestURI();
+		String viewName = "home";  // Mặc định view cho trang home
+
+		if (requestURI.contains("/searchJob")) {
+			viewName = "searchJob";  // Nếu là /searchJob, trả về view searchJob
+		}
+
+		mav = new ModelAndView(viewName);	// Trả về dữ liệu chung cho cả 2 trang
 
 		initSession(request, httpSession);
 		PageRequest pageRequest = PageRequest.of(
-                page, limit,
-                Sort.by("createdDate").descending()
-        );
-        Page<JobRequest> jobRequestPage = jobRequestRepository.findAll(pageRequest);
-        int totalPages = jobRequestPage.getTotalPages();
-        List<JobRequest> jobRequests = jobRequestPage.getContent();
-        mav.addObject("jobrequests", jobRequests);
-        mav.addObject("totalPages", totalPages);
-        mav.addObject("currentPage", page);
+				page, limit,
+				Sort.by("createdDate").descending()
+		);
+		Page<JobRequest> jobRequestPage = jobRequestRepository.findAll(pageRequest);
+		int totalPages = jobRequestPage.getTotalPages();
+		List<JobRequest> jobRequests = jobRequestPage.getContent();
+		mav.addObject("jobrequests", jobRequests);
+		mav.addObject("totalPages", totalPages);
+		mav.addObject("currentPage", page);
 		mav.addObject("currentSiteId", getCurrentSiteId());
 		mav.addObject("userDisplayName", getCurrentUserDisplayName());
 		List<Location> locations = locationService.getRepo().findAll();
