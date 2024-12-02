@@ -2,6 +2,8 @@ package mks.myworkspace.cvhub.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import mks.myworkspace.cvhub.entity.CV;
@@ -14,7 +16,8 @@ public interface CvService{
 	long getSelectedCVCount(Long userId);
 	List<CV> findCVsByUserId(Long id);
 	void setPrimaryCV(Long id, Long id2);
-
+	Page<CV> getPaginatedCVs(Pageable pageable);
+	Page<CV> searchCVs(String keyword, Pageable pageable);
 
 
 }
