@@ -18,12 +18,17 @@
 <body>
 	<th:block th:include="fragments/hmenu"></th:block>
     <nav class="navbar">
-	    <div class="search-container">
+	    <div class="search-container d-flex align-items-center">
 	        <form class="search-form" action="search-employer" method="GET">
 	            <input type="text" name="keyword" placeholder="Nhập tên công ty">
 	            
 	            <button type="submit">Tìm kiếm</button>
 	        </form>
+	        <!-- Nút Xuất Excel -->
+			<form class="search-form" action="export-employers" method="GET">
+				<input type="hidden" name="keyword" th:value="${param.keyword}" />
+				<button type="submit" class="btn btn-success ms-3">Xuất Excel</button>
+			</form>
 	    </div>
 	</nav>
 
