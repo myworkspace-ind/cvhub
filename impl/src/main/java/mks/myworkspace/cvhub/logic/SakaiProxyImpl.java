@@ -41,12 +41,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Implementation of {@link SakaiProxy}
- * 
- * @author Steve Swinsburg (steve.swinsburg@anu.edu.au), Thach Ngoc Le (ThachLN@mks.com.vn
- *
- */
 @Slf4j
 public class SakaiProxyImpl implements SakaiProxy {
 
@@ -167,7 +161,7 @@ public class SakaiProxyImpl implements SakaiProxy {
     public AuthzGroupService authzGroupService = null;
     
 	@Override
-	public boolean isUserRoleSwapped() {
+	public boolean isUserRoleSwapped() throws IdUnusedException {
 		return securityService.isUserRoleSwapped();
 	}
 

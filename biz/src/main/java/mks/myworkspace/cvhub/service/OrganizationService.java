@@ -17,6 +17,7 @@ public interface OrganizationService {
 	byte[] downloadImage(MultipartFile logoFile) throws IOException ;
 	 boolean isOwner(Long organizationId, String userEmail);
 	 Organization findByUserId(Long id);
-	 List<Organization> searchByTitle(String title); // Thêm chức năng tìm kiếm công ty bằng tên công ty : người thêm LeDaoNhanSam
+	 List<Organization> searchByTitle(String title); // Th�m ch?c nang t�m ki?m c�ng ty b?ng t�n c�ng ty : ngu?i th�m LeDaoNhanSam
 	 
+    List<Organization> findByTitleContaining(String title);
 }

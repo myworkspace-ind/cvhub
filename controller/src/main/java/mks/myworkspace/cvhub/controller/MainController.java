@@ -51,13 +51,14 @@ import mks.myworkspace.cvhub.service.OrganizationService;
 @Controller
 @Slf4j
 public class MainController extends BaseController {
+	@Autowired
+	OrganizationService organizationService;
+
 	/**
 	 * Handles requests for the application home page on Platform MyWorkspace/Sakai.
 	 * 
 	 * @return
 	 */
-	@Autowired
-	OrganizationService organizationService;
 	@Autowired
 	LocationService locationService;
 
@@ -77,8 +78,8 @@ public class MainController extends BaseController {
 		ModelAndView mav = new ModelAndView("organization/organizationReport");
 		Page<Organization> organizationPage = organizationService.getRepo().findAll(PageRequest.of(page, size));
 		mav.addObject("organizations", organizationPage.getContent());
-		mav.addObject("currentPage", page); // Trang hiện tại
-		mav.addObject("totalPages", organizationPage.getTotalPages()); // Tổng số trang
+		mav.addObject("currentPage", page); // Trang hi?n t?i
+		mav.addObject("totalPages", organizationPage.getTotalPages()); // T?ng s? trang
 		return mav;
 	}
 
@@ -89,11 +90,11 @@ public class MainController extends BaseController {
 	  HttpSession httpSession) { ModelAndView mav = new ModelAndView("organization/organizationReport");
 
 	 List<Organization>searchResults = organizationService.searchByTitle(companyName);
-	 Page<Organization> organizationPage = new PageImpl<>(searchResults,PageRequest.of(page, size), searchResults.size()); // Thêm kết quả vào
+	 Page<Organization> organizationPage = new PageImpl<>(searchResults,PageRequest.of(page, size), searchResults.size()); // Th�m k?t qu? v�o
 	 mav.addObject("organizations", organizationPage.getContent());
-	 mav.addObject("currentPage", page); // Trang hiện tại
-	 mav.addObject("totalPages", organizationPage.getTotalPages()); // Tổng sốtrang 
-	 mav.addObject("size", size);  // Kích thước mỗi trang 
+	 mav.addObject("currentPage", page); // Trang hi?n t?i
+	 mav.addObject("totalPages", organizationPage.getTotalPages()); // T?ng s?trang 
+	 mav.addObject("size", size);  // K�ch thu?c m?i trang 
 	 return mav; }
 	 
 }
