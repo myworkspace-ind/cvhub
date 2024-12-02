@@ -77,13 +77,13 @@ public class HomeController extends BaseController {
 	@Autowired
 	SearchJobService searchjobService;
 	@Autowired
-    private JobRequestRepository jobRequestRepository;
-	
+	private JobRequestRepository jobRequestRepository;
+
 	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
 
 	/**
 	 * This method is called when binding the HTTP parameter to bean (or model).
-	 * 
+	 *
 	 * @param binder
 	 */
 	@InitBinder
@@ -98,14 +98,15 @@ public class HomeController extends BaseController {
 
 	/**
 	 * Simply selects the home view to render by returning its name.
-	 * 
+	 *
 	 * @return
 	 */
-	@RequestMapping(value = { "/", "/home" ,"/searchJob"}, method = RequestMethod.GET)
-	public ModelAndView displayHome(HttpServletRequest request, 
-									HttpSession httpSession, 
+
+	@RequestMapping(value = { "/", "/home","/searchJob" }, method = RequestMethod.GET)
+	public ModelAndView displayHome(HttpServletRequest request,
+									HttpSession httpSession,
 									@RequestParam(value = "page", defaultValue = "0") int page,
-						            @RequestParam(value ="limit", defaultValue = "9") int limit) {
+									@RequestParam(value ="limit", defaultValue = "9") int limit) {
 		ModelAndView mav;
 
 		// Xác định view dựa trên URL
@@ -136,6 +137,7 @@ public class HomeController extends BaseController {
 		return mav;
 	}
 
+
 	@GetMapping("/job-roles")
 	@ResponseBody
 	public List<JobRole> getAllJobRoles() {
@@ -144,7 +146,7 @@ public class HomeController extends BaseController {
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public ModelAndView searchJobs(@ModelAttribute JobSearchDTO jobSearchDTO, HttpServletRequest request,
-			HttpSession httpSession) {
+								   HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("searchResult");
 		List<JobRequest> searchResults = searchjobService.searchJobRequest(jobSearchDTO.getKeyword(),
 				jobSearchDTO.getLocation(), jobSearchDTO.getIndustry());
@@ -166,16 +168,16 @@ public class HomeController extends BaseController {
 		return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
 	}
 
-	
-	  @GetMapping("/details")
-	   public ModelAndView getJobDetails(@RequestParam("id") Long jobId) {
-	        // Replace with your service call to fetch the job details using jobId
-			ModelAndView mav = new ModelAndView("V");
-	        return mav;
-	    }
+
+	@GetMapping("/details")
+	public ModelAndView getJobDetails(@RequestParam("id") Long jobId) {
+		// Replace with your service call to fetch the job details using jobId
+		ModelAndView mav = new ModelAndView("V");
+		return mav;
+	}
 
 
-	
+
 
 	public byte[] uuidToBytes(UUID uuid) {
 		ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[256]);
