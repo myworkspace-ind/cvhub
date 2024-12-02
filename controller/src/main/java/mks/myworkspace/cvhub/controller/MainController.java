@@ -19,14 +19,17 @@
 
 package mks.myworkspace.cvhub.controller;
 
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.slf4j.Slf4j;
+import mks.myworkspace.cvhub.service.OrganizationService;
 
 /**
  * Handles requests for the application home page.
@@ -34,6 +37,9 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Slf4j
 public class MainController extends BaseController {
+	@Autowired
+	OrganizationService organizationService;
+
 	/**
 	 * Handles requests for the application home page on Platform MyWorkspace/Sakai.
 	 * 
