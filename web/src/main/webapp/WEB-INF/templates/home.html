@@ -11,7 +11,7 @@
 <link rel="stylesheet" th:href="@{/resources/home/jobRequest.css}" />
 </head>
 <body>
-
+	
 	<div th:replace="~{fragments/header :: header}"></div>
 	<div class="container">
 		<div th:replace="~{fragments/searchCondition :: search}"></div>
@@ -73,4 +73,5 @@
 		</nav>
 	</div>
 </body>
+<th:block th:include="fragments/javascript"></th:block>
 </html>

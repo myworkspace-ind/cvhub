@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,24 @@ public class OrganizationImpl implements OrganizationService {
 	        return logoFile.getBytes();
 	    }
 	    throw new IOException("Logo file is null or empty");
+	}
+
+	@Override
+	public boolean isOwner(Long organizationId, String userEmail) {
+		        Organization org = repo.findById(organizationId).orElse(null);
+		        if (org == null || org.getUser() == null) {
+		            return false;
+		        }
+		        return org.getUser().getEmail().equals(userEmail);
+	}
+
+	@Override
+	public Organization findByUserId(Long id) {
+		return repo.findByUserId(id);
+	}
+	
+	@Override
+	public List<Organization> findByTitleContaining(String title) {
+		return repo.findByTitleContaining(title);
 	}
 }

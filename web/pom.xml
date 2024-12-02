@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-<!--	<parent>-->
-<!--		<artifactId>cvhub</artifactId>-->
-<!--		<groupId>mks.myworkspace.cvhub</groupId>-->
-<!--		<version>23.2</version>-->
-<!--	</parent>-->
+	<!--	<parent>-->
+	<!--		<artifactId>cvhub</artifactId>-->
+	<!--		<groupId>mks.myworkspace.cvhub</groupId>-->
+	<!--		<version>23.2</version>-->
+	<!--	</parent>-->
 	<!-- Comments parent tag to run the web standalone -->
 	<groupId>mks.myworkspace.cvhub</groupId>
 	<artifactId>cvhub-web</artifactId>
@@ -14,25 +16,42 @@
 	<packaging>war</packaging>
 
 	<properties>
-        <sakai.kernel.version>23.2</sakai.kernel.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>5.3.27</spring.version>
-        <spring.security.version>5.5.7</spring.security.version>
-        <module.version>23.2</module.version>
-        <thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
-        <sakai.hibernate.version>5.6.15.Final</sakai.hibernate.version>
-        <sakai.commons-io.version>2.13.0</sakai.commons-io.version>
-        <spring.data.jpa.version>2.5.3</spring.data.jpa.version>
-        <sakai.commons.fileupload.version>1.5</sakai.commons.fileupload.version>
-        <sakai.jackson.version>2.13.2</sakai.jackson.version>
-        <sakai.jstl.version>1.2</sakai.jstl.version>
+		<sakai.kernel.version>23.2</sakai.kernel.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<spring.version>5.3.27</spring.version>
+		<spring.security.version>5.5.7</spring.security.version>
+		<module.version>23.2</module.version>
+		<thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
+		<sakai.hibernate.version>5.6.15.Final</sakai.hibernate.version>
+		<sakai.commons-io.version>2.13.0</sakai.commons-io.version>
+		<spring.data.jpa.version>2.5.3</spring.data.jpa.version>
+		<sakai.commons.fileupload.version>1.5</sakai.commons.fileupload.version>
+		<sakai.jackson.version>2.13.2</sakai.jackson.version>
+		<sakai.jstl.version>1.2</sakai.jstl.version>
 		<!-- More -->
-        <sakai.log4j.version>2.20.0</sakai.log4j.version>
-        <sakai.slf4j.version>1.7.36</sakai.slf4j.version>
-        <sakai.poi.version>5.2.3</sakai.poi.version>
+		<sakai.log4j.version>2.20.0</sakai.log4j.version>
+		<sakai.slf4j.version>1.7.36</sakai.slf4j.version>
+		<sakai.poi.version>5.2.3</sakai.poi.version>
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery</artifactId>
+			<version>3.6.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>popper.js</artifactId>
+			<version>2.9.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>bootstrap</artifactId>
+			<version>5.2.0</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>mks.myworkspace.cvhub</groupId>
 			<artifactId>cvhub-api</artifactId>
@@ -69,7 +88,23 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring.security.version}</version>
+		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring.security.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+			<version>${spring.security.version}</version>
+		</dependency>
 		<!-- For uploading -->
 		<dependency>
 			<groupId>commons-fileupload</groupId>
@@ -187,73 +222,77 @@
 			<artifactId>sakai-component-manager</artifactId>
 			<version>${sakai.kernel.version}</version>
 		</dependency>
-      <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-1.2-api</artifactId>
-        <version>${sakai.log4j.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-api</artifactId>
-        <version>${sakai.log4j.version}</version>
-      </dependency>
-      <!-- slf4j-log4j12 binds slf4j to log4j impl, this can be changed to another logging impl-->
-      <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-slf4j-impl</artifactId>
-        <version>${sakai.log4j.version}</version>
-      </dependency>
-      <!-- log4j is the actual logger used by slf4j, this would be removed if using a different logging impl -->
-      <!-- change to scope runtime once all sakai log4j code is switched to slf4j -->
-      <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-core</artifactId>
-        <version>${sakai.log4j.version}</version>
-      </dependency>
-      <!-- jcl-over-slf4j is providing the redirection from jcl to slf4j -->
-      <!-- change to scope runtime once all sakai jcl code is switched to slf4j -->
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>jcl-over-slf4j</artifactId>
-        <version>${sakai.slf4j.version}</version>
-      </dependency>
-      
-        <!-- Support JPA -->
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-commons</artifactId>
-            <version>${spring.data.jpa.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
-            <version>${spring.data.jpa.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>${sakai.hibernate.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>${sakai.hibernate.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <version>2.7.1</version>
-        </dependency>
 		<dependency>
-		    <groupId>org.postgresql</groupId>
-		    <artifactId>postgresql</artifactId>
-		    <version>42.6.0</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-1.2-api</artifactId>
+			<version>${sakai.log4j.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.mariadb.jdbc</groupId>
-		    <artifactId>mariadb-java-client</artifactId>
-		    <version>3.4.0</version>
-<!--		    <version>2.7.4</version>-->
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${sakai.log4j.version}</version>
+		</dependency>
+		<!-- slf4j-log4j12 binds slf4j to log4j impl, this can be changed to
+		another logging impl-->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>${sakai.log4j.version}</version>
+		</dependency>
+		<!-- log4j is the actual logger used by slf4j, this would be removed if
+		using a different logging impl -->
+		<!-- change to scope runtime once all sakai log4j code is switched to
+		slf4j -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${sakai.log4j.version}</version>
+		</dependency>
+		<!-- jcl-over-slf4j is providing the redirection from jcl to slf4j -->
+		<!-- change to scope runtime once all sakai jcl code is switched to
+		slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${sakai.slf4j.version}</version>
+		</dependency>
+
+		<!-- Support JPA -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-commons</artifactId>
+			<version>${spring.data.jpa.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+			<version>${spring.data.jpa.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${sakai.hibernate.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${sakai.hibernate.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>2.7.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.6.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>3.4.0</version>
+			<!--		    <version>2.7.4</version>-->
 		</dependency>
 
 	</dependencies>
@@ -292,7 +331,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
 					<warSourceDirectory>${basedir}/src/main/webapp</warSourceDirectory>
-					<ouputDirectory>${project.build.directory}</ouputDirectory>
+					<outputDirectory>${project.build.directory}</outputDirectory>
 				</configuration>
 			</plugin>
 		</plugins>

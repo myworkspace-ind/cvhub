@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const jobRoleSelect = document.getElementById('jobRoleSelect');
         async function fetchLocations() {
             try {
-                const response = await fetch('https://provinces.open-api.vn/api/?depth=1');
+				/*const response = await fetch('https://provinces.open-api.vn/api/?depth=1');*/
+                const response = await fetch(_ctx + 'resources/master-data/provinces.json');
                 const locations = await response.json();
                 
                 locations.forEach(location => {
@@ -21,7 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const jobRoles = await response.json(); // Sử dụng phương thức .json() để phân tích cú pháp
+        const jobRoles = await response.json(); 
+		// Sử dụng phương thức .json() để phân tích cú pháp
         jobRoles.forEach(role => {
             const option = new Option(role.title, role.id);
             jobRoleSelect.add(option);
