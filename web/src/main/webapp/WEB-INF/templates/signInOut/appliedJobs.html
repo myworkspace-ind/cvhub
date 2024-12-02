@@ -42,12 +42,14 @@ th:each="appli : ${applications}">
 
 <div>
 <span class="status-badge"
-th:classappend="${appli.status == 'PENDING' ? 'status-pending' :
-appli.status == 'APPROVED' ? 'status-approved' :
-'status-rejected'}"
+th:classappend="${appli.status == 'PENDING' ? 'status-pending' : 
+                appli.status == 'APPROVED' ? 'status-approved' :
+                appli.status == 'DENY' ? 'status-rejected' :
+                'status-rejected'}"
 th:text="${appli.status == 'PENDING' ? 'Đang chờ' :
-appli.status == 'APPROVED' ? 'Đã duyệt' :
-'Từ chối'}">
+         appli.status == 'APPROVED' ? 'Đã duyệt' :
+         appli.status == 'DENY' ? 'Từ chối' :
+         'Từ chối'}">
 </span>
 </div>
 
