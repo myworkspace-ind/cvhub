@@ -6,7 +6,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,26 +16,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
-
 import mks.myworkspace.cvhub.entity.Organization;
 import mks.myworkspace.cvhub.repository.OrganizationRepository;
-import mks.myworkspace.cvhub.service.OrganizationExportExcelService;
 import mks.myworkspace.cvhub.service.OrganizationService;
-
 
 @Controller
 public class SearchEmployerController extends BaseController{
 
-	@Autowired
-    OrganizationRepository organizationRepository;
-	
     @Autowired
     OrganizationService organizationService;
-    
     @Autowired
-    OrganizationExportExcelService exportService;
+    OrganizationRepository organizationRepository;
     
     @GetMapping("/resources")
     public ModelAndView getEmployers(HttpServletRequest request,
@@ -91,4 +84,8 @@ public class SearchEmployerController extends BaseController{
 
 		return mav;
 	}
+    
+    
+    
+    
 }
