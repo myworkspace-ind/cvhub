@@ -21,4 +21,6 @@ public interface JobApplicationService {
 	Page<JobApplication> findByCreatedDateBetween(Date start, Date end, PageRequest pageRequest);
 	List<JobApplication> findByCreatedDateBetween(Date start, Date end);
 	void deleteApplicationById(Long id);
+	JobApplication getApplicationsByJobApplicationId(Long id);
+	List<JobApplication> findJobApplicationByOption(Long organizationId, String option);
 }
