@@ -1,8 +1,12 @@
 package mks.myworkspace.cvhub.service.impl;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import lombok.Getter;
@@ -24,10 +28,12 @@ public class JobApplicationImpl implements JobApplicationService{
 	public void AddJobApplication(User user, JobRequest jobRequest) {
 		JobApplication jobApplication = new JobApplication();
 		jobApplication.setJobRequest(jobRequest);
+
         jobApplication.setUser(user);
         jobApplication.setStatus("PENDING");
         jobApplication.setNote(null);
         repo.save(jobApplication);
+
 	}
 	@Override
 	public List<JobApplication> getApplicationsByUser(User currentUser) {
@@ -48,6 +54,22 @@ public class JobApplicationImpl implements JobApplicationService{
 		// TODO Auto-generated method stub
 		return repo.findAll();
 	}
+
+	@Override
+	public Page<JobApplication> findAll(PageRequest pageRequest) {
+		return repo.findAll(pageRequest);
+	}
+
+	@Override
+	public Page<JobApplication> findByCreatedDateBetween(Date start, Date end, PageRequest pageRequest) {
+		return repo.findByCreatedDateBetween(start, end, pageRequest);
+	}
+
+	@Override
+	public List<JobApplication> findByCreatedDateBetween(Date start, Date end) {
+		return repo.findByCreatedDateBetween(start, end);
+	}
+
 	@Override
 	public void deleteApplicationById(Long id) {
 		repo.deleteById(id);
