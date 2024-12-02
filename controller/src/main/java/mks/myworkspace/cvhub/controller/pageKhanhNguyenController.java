@@ -56,7 +56,7 @@ public class pageKhanhNguyenController extends BaseController{
 	 @Autowired
 	 private FolderUserService fileSystemService;
 	
-	@GetMapping("/jobrequests_kn") // http://localhost:8080/cvhub-web/jobrequests?page=0&limit=10
+	@GetMapping("/jobrequests_kn")
 	public ModelAndView getAllJobRoles(@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "limit", defaultValue = "9") int limit) {
 		ModelAndView mav = new ModelAndView("searchJob");

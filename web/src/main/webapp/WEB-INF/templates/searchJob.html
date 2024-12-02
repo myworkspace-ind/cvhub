@@ -19,7 +19,7 @@
 	<th:block th:include="fragments/hmenu"></th:block>
 	</div>
 	<div class="container">
-		<div th:replace="~{fragments/searchCondition :: search}"></div>
+		<div th:include ="~{fragments/searchCondition1.html}"></div>
 		<script type="text/javascript"
 			th:src="@{/resources/searchCondition/searchProvince.js}"></script>
 		<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
