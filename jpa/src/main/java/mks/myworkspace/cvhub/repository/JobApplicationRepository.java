@@ -23,7 +23,7 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
 	List<JobApplication> findByUser(@Param("user") User user);
 
 	@Query("SELECT ja FROM JobApplication ja WHERE ja.jobRequest = :jobRequest")
-<<<<<<< HEAD
+
         List<JobApplication> findByUserAndJobRequest(@Param("jobRequest") JobRequest jobRequest);
         Page<JobApplication> findAll(@Param("pageRequest") Pageable pageRequest );
 
@@ -37,8 +37,8 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
         List<JobApplication> findByCreatedDateBetween(
                 @Param("startDate") Date startDate,
                 @Param("endDate") Date endDate);
-=======
-	List<JobApplication> findByUserAndJobRequest(@Param("jobRequest") JobRequest jobRequest);
+
+
 
 	@Query("SELECT ja FROM JobApplication ja WHERE ja.id = :id")
 	Optional<JobApplication> findByJobApplicationId(@Param("id") Long id);
@@ -50,5 +50,5 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
 	List<JobApplication> findJobApplicationByStatusAndOrganizationId(
 		    @Param("status") String status, 
 		    @Param("organizationId") Long organizationId);
->>>>>>> remotes/origin/develop
+
 }
