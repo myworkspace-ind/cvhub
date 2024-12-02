@@ -36,6 +36,7 @@
 				<div>
 					<p>Kinh nghiệm</p>
 					<strong th:text="${jobRequest.experience}">Không yêu cầu</strong>
+					<strong>năm</strong>
 				</div>
 			</div>
 			<form th:action="@{'/applyJob/' + ${jobRequest.id}}" method="post"

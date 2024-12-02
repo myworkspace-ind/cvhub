@@ -1,0 +1,186 @@
+body{
+    background-color: #f5f5f5;
+}
+.container{
+    margin-top: 55px;
+}
+.table {
+    width: 100%;
+    border-spacing: 0;
+}
+
+.card-table {
+    margin-bottom: 24px;
+    margin-top: 20px;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.card-table-header {
+    background-color: transparent !important;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+
+.box-type-keyword-below__content {
+    align-items: center;
+    display: flex;
+    gap: 12px;
+    padding: 0px 0;
+}
+
+.box-type-keyword-below__list {
+    align-content: flex-start;
+    align-items: flex-start;
+    border-right: 1px solid var(--Neutral-Neutral-30s, #b3b8bd);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-right: 20px;
+}
+
+.box-type-keyword-below__list--item.selected {
+    border-color: green; /* Viền màu xanh */
+    color: green;        /* Văn bản màu xanh */
+}
+
+.check-icon {
+    display: none;
+    margin-right: 10px;
+}
+
+.box-type-keyword-below__list--item.selected .check-icon {
+    display: inline-block;
+}
+
+.box-type-keyword-below__list--item {
+    align-items: center;
+    background: #e3e6ea;
+    border: 1px solid #e3e6ea;
+    border-radius: 24px;
+    color: #263a4d;
+    cursor: pointer;
+    display: flex;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    gap: 8px;
+    justify-content: center;
+    letter-spacing: .14px;
+    line-height: 22px;
+    padding: 3px 12px;
+    transition: .3s;
+}
+
+.select-sort-advanced {
+    height: 36px;
+    position: relative;
+    display: flex;
+    gap: 5px; /* Khoảng cách giữa các combo box */
+}
+
+.select-sort-advanced select {
+    align-items: center;
+    background: #fff 0 0 no-repeat padding-box;
+    border: 1px solid #dfdfdf;
+    border-radius: 6px !important;
+    box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, .04);
+    color: #263a4d;
+    display: flex !important;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: .14px;
+    line-height: 22px;
+    padding: 7px 12px;
+    text-indent: 1px;
+    text-overflow: "";
+}
+
+.card-table-body {
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+}
+
+.align-middle {
+    vertical-align: middle;
+}
+
+.table-nowrap td,
+.table-nowrap th {
+    white-space: nowrap;
+}
+
+.mb-0 {
+    margin-bottom: 0;
+}
+
+.table-borderless thead {
+    height: 60px;
+    border: none;
+    /* Loại bỏ đường viền của các ô */
+}
+
+.table-borderless td,
+.table-borderless th {
+    vertical-align: middle !important;
+    text-align: center;
+    text-align: left;
+    border: none;
+    /* Loại bỏ đường viền của các ô */
+}
+
+.table-borderless img {
+    max-height: 50px;
+    border-radius: 5px;
+}
+
+.table-light {
+    background-color: #f9f9f9;
+    /* Màu nền sáng */
+    color: #000;
+    /* Màu chữ đậm để dễ đọc */
+}
+
+.row {
+    display: flex;
+    justify-content: space-between; /* Phân chia đều khoảng cách giữa các cột */
+    align-items: center;
+}
+.left-content {
+    text-align: left; /* Căn lề trái cho h2 và p */
+}
+.right-content {
+    text-align: right; /* Căn lề phải cho input và button */
+}
+
+/* Nút phân trang */
+#pagination button {
+    margin: 0 5px;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#pagination button:hover {
+    background-color: #0056b3; /* Màu hover */
+    color: #fff;
+}
+
+/* Thông tin trang */
+.page-info {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Bố cục phân trang */
+#pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
