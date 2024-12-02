@@ -23,22 +23,7 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
 	List<JobApplication> findByUser(@Param("user") User user);
 
 	@Query("SELECT ja FROM JobApplication ja WHERE ja.jobRequest = :jobRequest")
-
-        List<JobApplication> findByUserAndJobRequest(@Param("jobRequest") JobRequest jobRequest);
-        Page<JobApplication> findAll(@Param("pageRequest") Pageable pageRequest );
-
-        @Query("SELECT j FROM JobApplication j WHERE j.createdDate >= :startDate AND j.createdDate <= :endDate")
-        Page<JobApplication> findByCreatedDateBetween(
-                @Param("startDate") Date startDate,
-                @Param("endDate") Date endDate,
-                @Param("pageRequest") Pageable pageable);
-
-        @Query("SELECT j FROM JobApplication j WHERE j.createdDate >= :startDate AND j.createdDate <= :endDate")
-        List<JobApplication> findByCreatedDateBetween(
-                @Param("startDate") Date startDate,
-                @Param("endDate") Date endDate);
-
-
+	List<JobApplication> findByUserAndJobRequest(@Param("jobRequest") JobRequest jobRequest);
 
 	@Query("SELECT ja FROM JobApplication ja WHERE ja.id = :id")
 	Optional<JobApplication> findByJobApplicationId(@Param("id") Long id);
