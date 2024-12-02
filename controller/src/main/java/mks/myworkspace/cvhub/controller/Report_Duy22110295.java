@@ -93,47 +93,37 @@ public class Report_Duy22110295 extends BaseController{
         ModelAndView mav = new ModelAndView("report_duy");
         LocalDateTime startDate;
 
+        // Thiết lập startDate dựa trên thời gian
         switch (timePeriod) {
-            case "today":
-                startDate = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
-                break;
-            case "week":
-                startDate = LocalDateTime.now().minusDays(LocalDateTime.now().getDayOfWeek().getValue() - 1)
-                        .truncatedTo(ChronoUnit.DAYS);
-                break;
-            case "month":
-                startDate = LocalDateTime.now().withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS);
-                break;
-            default:
-                startDate = LocalDateTime.MIN;
+	        case "today":
+	            startDate = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS); // Lấy thời gian đầu ngày hôm nay
+	            break;
+	        case "week":
+	            startDate = LocalDateTime.now().minusDays(7); // Lấy thời gian 7 ngày trước
+	            break;
+	        case "month":
+	            startDate = LocalDateTime.now().minusDays(30); // Lấy thời gian 30 ngày trước
+	            break;
+	        default:
+	            startDate = LocalDateTime.MIN; // Trường hợp mặc định
         }
 
+        // Chuyển startDate thành Date để so sánh với createdDate trong DB
         Date startDateAsDate = java.sql.Timestamp.valueOf(startDate);
+        System.out.println("===== Job Requests Fetched ===== " + startDate);
 
+        // Thực hiện phân trang cho dữ liệu job requests
         Pageable pageRequest = PageRequest.of(page, limit, Sort.by("createdDate").descending());
-        // Lấy dữ liệu từ repository
+
+        // Lấy danh sách job requests từ repository có createdDate > startDate
         Page<JobRequest> jobRequestPage = jobRequestRepository.findByCreatedDateAfter(startDateAsDate, pageRequest);
 
-		/*
-		 * // In ra console để kiểm tra
-		 * System.out.println("===== Job Requests Fetched =====");
-		 * jobRequestPage.getContent().forEach(job -> { System.out.println("ID: " +
-		 * job.getId()); System.out.println("Title: " + job.getTitle());
-		 * System.out.println("Created Date: " + job.getCreatedDate());
-		 * System.out.println("Organization: " + job.getOrganization().getTitle());
-		 * System.out.println("Location: " + job.getLocation().getName());
-		 * System.out.println("Job Role: " + job.getJobRole().getTitle());
-		 * System.out.println("----------------------------------"); });
-		 */
-
-		//System.out.println("page total: " + jobRequestPage.getTotalPages());
-
+        // Thêm dữ liệu vào ModelAndView
         mav.addObject("jobrequests", jobRequestPage.getContent());
         mav.addObject("totalPages", jobRequestPage.getTotalPages());
         mav.addObject("currentPage", page);
         mav.addObject("timePeriod", timePeriod);
+        
         return mav;
     }
-
-
 }
