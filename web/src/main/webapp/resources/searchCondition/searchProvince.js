@@ -22,7 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const jobRoles = await response.json(); // Sử dụng phương thức .json() để phân tích cú pháp
+        const jobRoles = await response.json(); 
+		// Sử dụng phương thức .json() để phân tích cú pháp
         jobRoles.forEach(role => {
             const option = new Option(role.title, role.id);
             jobRoleSelect.add(option);

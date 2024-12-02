@@ -21,12 +21,19 @@ package mks.myworkspace.cvhub.controller;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import mks.myworkspace.cvhub.controller.model.JobSearch_tuan_DTO;
+import mks.myworkspace.cvhub.service.*;
+import mks.myworkspace.cvhub.service.impl.SearchJobImpl_tuan_22110450;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
@@ -57,10 +64,6 @@ import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
 import mks.myworkspace.cvhub.repository.JobRequestRepository;
-import mks.myworkspace.cvhub.service.JobRoleService;
-import mks.myworkspace.cvhub.service.LocationService;
-import mks.myworkspace.cvhub.service.OrganizationService;
-import mks.myworkspace.cvhub.service.SearchJobService;
 
 /**
  * Handles requests for the application home page.
@@ -68,71 +71,91 @@ import mks.myworkspace.cvhub.service.SearchJobService;
 @Controller
 
 public class Search_Tuan_22110450 extends BaseController {
-    @Autowired
-    OrganizationService organizationService;
-    @Autowired
-    JobRoleService jobRoleService;
-    @Autowired
-    LocationService locationService;
-    @Autowired
-    SearchJobService searchjobService;
-    @Autowired
-    private JobRequestRepository jobRequestRepository;
+	@Autowired
+	OrganizationService organizationService;
+	@Autowired
+	JobRoleService jobRoleService;
+	@Autowired
+	LocationService locationService;
+	@Autowired
+	SearchJobService searchjobService;
+	@Autowired
+	private JobRequestRepository jobRequestRepository;
+	@Autowired
+	private SearchJobService_tuan_22110450 searchJobImpl;
 
-    public final Logger logger = LoggerFactory.getLogger(this.getClass());;
+	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
 
-    /**
-     * This method is called when binding the HTTP parameter to bean (or model).
-     *
-     * @param binder
-     */
-    @InitBinder
-    protected void initBinder(WebDataBinder binder) {
-        // Sample init of Custom Editor
+	/**
+	 * This method is called when binding the HTTP parameter to bean (or model).
+	 *
+	 * @param binder
+	 */
+	@InitBinder
+	protected void initBinder(WebDataBinder binder) {
+		// Sample init of Custom Editor
 
 //        Class<List<ItemKine>> collectionType = (Class<List<ItemKine>>)(Class<?>)List.class;
 //        PropertyEditor orderNoteEditor = new MotionRuleEditor(collectionType);
 //        binder.registerCustomEditor((Class<List<ItemKine>>)(Class<?>)List.class, orderNoteEditor);
 
-    }
+	}
 
-    /**
-     * Simply selects the home view to render by returning its name.
-     *
-     * @return
-     */
-    @RequestMapping(value = { "/search_tuan" }, method = RequestMethod.GET)
-    public ModelAndView displayHome(HttpServletRequest request,
-                                    HttpSession httpSession,
-                                    @RequestParam(value = "page", defaultValue = "0") int page,
-                                    @RequestParam(value ="limit", defaultValue = "10") int limit) {
-        ModelAndView mav = new ModelAndView("search_votuan");
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = { "/search_tuan" }, method = RequestMethod.GET)
+	public ModelAndView displayHome(HttpServletRequest request, HttpSession httpSession,
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "limit", defaultValue = "10") int limit) {
+		ModelAndView mav = new ModelAndView("search_job_DataTable_Tuan_ver2");
 
-        initSession(request, httpSession);
-        PageRequest pageRequest = PageRequest.of(
-                page, limit,
-                Sort.by("createdDate").descending()
-        );
-        Page<JobRequest> jobRequestPage = jobRequestRepository.findAll(pageRequest);
-        int totalPages = jobRequestPage.getTotalPages();
-        List<JobRequest> jobRequests = jobRequestPage.getContent();
-        mav.addObject("jobrequests", jobRequests);
-        mav.addObject("totalPages", totalPages);
-        mav.addObject("currentPage", page);
-        mav.addObject("currentSiteId", getCurrentSiteId());
-        mav.addObject("userDisplayName", getCurrentUserDisplayName());
-        List<Location> locations = locationService.getRepo().findAll();
-        mav.addObject("locations", locations);
-        return mav;
-    }
+		initSession(request, httpSession);
+		PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("createdDate").descending());
+		Page<JobRequest> jobRequestPage = jobRequestRepository.findAll(pageRequest);
+		int totalPages = jobRequestPage.getTotalPages();
+		List<JobRequest> jobRequests = jobRequestPage.getContent();
+		mav.addObject("jobrequests", jobRequests);
+		mav.addObject("totalPages", totalPages);
+		mav.addObject("currentPage", page);
+		mav.addObject("currentSiteId", getCurrentSiteId());
+		mav.addObject("userDisplayName", getCurrentUserDisplayName());
+		List<Location> locations = locationService.getRepo().findAll();
+		mav.addObject("locations", locations);
+		return mav;
+	}
 
-    @RequestMapping(value = "/search_job", method = RequestMethod.GET)
-    @ResponseBody // Dùng @ResponseBody để trả về dữ liệu JSON
-    public List<JobRequest> searchJobs(@ModelAttribute JobSearchDTO jobSearchDTO, HttpServletRequest request,
-                                   HttpSession httpSession) {
-        return searchjobService.searchJobRequest(jobSearchDTO.getKeyword(),
-                jobSearchDTO.getLocation(), jobSearchDTO.getIndustry());
+	@RequestMapping(value = "/search_job", method = RequestMethod.GET)
+	@ResponseBody // Dùng @ResponseBody để trả về dữ liệu JSON
+	public List<JobRequest> searchJobs(@ModelAttribute JobSearchDTO jobSearchDTO, HttpServletRequest request,
+			HttpSession httpSession) {
+		return searchjobService.searchJobRequest(jobSearchDTO.getKeyword(), jobSearchDTO.getLocation(),
+				jobSearchDTO.getIndustry());
 
-    }
+	}
 
+	@RequestMapping(value = "/search_job_sort_tuan", method = RequestMethod.GET)
+	@ResponseBody // Dùng @ResponseBody để trả về dữ liệu JSON
+	public ResponseEntity<Map<String, Object>> searchJobsSort(@ModelAttribute JobSearch_tuan_DTO jobSearchDTO,
+			HttpServletRequest request, HttpSession httpSession) {
+		List<Long> selectedIndustriesList = null;
+		// Chuyển chuỗi selectedIndustries thành List<Long>
+		if (jobSearchDTO.getSelectedIndustries() != "") {
+			selectedIndustriesList = Arrays.stream(jobSearchDTO.getSelectedIndustries().split(",")).map(Long::parseLong)
+					.collect(Collectors.toList());
+		}
+
+		Page<JobRequest> jobPage = searchJobImpl.searchJobRequest(jobSearchDTO.getKeyword(), jobSearchDTO.getLocation(),
+				selectedIndustriesList, jobSearchDTO.getSort(), jobSearchDTO.isBool(), jobSearchDTO.getPage(),
+				jobSearchDTO.getSize());
+
+		Map<String, Object> response = new HashMap<>();
+		response.put("jobs", jobPage.getContent());
+		response.put("currentPage", jobPage.getNumber());
+		response.put("totalPages", jobPage.getTotalPages());
+		response.put("totalItems", jobPage.getTotalElements());
+		return ResponseEntity.ok(response);
+	}
 }
