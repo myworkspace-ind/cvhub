@@ -1,6 +1,7 @@
 package mks.myworkspace.cvhub.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,6 +58,20 @@ public class JobRequestController {
 		return mav;
 	}
 
+	@GetMapping("/jobrequests_kn")
+	public ModelAndView getAllJobRoles1(@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "limit", defaultValue = "9") int limit) {
+		ModelAndView mav = new ModelAndView("searchJob");
+		PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("createdDate").descending());
+		Page<JobRequest> jobRequestPage = jobRequestService.getRepo().findAll(pageRequest);
+		int totalPages = jobRequestPage.getTotalPages();
+		List<JobRequest> jobRequests = jobRequestPage.getContent();
+		mav.addObject("jobrequests", jobRequests);
+		mav.addObject("totalPages", totalPages);
+		mav.addObject("currentPage", page);
+		return mav;
+	}
+	
 	@GetMapping("/{id}")
 	public ModelAndView getDetailJob(@PathVariable Long id) {
 		ModelAndView mav = new ModelAndView("jobDetail");
