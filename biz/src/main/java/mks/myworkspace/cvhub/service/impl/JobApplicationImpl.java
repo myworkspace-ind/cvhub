@@ -25,7 +25,7 @@ public class JobApplicationImpl implements JobApplicationService{
 		JobApplication jobApplication = new JobApplication();
 		jobApplication.setJobRequest(jobRequest);
         jobApplication.setUser(user);
-        jobApplication.setStatus(null);
+        jobApplication.setStatus("PENDING");
         jobApplication.setNote(null);
         repo.save(jobApplication);
 	}
@@ -52,5 +52,14 @@ public class JobApplicationImpl implements JobApplicationService{
 	public void deleteApplicationById(Long id) {
 		repo.deleteById(id);
 		
+	}
+	@Override
+	public JobApplication getApplicationsByJobApplicationId(Long id) {
+		// TODO Auto-generated method stub
+		return repo.findByJobApplicationId(id).get();
+	}
+	@Override
+	public List<JobApplication> findJobApplicationByOption(Long organizationId, String option) {
+		return repo.findJobApplicationByStatusAndOrganizationId(option, organizationId);
 	}
 }
