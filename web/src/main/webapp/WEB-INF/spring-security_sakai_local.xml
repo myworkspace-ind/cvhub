@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd 
+    http://www.springframework.org/schema/security 
+    http://www.springframework.org/schema/security/spring-security.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- Enable property placeholder -->
+    <context:property-placeholder location="/WEB-INF/app-config.properties"/>
+    
+    <!-- Password Encoder -->
+    <beans:bean id="passwordEncoder" 
+          class="mks.myworkspace.cvhub.service.impl.EncodePasswordImpl"/>
+
+    <!-- DataSource Configuration -->
+    <beans:bean id="dataSource" 
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <beans:property name="driverClassName" value="org.mariadb.jdbc.Driver"/>
+        <beans:property name="url" value="jdbc:mariadb://127.0.0.1:3306/sakai233?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowPublicKeyRetrieval=true"/>
+        <beans:property name="username" value="sakai_user"/>
+        <beans:property name="password" value="Sakai!123"/>
+    </beans:bean>
+
+    <http auto-config="true" use-expressions="true">
+        <access-denied-handler error-page="/403" />
+        <intercept-url pattern="/resources/**" access="permitAll" />
+        <intercept-url pattern="/login" access="permitAll" />
+        <intercept-url pattern="/register" access="permitAll" />
+        <intercept-url pattern="/" access="permitAll" />
+        <intercept-url pattern="/uploadCV/**" access="isAuthenticated()" />
+        <intercept-url pattern="/**" access="permitAll" />
+        
+        <form-login 
+            login-page="/login"
+            default-target-url="/"
+            authentication-failure-url="/login?error"
+            username-parameter="email"
+            password-parameter="password"
+        />
+        
+        <logout logout-success-url="/login?logout" 
+                invalidate-session="true"
+                delete-cookies="JSESSIONID"/>
+        
+        <csrf disabled="true"/>
+    </http>
+
+
+<authentication-manager>
+        <authentication-provider>
+            <password-encoder ref="passwordEncoder"/>
+            <jdbc-user-service data-source-ref="dataSource"
+            	  users-by-username-query="
+                    SELECT sim.EID AS username, su.PW AS password, 1 AS enabled
+                    FROM sakai_user_id_map sim
+                    JOIN sakai_user su ON sim.USER_ID = su.USER_ID
+                    WHERE sim.EID = ?"
+                    authorities-by-username-query="
+                    SELECT sim.EID AS username,  'ROLE_USER' as authority
+                    FROM sakai_user_id_map sim
+                    JOIN sakai_user su ON sim.USER_ID = su.USER_ID
+                    WHERE sim.EID = ?"
+           
+            />
+        </authentication-provider>
+    </authentication-manager>
+</beans:beans>
