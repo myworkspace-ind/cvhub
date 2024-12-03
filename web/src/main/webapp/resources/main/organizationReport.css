@@ -1,0 +1,120 @@
+ body {
+            font-family: Arial, sans-serif;
+            background-color: #e6f7f0;
+        }
+.table-blue {
+    background-color: #40e394; /* Màu xanh lam (Bootstrap Primary) */
+    color: white; /* Chữ trắng */
+}
+/* Tùy chỉnh cho tiêu đề trang */
+h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #32b877;
+}
+
+/* Form tìm kiếm */
+.search-form {
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    padding: 10px 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    margin-bottom: 30px;
+}
+
+/* Tạo viền cho table */
+table {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+th {
+    background-color: #4A90E2;
+    color: #fff;
+    text-align: center;
+}
+
+td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+/* Cột chi tiết và website */
+td:last-child {
+    text-align: left;
+    width: 200px;
+    max-width: 200px;
+    word-wrap: break-word;
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 30px;
+    justify-content: center;
+}
+
+.page-item.active .page-link {
+    background-color: #4A90E2;
+    border-color: #4A90E2;
+}
+
+.page-item.disabled .page-link {
+    color: #ccc;
+    pointer-events: none;
+}
+
+.page-link {
+    color: #4A90E2;
+}
+
+.page-link:hover {
+    background-color: #E1F0FF;
+}
+
+/* Điều chỉnh độ rộng của input tìm kiếm */
+input[type="text"] {
+    width: 600px;
+}
+
+.button {
+    background-color: #40e394;
+    border-color: #40e394;
+    color: black;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Hiệu ứng hover */
+.button:hover {
+    background-color:#2da169;
+    border-color: #2da169;
+    transform: scale(1.05); /* Tăng kích thước một chút khi hover */
+}
+
+/* Hiệu ứng click */
+.button:active {
+    transform: scale(0.98); /* Giảm kích thước khi nhấn */
+}
+
+/* Thông báo không có dữ liệu */
+.table td {
+    text-align: center;
+    color: #888;
+}
+ .apply-button {
+            background-color: #00b14f;
+            color: white;
+            border: none;
+            margin-right: 10px;
+}
+.apply-button:hover {
+            background-color: #009a43;
+}
