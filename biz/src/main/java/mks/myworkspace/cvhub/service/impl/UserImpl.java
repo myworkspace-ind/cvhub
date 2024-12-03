@@ -6,6 +6,8 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,9 @@ import mks.myworkspace.cvhub.repository.UserRepository;
 import mks.myworkspace.cvhub.service.UserService;
 @Service
 public class UserImpl implements UserService {
+	@Autowired
+    private JdbcTemplate jdbcTemplate;
+	
 	@Getter
 	@Autowired
 	UserRepository repo;
@@ -24,20 +29,19 @@ public class UserImpl implements UserService {
 	@Override
 	@Transactional
 	public User createUser(String fullName, String email, String password, String phone) throws Exception {
-		if (isEmailExists(email)) {
-            throw new Exception("Email already exists");
-        }
-        
+	    if (isEmailExists(email)) {
+	        throw new Exception("Email already exists");
+	    }
 
-        User user = new User();
-        user.setFullName(fullName);
-        user.setEmail(email);
+	    String sqlInsert = "INSERT INTO cvhub_user (fullname, email, password, phone, role, created_date, modified_date) " +
+	                       "VALUES (?, ?, ?, ?, ?, ?, ?)";
+	    Date currentDate = new Date();
+	    jdbcTemplate.update(sqlInsert, fullName, email, password, phone, "ROLE_USER", currentDate, currentDate);
 
-        user.setPassword(password);
-        user.setPhone(phone);
-        user.setRole("ROLE_USER");
-        return repo.save(user);
+	    String sqlSelect = "SELECT * FROM cvhub_user WHERE email = ?";
+	    return jdbcTemplate.queryForObject(sqlSelect, new BeanPropertyRowMapper<>(User.class), email);
 	}
+
 
 	@Override
 	public boolean isEmailExists(String email) {
