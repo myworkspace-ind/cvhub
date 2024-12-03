@@ -33,6 +33,11 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
         </dependency>
+        <dependency>
+        	<groupId>mks.myworkspace.cvhub</groupId>
+        	<artifactId>cvhub-api</artifactId>
+        	<version>23.2</version>
+        </dependency>
 	</dependencies>
 	<build>
 		<!-- configure the build to use the standard maven structure -->

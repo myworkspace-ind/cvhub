@@ -18,28 +18,48 @@ import mks.myworkspace.cvhub.repository.UserRepository;
 import mks.myworkspace.cvhub.service.UserService;
 @Service
 public class UserImpl implements UserService {
-	@Autowired
-    private JdbcTemplate jdbcTemplate;
+	/*
+	 * @Autowired private JdbcTemplate jdbcTemplate;
+	 */
 	
 	@Getter
 	@Autowired
 	UserRepository repo;
 //	 @Autowired
 //	private PasswordEncoder passwordEncoder;
+	/*
+	 * @Override
+	 * 
+	 * @Transactional public User createUser(String fullName, String email, String
+	 * password, String phone) throws Exception { if (isEmailExists(email)) { throw
+	 * new Exception("Email already exists"); }
+	 * 
+	 * String sqlInsert =
+	 * "INSERT INTO cvhub_user (fullname, email, password, phone, role, created_date, modified_date) "
+	 * + "VALUES (?, ?, ?, ?, ?, ?, ?)"; Date currentDate = new Date();
+	 * jdbcTemplate.update(sqlInsert, fullName, email, password, phone, "ROLE_USER",
+	 * currentDate, currentDate);
+	 * 
+	 * String sqlSelect = "SELECT * FROM cvhub_user WHERE email = ?"; return
+	 * jdbcTemplate.queryForObject(sqlSelect, new
+	 * BeanPropertyRowMapper<>(User.class), email); }
+	 */
 	@Override
 	@Transactional
 	public User createUser(String fullName, String email, String password, String phone) throws Exception {
-	    if (isEmailExists(email)) {
-	        throw new Exception("Email already exists");
-	    }
+		if (isEmailExists(email)) {
+            throw new Exception("Email already exists");
+        }
+        
 
-	    String sqlInsert = "INSERT INTO cvhub_user (fullname, email, password, phone, role, created_date, modified_date) " +
-	                       "VALUES (?, ?, ?, ?, ?, ?, ?)";
-	    Date currentDate = new Date();
-	    jdbcTemplate.update(sqlInsert, fullName, email, password, phone, "ROLE_USER", currentDate, currentDate);
+        User user = new User();
+        user.setFullName(fullName);
+        user.setEmail(email);
 
-	    String sqlSelect = "SELECT * FROM cvhub_user WHERE email = ?";
-	    return jdbcTemplate.queryForObject(sqlSelect, new BeanPropertyRowMapper<>(User.class), email);
+        user.setPassword(password);
+        user.setPhone(phone);
+        user.setRole("ROLE_USER");
+        return repo.save(user);
 	}
 
 
