@@ -1,0 +1,63 @@
+@charset "UTF-8";
+/* Mặc định ẩn dropdown menu */
+.dropdown-menu {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateY(-10px); /* Đưa menu lên một chút khi ẩn */
+  position: absolute;
+  background-color: #fff;
+  min-width: 160px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  top: 100%; /* Menu hiển thị dưới button */
+  left: 0;
+  z-index: 10; /* Đảm bảo menu không bị che khuất */
+}
+
+/* Khi hover vào .dropdown, menu sẽ hiện ra với hiệu ứng */
+.dropdown:hover .dropdown-menu {
+  display: block;
+  opacity: 1;
+  transform: translateY(0); /* Menu trượt xuống mượt mà */
+}
+
+/* Thiết kế cho từng mục trong dropdown */
+.dropdown-item {
+  padding: 10px 20px;
+  color: #333;
+  text-decoration: none;
+  background-color: transparent;
+  border: none;
+  font-size: 14px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #007bff; /* Màu nền khi hover */
+  color: #fff; /* Màu chữ khi hover */
+  border-radius: 4px; /* Bo góc cho item */
+}
+
+/* Tối ưu cho span chứa dropdown */
+.dropdown > span {
+  position: relative;
+  display: inline-block;
+  z-index: 20; /* Đảm bảo span luôn ở trên so với menu */
+}
+
+/* Loại bỏ border và nền của span */
+.dropdown span {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  font-weight: bold;
+  color: #007bff; /* Màu chữ của dropdown */
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+/* Thay đổi màu chữ khi hover trên span */
+.dropdown span:hover {
+  color: #0056b3;
+}
