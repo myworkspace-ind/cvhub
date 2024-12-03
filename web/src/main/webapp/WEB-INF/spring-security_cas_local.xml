@@ -15,7 +15,7 @@
     
     <!-- Password Encoder -->
     <beans:bean id="passwordEncoder" 
-          class="mks.myworkspace.cvhub.service.impl.EncodePasswordImpl"/>
+          class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
     <!-- DataSource Configuration -->
     <beans:bean id="dataSource" 
@@ -55,17 +55,8 @@
         <authentication-provider>
             <password-encoder ref="passwordEncoder"/>
             <jdbc-user-service data-source-ref="dataSource"
-            	  users-by-username-query="
-                    SELECT sim.EID AS username, su.PW AS password, 1 AS enabled
-                    FROM sakai_user_id_map sim
-                    JOIN sakai_user su ON sim.USER_ID = su.USER_ID
-                    WHERE sim.EID = ?"
-                    authorities-by-username-query="
-                    SELECT sim.EID AS username,  'ROLE_USER' as authority
-                    FROM sakai_user_id_map sim
-                    JOIN sakai_user su ON sim.USER_ID = su.USER_ID
-                    WHERE sim.EID = ?"
-           
+                users-by-username-query="select email as username, password, 1 as enabled from cvhub_user where email=?"
+                authorities-by-username-query="select email as username, role as authority from cvhub_user where email=?"
             />
         </authentication-provider>
     </authentication-manager>
