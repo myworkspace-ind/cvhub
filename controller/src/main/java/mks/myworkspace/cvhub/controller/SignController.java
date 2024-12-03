@@ -23,21 +23,19 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import mks.myworkspace.cvhub.controller.model.UserDTO;
 import mks.myworkspace.cvhub.service.UserService;
-import mks.myworkspace.cvhub.service.impl.EncodePasswordImpl;
 
 @Controller
 public class SignController extends BaseController {
     
     @Autowired
     private UserService userService;
-    //BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    EncodePasswordImpl encodePassword = new EncodePasswordImpl();
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     // Login page
     @GetMapping("/login")
     public ModelAndView showLoginPage(
             @RequestParam(value = "error", required = false) String error,
             @RequestParam(value = "logout", required = false) String logout) {
-
+        
         ModelAndView model = new ModelAndView();
         
         if (error != null) {
@@ -91,8 +89,8 @@ public class SignController extends BaseController {
             }
 
             // Register user
-            User user = userService.createUser(userDTO.getFullName(), userDTO.getEmail(),
-            		encodePassword.encode(userDTO.getPassword()), userDTO.getPhone());
+            User user = userService.createUser(userDTO.getFullName(), userDTO.getEmail(), 
+            		passwordEncoder.encode(userDTO.getPassword()), userDTO.getPhone());
 
             // Redirect to login with success message
             mav.setViewName("redirect:/login");
