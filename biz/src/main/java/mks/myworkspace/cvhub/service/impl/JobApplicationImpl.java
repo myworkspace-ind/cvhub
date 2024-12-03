@@ -1,3 +1,4 @@
+
 package mks.myworkspace.cvhub.service.impl;
 
 import java.time.LocalDateTime;
@@ -85,3 +86,4 @@ public class JobApplicationImpl implements JobApplicationService{
 		return repo.findJobApplicationByStatusAndOrganizationId(option, organizationId);
 	}
 }
+
