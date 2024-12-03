@@ -54,4 +54,9 @@ public class OrganizationImpl implements OrganizationService {
 	public Organization findByUserId(Long id) {
 		return repo.findByUserId(id);
 	}
+	
+	@Override
+	public void saveFormData(Organization formData) {
+        repo.save(formData);
+    }
 }

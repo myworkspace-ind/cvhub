@@ -15,4 +15,5 @@ public interface OrganizationService {
 	byte[] downloadImage(MultipartFile logoFile) throws IOException ;
 	 boolean isOwner(Long organizationId, String userEmail);
 	 Organization findByUserId(Long id);
+	void saveFormData(Organization formData);
 }
