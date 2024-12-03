@@ -64,6 +64,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+         <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-core</artifactId>
+        <version>5.8.0</version> <!-- Chỉnh sửa phiên bản tùy theo yêu cầu -->
+    </dependency>
 
         <!-- Add SLF4J bridge for commons-logging -->
         <dependency>

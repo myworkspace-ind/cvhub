@@ -5,17 +5,20 @@
     <link rel="stylesheet" href="/library/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
 
     <link rel="stylesheet" type="text/css" href="/library/skin/default-skin/tool.css">
-
+	<!-- Link report css -->
+	<link rel="stylesheet" th:href="@{/resources/main/style.css}" />
     <!-- jQuery library -->
     <script src="/library/webjars/jquery/1.12.4/jquery.min.js"></script>
     
     <!-- Bootstrap library -->
 <!-- <script src="/library/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script> -->
     <script src="/library/webjars/bootstrap/5.2.0/js/bootstrap.bundle.min.js"></script>
-
+	<script src="/library/webjars/bootstrap/5.2.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/library/webjars/popper.js/2.9.3/umd/popper.min.js"></script>
     <!-- For Sakai only -->
     <script type="text/javascript" src="/library/js/headscripts.js"></script>
     
     <!-- Determine the root context of the application.  -->
     <script th:inline="javascript"> var _ctx = /*[[@{/}]]*/ ''; </script>
+    
 </head>

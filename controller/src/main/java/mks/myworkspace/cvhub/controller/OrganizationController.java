@@ -33,6 +33,7 @@ import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
 import mks.myworkspace.cvhub.entity.Organization;
 import mks.myworkspace.cvhub.entity.OrganizationReview;
+import mks.myworkspace.cvhub.repository.JobApplicationRepository;
 import mks.myworkspace.cvhub.repository.JobRequestRepository;
 import mks.myworkspace.cvhub.repository.OrganizationRepository;
 import mks.myworkspace.cvhub.repository.OrganizationReviewRepository;
@@ -61,10 +62,12 @@ public class OrganizationController extends BaseController {
 	private UserService userService;
 	@Autowired
 	private JobApplicationService jobApplicationService;
+	@Autowired
+	private JobApplicationRepository jobApplicationRepository;
 	
 	private final OrganizationReviewService reviewService;
 	private final OrganizationRepository organizationRepo;
-	
+
 	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
 
 	@RequestMapping(value = { "/organization/{id}" }, method = RequestMethod.GET)
@@ -218,6 +221,7 @@ public class OrganizationController extends BaseController {
 			mav.addObject("jobRequests", jobRequests);
 			mav.addObject("jobApplications", applicationsNeed2);
 			mav.addObject("cvs", users2);
+			mav.addObject("organizationId", id);
 			return mav;
 		}
 		catch (Exception e) {
@@ -227,6 +231,7 @@ public class OrganizationController extends BaseController {
 			return mav;
 		}
 	}
+	
 	public static List<User> removeDuplicatesManually(List<User> list) {
         List<User> result = new ArrayList<>();
         for (User item : list) {
@@ -236,6 +241,7 @@ public class OrganizationController extends BaseController {
         }
         return result;
     }
+	
 	public static List<JobApplication> removeDuplicatesManually2(List<JobApplication> list) {
         List<JobApplication> result = new ArrayList<>();
         for (JobApplication item : list) {
@@ -245,4 +251,39 @@ public class OrganizationController extends BaseController {
         }
         return result;
     }
+
+	@RequestMapping(value = { "/{organizationId}/getCVs/setStatusDeny/{id}" }, method = RequestMethod.POST)
+	public ModelAndView setStatus(@PathVariable("id") Long jobApplicationId, @PathVariable("organizationId") Long organizationId, 
+								HttpServletRequest request, HttpSession httpSession) {
+		JobApplication jobApplication = jobApplicationService.getApplicationsByJobApplicationId(jobApplicationId);
+		jobApplication.setStatus("DENY");
+		jobApplicationRepository.save(jobApplication);
+		return new ModelAndView("redirect:/organization/" + organizationId + "/getCVs");
+	}
+	
+	@RequestMapping(value = { "/{organizationId}/getCVs/setStatusApprove/{id}" }, method = RequestMethod.POST)
+	public ModelAndView setStatusApprove(@PathVariable("id") Long jobApplicationId, @PathVariable("organizationId") Long organizationId, 
+								HttpServletRequest request, HttpSession httpSession) {
+		JobApplication jobApplication = jobApplicationService.getApplicationsByJobApplicationId(jobApplicationId);
+		jobApplication.setStatus("APPROVED");
+		jobApplicationRepository.save(jobApplication);
+		return new ModelAndView("redirect:/organization/" + organizationId + "/getCVs");
+	}
+	
+	@RequestMapping(value = { "/organization/{organizationId}/getCVs/option" }, method = RequestMethod.GET)
+	public ModelAndView findJobApplicationByOption(@RequestParam String status, @PathVariable("organizationId") Long organizationId, 
+								HttpServletRequest request, HttpSession httpSession)
+	{
+		List<JobApplication> jobApplications = new ArrayList<>();
+		if (status.equals("ALL")) 
+			jobApplications = jobApplicationService.findAll();
+		else
+			jobApplications = jobApplicationService.findJobApplicationByOption(organizationId, status);
+		List<JobRequest> jobRequests = jobRequestService.findAllByOrganizationId(organizationId);
+		ModelAndView mav = new ModelAndView("organization/getCVs.html");
+		mav.addObject("jobRequests", jobRequests);
+		mav.addObject("jobApplications", jobApplications);
+		mav.addObject("organizationId", organizationId);
+		return mav;
+	}
 }

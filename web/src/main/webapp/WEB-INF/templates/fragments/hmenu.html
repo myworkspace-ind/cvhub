@@ -1,50 +1,68 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <!-- Fragment: Horizontal menu -->
-<ul class="navIntraTool actionToolbar">
-  <li>  
-      <span title="List jobs" th:class="${isSelectedHome != null && isSelectedHome ? 'current' : ''}">
-         <!--<a th:href="@{/job}">Job</a> -->
-		<a th:href="@{/searchJob}">Job</a>
-      </span>
-  </li>
-  <li>  
-      <span title="List employee">
-        <a th:href="@{/employee}">Employee</a>
-      </span>
-  </li>
-  <li>  
-      <span title="Resources" th:class="${isSelectedResources != null && isSelectedResources ? 'current' : ''}">
-        <a th:href="@{/resources}">Employer</a>
-      </span>
-  </li>
-  <li>
-      <span title="Configuration" th:class="${isSelectedConfiguration != null && isSelectedConfiguration ? 'current' : ''}">
-        <a th:href="@{/configuration}">Configuration</a>
-      </span>
-  </li>
- <li> 
-     <span title="Report">
-       <a id="report" th:href="@{/report}">Report</a>
-     </span>
- </li>
- <li> 
-     <span title="About">
-       <a id="about" href="#">About</a>
-     </span>
- </li>
- <li> 
-     <span title="About">
-       <a id="about" th:href="@{/main/folder-account}">Folder Account</a>
-     </span>
- </li>
- <li> 
-     <span title="About">
-       <a id="about" th:href="@{/main/dev_phuhao}">Search Page</a>
-     </span>
- </li>
-	</li>
-    <li>
-     <span title="dev_tuan_22110450">
-       <a id="dev_tuan_22110450" th:href="@{/search_tuan}">Search_tuan_22110450</a>
-     </span>
-    </li></ul>
+<head>
+<th:block th:include="fragments/head"></th:block>
+<style>
+.dropdown:hover .dropdown-menu {
+	display: block;
+}
+</style>
+</head>
+
+
+<div class="d-flex justify-content-between">
+	<!-- Left-aligned menu items -->
+	<ul class="navIntraTool actionToolbar">
+		<li><span title="List jobs"
+			th:class="${isSelectedHome != null && isSelectedHome ? 'current' : ''}">
+				<a th:href="@{/searchJob}">Job</a>
+		</span></li>
+		<li><span title="List employee"> <a th:href="@{/employee}">Employee</a>
+		</span></li>
+		<li><span title="Resources"
+			th:class="${isSelectedResources != null && isSelectedResources ? 'current' : ''}">
+				<a th:href="@{/resources}">Employer</a>
+		</span></li>
+		<li><span title="Configuration"
+			th:class="${isSelectedConfiguration != null && isSelectedConfiguration ? 'current' : ''}">
+				<a th:href="@{/configuration}">Configuration</a>
+		</span></li>
+		<li class="dropdown"><span title="Report"> <a id="report"
+				href="javascript:void(0);">Report</a>
+		</span>
+			<ul class="dropdown-menu">
+				<li><a th:href="@{/main/report/organization}">Organization List</a></li>
+				<li><a th:href="@{/report_duy}">Job Report</a></li>
+				<li><a th:href="@{/report/organization}">Organization Report</a></li>
+				<li><a th:href="@{/report/user}">User Report</a></li>
+			</ul></li>
+		<li><span title="About"> <a id="about" href="#">About</a>
+		</span></li>
+		<li><span title="About"> <a id="about"
+				th:href="@{/main/folder-account}">Folder</a>
+		</span></li>
+		<li><span title="About"> <a id="about"
+				th:href="@{/main/dev_phuhao}">Search</a>
+		</span></li>
+		<li><span title="dev_tuan_22110450"> <a
+				style="width: 200px;" id="dev_tuan_22110450"
+				th:href="@{/search_tuan}">Search Job With DataTable</a>
+		</span></li>
+	</ul>
+	<!-- Right-aligned dropdown button -->
+	<ul class="nav mt-2 me-3">
+		<li class="dropdown">
+			<button button class="btn btn-secondary btn-sm dropdown-toggle"
+				type="button" data-bs-toggle="dropdown" aria-expanded="false">
+				username</button>
+			<ul class="dropdown-menu dropdown-menu-end">
+				<li><a class="dropdown-item small" href="#">View Profile</a></li>
+				<li><a class="dropdown-item small" href="#">Setting</a></li>
+				<li><a class="dropdown-item small" href="#">Log out</a></li>
+			</ul>
+		</li>
+	</ul>
+</div>
+
+<script th:src="@{/resources/report_duy/report_duy.js}"></script>
+<link rel="stylesheet" th:href="@{/resources/report_duy/style.css}">

@@ -12,17 +12,16 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface JobRequestRepository_tuan_22110450 extends JpaRepository<JobRequest, Long> {
-    @Query("SELECT j FROM JobRequest j "
-            + " WHERE "
-            + "( :locationCD IS NULL OR :locationCD <= 0 OR j.location.code = :locationCD) AND "
-            + "( :industryCD IS NULL OR :industryCD <= 0L OR j.jobRole.id = :industryCD) AND "
-            + "( :company IS NULL OR j.organization.title LIKE %:company% OR :bool is false) AND "
-            + "( :jobName IS NULL OR j.title LIKE %:jobName% OR :bool is true)")
-    Page<JobRequest> findBySearchCriteria(
-            @Param("locationCD") int locationCD,
-            @Param("industryCD") Long industryCD,
-            @Param("company") String company,
-            @Param("jobName") String jobName,
-            @Param("bool") boolean search,
-            Pageable pageable);
+	@Query("SELECT j FROM JobRequest j "
+		       + "WHERE "
+		       + "( :locationCD IS NULL OR :locationCD <= 0 OR j.location.code = :locationCD) AND "
+		       + "( j.jobRole.id IN :industryCD) AND "
+		       + "( :company IS NULL OR j.organization.title LIKE CONCAT('%', :company, '%') OR :bool = false) AND "
+		       + "( :jobName IS NULL OR j.title LIKE CONCAT('%', :jobName, '%') OR :bool = true)")
+		Page<JobRequest> findBySearchCriteria(@Param("locationCD") Integer locationCD,
+		                                      @Param("industryCD") List<Long> selectedIndustries,
+		                                      @Param("company") String company,
+		                                      @Param("jobName") String jobName,
+		                                      @Param("bool") boolean search, Pageable pageable);
+
 }

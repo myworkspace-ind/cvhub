@@ -24,16 +24,16 @@ public class SearchJobImpl_tuan_22110450 implements SearchJobService_tuan_221104
 
 	@Autowired
 	private JobRequestRepository_tuan_22110450 jobRepository;
-
+	
 	@Override
-	public Page<JobRequest> searchJobRequest(String keyword, int locationCD, Long industryCD, String sort, boolean search, int page, int size) {
+	public Page<JobRequest> searchJobRequest(String keyword, int locationCD, List<Long> selectedIndustries, String sort, boolean search, int page, int size) {
 		Sort sorting = getSortOrder(sort); // Xác định thứ tự sắp xếp
 		Pageable pageable = PageRequest.of(page, size, sorting);
 
 		// Sử dụng phương thức tìm kiếm tùy chỉnh trong repository
 		try {
 
-			return jobRepository.findBySearchCriteria(locationCD, industryCD, keyword, keyword, search, pageable);
+			return jobRepository.findBySearchCriteria(locationCD, selectedIndustries, keyword, keyword, search, pageable);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -45,9 +45,9 @@ public class SearchJobImpl_tuan_22110450 implements SearchJobService_tuan_221104
 	private Sort getSortOrder(String sort) {
 		switch (sort) {
 			case "new":
-				return Sort.by(Sort.Direction.DESC, "deadlineApplication");
+				return Sort.by(Sort.Direction.DESC, "createdDate");
 			case "up_top":
-				return Sort.by(Sort.Direction.DESC, "deadlineApplication");
+				return Sort.by(Sort.Direction.DESC, "modified");
 			case "high_salary":
 				return Sort.by(Sort.Direction.DESC, "salary");
 			case "experientia":

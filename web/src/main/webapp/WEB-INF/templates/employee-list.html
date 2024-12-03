@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee List - MyWorkspace</title>
+    <th:block th:include="fragments/head"></th:block>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+     
+</head>
+<body>
+    <th:block th:include="fragments/hmenu"></th:block>
+
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Danh sách Employee</h1>
+        <!-- Form tìm kiếm -->
+        <form class="mb-4" method="post" action="employee-search" style="max-width: 700px; margin: auto;">
+            <div class="input-group">
+                <input type="text" name="keyword" class="form-control" placeholder="Tìm kiếm theo tên, email hoặc số điện thoại của người tìm việc..." 
+                       th:value="${keyword}">
+                <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+            </div>
+        </form>
+
+        <!-- Bảng danh sách Employee -->
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+               <thead style="background-color: #00b14f; color: white;">
+                    <tr>
+                        <th>Ảnh</th>
+                        <th>Tên đầy đủ</th>
+                        <th>Email</th>
+                        <th>Số điện thoại</th>
+                        <th>Vị trí công việc</th>
+                        <th>Địa điểm</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Thymeleaf sẽ lặp qua danh sách employees -->
+                    <tr th:each="cv : ${employees}">
+                        <td>
+                            <img th:src="@{/images/{logoId}(logoId=${cv.logoID})}" 
+                                 alt="Ảnh" 
+                                 class="img-fluid rounded-circle" 
+                                 style="width: 50px; height: 50px; object-fit: cover;">
+                        </td>
+                        <td th:text="${cv.fullName}"></td>
+                        <td th:text="${cv.email}"></td>
+                        <td th:text="${cv.phone}"></td>
+                        <td th:text="${cv.jobRole.title}"></td>
+                        <td th:text="${cv.location.name}"></td>
+                        <td>
+                            <a th:href="@{#}" 
+                               class="btn btn-primary btn-sm">Xem chi tiết</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Phân trang -->
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/employee(page=${currentPage - 1}, size=10)}">Previous</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link" th:href="@{/employee(page=${i}, size=10)}" th:text="${i + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/employee(page=${currentPage + 1}, size=10)}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <th:block th:include="fragments/about_dialog"></th:block>
+</body>
+<th:block th:include="fragments/javascript"></th:block>
+</html>

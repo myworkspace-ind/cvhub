@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,7 +101,14 @@ public class CvImpl implements CvService {
         }
 	}
 
-	
+	// Phương thức để lấy danh sách CV phân trang
+    public Page<CV> getPaginatedCVs(Pageable pageable) {
+        return repo.findAll(pageable);
+    }
 
+    // Phương thức tìm kiếm và phân trang
+    public Page<CV> searchCVs(String keyword, Pageable pageable) {
+        return repo.search(keyword, pageable);
+    }
 	
 }
