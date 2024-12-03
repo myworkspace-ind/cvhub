@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>The generated source code Web Application for Sakai</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet"
+          href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<!--        <link rel="stylesheet" th:href="@{/resources/searchCondition/style.css}" />-->
+
+<!--    <th:block th:include="fragments/head"></th:block>-->
+
+    <link rel="stylesheet" th:href="@{/resources/search_tuan_22110450/style.css}"/>
+    <link rel="stylesheet" th:href="@{/resources/home/style.css}"/>
+    <link rel="stylesheet" th:href="@{/resources/home/jobRequest.css}"/>
+</head>
+<!--<th:block th:include="fragments/hmenu"></th:block>-->
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="container">
+    <div class="row">
+        <!-- Cột bên trái chứa h2 và p -->
+        <div class="col-md-6 left-content">
+            <h2>Job List</h2>
+            <p>Tim kiem cong viec cua ban</p>
+        </div>
+
+        <!-- Cột bên phải chứa input và button -->
+        <div class="col-md-6 right-content">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Enter text" id="searchKeyword">
+                <span class="input-group-btn">
+                        <button id="searchButton" class="btn btn-default" type="button" onclick="searchJobs(0)">Search</button>
+                    </span>
+            </div>
+
+        </div>
+    </div>
+    <div class="panel panel-default card-table">
+        <div class="card-table-header panel-heading">
+            <div class="box-type-keyword-below__content">
+                <div class="box-type-keyword-below__title">Tìm kiếm theo:</div>
+                <div class="box-type-keyword-below__list">
+                    <div class="box-type-keyword-below__list--item" data-type-keyword="1" onclick="toggleCheck(this)">
+                        <i class="glyphicon glyphicon-ok check-icon"></i>
+                        Tên việc làm
+                    </div>
+                    <div class="box-type-keyword-below__list--item" data-type-keyword="2" onclick="toggleCheck(this)">
+                        <i class="glyphicon glyphicon-ok check-icon"></i>
+                        Tên công ty
+                    </div>
+                    <!--                    <div class="box-type-keyword-below__list&#45;&#45;item" data-type-keyword="">-->
+                    <!--                        Cả hai-->
+                    <!--                    </div>-->
+                </div>
+                <div class="select-sort-advanced">
+                    <select id="sort-advanced" name="sort-advanced" tabindex="-1" class="select2-hidden-accessible"
+                            aria-hidden="true" onchange = "searchJobs(0)">
+                        <option value="top_related" sort-value="new" class="option-item-sort" selected="">
+                            Sắp xếp
+                        </option>
+                        <option value="new" sort-value="new" class="option-item-sort">
+                            Ngày đăng
+                        </option>
+                        <option value="up_top" sort-value="up_top" class="option-item-sort">
+                            Ngày cập nhật
+                        </option>
+                        <option value="high_salary" sort-value="high_salary" class="option-item-sort">
+                            Lương cao đến thấp
+                        </option>
+                        <option value="experientia" sort-value="experientia" class="option-item-sort">
+                            Kinh nghiệm thấp đến cao
+                        </option>
+                    </select>
+
+                    <select name="location" id="locationSelect" class="option-item-sort" style="width: 190px" onchange = "searchJobs(0)">
+                        <option value="0">Tất cả tỉnh/thành phố</option>
+
+                    </select>
+
+                    <select name="industry" id="jobRoleSelect" class="option-item-sort" onchange = "searchJobs(0)">
+                        <option value="0">Tất cả ngành nghề</option>
+
+                        </option>
+                    </select>
+                    <script type="text/javascript"
+                            th:src="@{/resources/search_tuan_22110450/search_tuan.js}"></script>
+                    <script type="text/javascript"
+                            th:src="@{/resources/searchCondition/searchProvince.js}"></script>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body card-table-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle table-nowrap mb-0 table-borderless">
+                    <thead class="table-light">
+                    <tr>
+                        <th class="align-middle" scope="col">Logo</th>
+                        <th class="align-middle" scope="col">Job Title</th>
+                        <th class="align-middle" scope="col">Company Name</th>
+                        <th class="align-middle" scope="col">Location</th>
+                        <th class="align-middle" scope="col">Job Role</th>
+                        <th class="align-middle" scope="col">Experience</th>
+                        <th class="align-middle" scope="col">Salary</th>
+                        <th class="align-middle" scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="job-table-body">
+<!--                    nội dung hiển thị ở đây-->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="pagination" class="pagination justify-content-center"></div>
+</div>
+
+<script>
+    let currentPage = 0; // Biến lưu số trang hiện tại
+    const pageSize = 5; // Số lượng công việc mỗi trang
+
+    document.getElementById('searchButton').addEventListener('click', function () {
+        searchJobs(0); // Khi nhấn nút tìm kiếm, luôn bắt đầu từ trang đầu tiên
+    });
+
+    function searchJobs(page) {
+        const keyword = document.getElementById('searchKeyword').value;
+        const location = document.getElementById('locationSelect').value;
+        const industry = document.getElementById('jobRoleSelect').value;
+        const sort = document.getElementById('sort-advanced').value;
+
+        // Tìm phần tử có class 'selected'
+        const selectedItem = document.querySelector('.box-type-keyword-below__list--item.selected');
+        let bool;
+        if (selectedItem) {
+            const keyword = selectedItem.getAttribute('data-type-keyword');
+            bool = keyword === "2" ? 1 : 0;
+        } else {
+            console.log("Không có phần tử nào được chọn.");
+            bool = 0; // Giá trị mặc định
+        }
+
+        const params = new URLSearchParams({
+            keyword,
+            location,
+            industry,
+            sort,
+            bool,
+            page,
+            size: pageSize,
+        });
+
+        fetch(`/cvhub-web/search_job_sort_tuan?${params}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Dữ liệu nhận được từ server:', data); // In dữ liệu ra console
+
+                const tableBody = document.querySelector('#job-table-body');
+                tableBody.innerHTML = ''; // Xóa tất cả dữ liệu cũ trong bảng
+
+                // Hiển thị danh sách công việc
+                if (data.jobs && data.jobs.length > 0) {
+                    data.jobs.forEach(job => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                        <td><img
+									src="/cvhub-web/images/${job.organization.logoID}"
+									alt="Logo" class="img-responsive"></td>
+                        <td>${job.title}</td>
+                        <td>${job.organization.title}</td>
+                        <td>${job.location.name}</td>
+                        <td>${job.jobRole.title}</td>
+                        <td>${job.experience}</td>
+                        <td>${job.salary}</td>
+                        <td>
+                            <a href="/cvhub-web/jobrequests/${job.id}" class="btn btn-success">Chi tiết</a>
+                        </td>
+                    `;
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    tableBody.innerHTML = '<tr><td colspan="8">Không có công việc nào phù hợp.</td></tr>';
+                }
+
+                // Cập nhật phân trang
+                renderPagination(data.currentPage, data.totalPages);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const tableBody = document.querySelector('#job-table-body');
+                tableBody.innerHTML = '<tr><td colspan="8">Đã có lỗi xảy ra khi tải dữ liệu. Vui lòng thử lại sau.</td></tr>';
+            });
+    }
+
+    function renderPagination(currentPage, totalPages) {
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = ''; // Xóa nội dung phân trang cũ
+
+        // Nút Previous
+        if (currentPage > 0) {
+            const prevButton = document.createElement('button');
+            prevButton.textContent = 'Previous';
+            prevButton.innerHTML = '<span class="glyphicon glyphicon-chevron-left"></span>'; // Icon
+            prevButton.classList.add('btn', 'btn-primary', 'page-item', 'page-link');
+            prevButton.addEventListener('click', () => searchJobs(currentPage - 1));
+            pagination.appendChild(prevButton);
+        }
+
+        // Hiển thị thông tin trang
+        const pageInfo = document.createElement('span');
+        pageInfo.textContent = ` Page ${currentPage + 1} of ${totalPages} `;
+        pageInfo.classList.add('mx-2', 'page-info');
+        pagination.appendChild(pageInfo);
+
+        // Nút Next
+        if (currentPage + 1 < totalPages) {
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Next';
+            nextButton.innerHTML = '<span class="glyphicon glyphicon-chevron-right"></span>'; // Icon
+            nextButton.classList.add('btn', 'btn-primary', 'page-item', 'page-link');
+            nextButton.addEventListener('click', () => searchJobs(currentPage + 1));
+            pagination.appendChild(nextButton);
+        }
+    }
+
+    searchJobs(0);
+</script>
+</body>
+<th:block th:include="fragments/javascript"></th:block>
+</html>

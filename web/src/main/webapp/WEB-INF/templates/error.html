@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MyWorkspace App Marketplace - Speed to text: Error</title>
+   <th:block th:include="fragments/head"></th:block>
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <!-- <th:block th:include="fragments/hnav"></th:block> -->
+    
+    <section id="error">
+        Exception: <p th:text="${exception}"></p>
+        Url: <p th:text="${url}"></p>
+     </section>
+     
+     <div class="act">
+        <a type="button" class="btn btn-secondary" th:href="@{/}" accesskey="b">Back</a>
+    </div>
+    <div th:replace="~{fragments/footer :: footer}">&copy; Thach.Le</div>
+
+
+</body>
+</html>
