@@ -108,7 +108,13 @@ public class SignController extends BaseController {
     public ModelAndView processRegistration(@ModelAttribute UserDTO userDTO, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
         try {
-            userService.registerUserInSakai(userDTO.getFullName(), userDTO.getEmail(), passwordEncoder.encode(userDTO.getPassword()), userDTO.getPhone());
+            // Mã hóa mật khẩu và thêm tiền tố PBKDF2:
+            String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
+            String prefixedPassword = "PBKDF2:" + encodedPassword;
+
+            // Gọi dịch vụ lưu người dùng với mật khẩu đã chỉnh sửa
+            userService.registerUserInSakai(userDTO.getFullName(), userDTO.getEmail(), prefixedPassword, userDTO.getPhone());
+
             redirectAttributes.addFlashAttribute("successMessage", "Đăng ký thành công! Vui lòng đăng nhập.");
             mav.setViewName("redirect:/login");
         } catch (Exception e) {
@@ -117,6 +123,7 @@ public class SignController extends BaseController {
         }
         return mav;
     }
+
 
 
     // Helper method to get current logged in user
