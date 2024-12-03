@@ -151,7 +151,6 @@ public class HomeController extends BaseController {
 		List<JobRequest> searchResults = searchjobService.searchJobRequest(jobSearchDTO.getKeyword(),
 				jobSearchDTO.getLocation(), jobSearchDTO.getIndustry());
 		mav.addObject("searchResults", searchResults);
-
 		return mav;
 	}
 
