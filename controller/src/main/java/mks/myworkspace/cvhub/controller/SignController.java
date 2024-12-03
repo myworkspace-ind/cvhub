@@ -24,13 +24,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import mks.myworkspace.cvhub.controller.model.UserDTO;
 import mks.myworkspace.cvhub.service.UserService;
 import mks.myworkspace.cvhub.service.impl.Pbkdf2PasswordEncoder;
+import org.springframework.beans.factory.annotation.Value;
 
 @Controller
 public class SignController extends BaseController {
-    
+	@Value("${user.register:0}")
+    private int userRegister; 
     @Autowired
     private UserService userService;
-    Pbkdf2PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder();
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    Pbkdf2PasswordEncoder passwordEncoder1 = new Pbkdf2PasswordEncoder();
     // Login page
     @GetMapping("/login")
     public ModelAndView showLoginPage(
@@ -69,58 +72,44 @@ public class SignController extends BaseController {
     }
 
     // Process registration
-    /*@PostMapping("/register")
+    @PostMapping("/register")
     public ModelAndView processRegistration(@ModelAttribute UserDTO userDTO, 
             BindingResult result, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
 
         try {
-            // Validate email existence
-            if (userService.isEmailExists(userDTO.getEmail())) {
-                mav.addObject("error", "Email đã tồn tại trong hệ thống");
-                mav.setViewName("/signInOut/signup");
-                return mav;
+            if (userRegister == 1) {
+                // Nếu `user.register = 1`, sử dụng phương thức đăng ký vào Sakai
+                String encodedPassword = passwordEncoder1.encode(userDTO.getPassword());
+                String prefixedPassword = "PBKDF2:" + encodedPassword;
+
+                userService.registerUserInSakai(userDTO.getFullName(), userDTO.getEmail(), prefixedPassword, userDTO.getPhone());
+                redirectAttributes.addFlashAttribute("successMessage", "Đăng ký thành công! Vui lòng đăng nhập.");
+                mav.setViewName("redirect:/login");
+            } else {
+                // Nếu không có key `user.register = 1`, sử dụng phương thức đăng ký mặc định
+                if (userService.isEmailExists(userDTO.getEmail())) {
+                    mav.addObject("error", "Email đã tồn tại trong hệ thống");
+                    mav.setViewName("/signInOut/signup");
+                    return mav;
+                }
+
+                if (!userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
+                    mav.addObject("error", "Mật khẩu xác nhận không khớp");
+                    mav.setViewName("/signInOut/signup");
+                    return mav;
+                }
+
+                User user = userService.createUser(userDTO.getFullName(), userDTO.getEmail(), 
+                        passwordEncoder.encode(userDTO.getPassword()), userDTO.getPhone());
+                redirectAttributes.addFlashAttribute("success", "Đăng ký thành công! Vui lòng đăng nhập.");
+                mav.setViewName("redirect:/login");
             }
-
-            // Validate password match
-            if (!userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
-                mav.addObject("error", "Mật khẩu xác nhận không khớp");
-                mav.setViewName("/signInOut/signup");
-                return mav;
-            }
-
-            // Register user
-            User user = userService.createUser(userDTO.getFullName(), userDTO.getEmail(), 
-            		passwordEncoder.encode(userDTO.getPassword()), userDTO.getPhone());
-
-            // Redirect to login with success message
-            mav.setViewName("redirect:/login");
-            redirectAttributes.addFlashAttribute("success", "Đăng ký thành công! Vui lòng đăng nhập.");
-
         } catch (Exception e) {
-            mav.setViewName("/signInOut/signup");
             mav.addObject("error", e.getMessage());
-        }
-
-        return mav;
-    }*/
-    @PostMapping("/register")
-    public ModelAndView processRegistration(@ModelAttribute UserDTO userDTO, RedirectAttributes redirectAttributes) {
-        ModelAndView mav = new ModelAndView();
-        try {
-            // Mã hóa mật khẩu và thêm tiền tố PBKDF2:
-            String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
-            String prefixedPassword = "PBKDF2:" + encodedPassword;
-
-            // Gọi dịch vụ lưu người dùng với mật khẩu đã chỉnh sửa
-            userService.registerUserInSakai(userDTO.getFullName(), userDTO.getEmail(), prefixedPassword, userDTO.getPhone());
-
-            redirectAttributes.addFlashAttribute("successMessage", "Đăng ký thành công! Vui lòng đăng nhập.");
-            mav.setViewName("redirect:/login");
-        } catch (Exception e) {
-            mav.addObject("errorMessage", e.getMessage());
             mav.setViewName("/signInOut/signup");
         }
+
         return mav;
     }
 
