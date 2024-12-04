@@ -1,10 +1,7 @@
 package mks.myworkspace.cvhub.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -24,12 +21,10 @@ public class JobRoleImpl implements JobRoleService {
 	public JobRole createJobRole(String title, String description) {
 		
 		//kiem tra cac tham so dau vao
-		if(title == null || description.isEmpty()) {
-			throw new IllegalArgumentException("Title and Description must not be null or empty.");
+		if (title == null) {
+			throw new IllegalArgumentException("Title must not be null or empty.");
 		}
-		JobRole jobRole = new JobRole();
-		jobRole.setTitle(title);
-		jobRole.setDescription(description);
+		JobRole jobRole = new JobRole(title, description);
 		
 		return jobRole;
 	}
