@@ -77,13 +77,13 @@ public class HomeController extends BaseController {
 	@Autowired
 	SearchJobService searchjobService;
 	@Autowired
-    private JobRequestRepository jobRequestRepository;
-	
+	private JobRequestRepository jobRequestRepository;
+
 	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
 
 	/**
 	 * This method is called when binding the HTTP parameter to bean (or model).
-	 * 
+	 *
 	 * @param binder
 	 */
 	@InitBinder
@@ -98,33 +98,45 @@ public class HomeController extends BaseController {
 
 	/**
 	 * Simply selects the home view to render by returning its name.
-	 * 
+	 *
 	 * @return
 	 */
-	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
-	public ModelAndView displayHome(HttpServletRequest request, 
-									HttpSession httpSession, 
+
+	@RequestMapping(value = { "/", "/home","/searchJob" }, method = RequestMethod.GET)
+	public ModelAndView displayHome(HttpServletRequest request,
+									HttpSession httpSession,
 									@RequestParam(value = "page", defaultValue = "0") int page,
-						            @RequestParam(value ="limit", defaultValue = "10") int limit) {
-		ModelAndView mav = new ModelAndView("home");
+									@RequestParam(value ="limit", defaultValue = "9") int limit) {
+		ModelAndView mav;
+
+		// Xác định view dựa trên URL
+		String requestURI = request.getRequestURI();
+		String viewName = "home";  // Mặc định view cho trang home
+
+		if (requestURI.contains("/searchJob")) {
+			viewName = "searchJob";  // Nếu là /searchJob, trả về view searchJob
+		}
+
+		mav = new ModelAndView(viewName);	// Trả về dữ liệu chung cho cả 2 trang
 
 		initSession(request, httpSession);
 		PageRequest pageRequest = PageRequest.of(
-                page, limit,
-                Sort.by("createdDate").descending()
-        );
-        Page<JobRequest> jobRequestPage = jobRequestRepository.findAll(pageRequest);
-        int totalPages = jobRequestPage.getTotalPages();
-        List<JobRequest> jobRequests = jobRequestPage.getContent();
-        mav.addObject("jobrequests", jobRequests);
-        mav.addObject("totalPages", totalPages);
-        mav.addObject("currentPage", page);
+				page, limit,
+				Sort.by("createdDate").descending()
+		);
+		Page<JobRequest> jobRequestPage = jobRequestRepository.findAll(pageRequest);
+		int totalPages = jobRequestPage.getTotalPages();
+		List<JobRequest> jobRequests = jobRequestPage.getContent();
+		mav.addObject("jobrequests", jobRequests);
+		mav.addObject("totalPages", totalPages);
+		mav.addObject("currentPage", page);
 		mav.addObject("currentSiteId", getCurrentSiteId());
 		mav.addObject("userDisplayName", getCurrentUserDisplayName());
 		List<Location> locations = locationService.getRepo().findAll();
 		mav.addObject("locations", locations);
 		return mav;
 	}
+
 
 	@GetMapping("/job-roles")
 	@ResponseBody
@@ -134,12 +146,11 @@ public class HomeController extends BaseController {
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public ModelAndView searchJobs(@ModelAttribute JobSearchDTO jobSearchDTO, HttpServletRequest request,
-			HttpSession httpSession) {
+								   HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("searchResult");
 		List<JobRequest> searchResults = searchjobService.searchJobRequest(jobSearchDTO.getKeyword(),
 				jobSearchDTO.getLocation(), jobSearchDTO.getIndustry());
 		mav.addObject("searchResults", searchResults);
-
 		return mav;
 	}
 
@@ -156,16 +167,16 @@ public class HomeController extends BaseController {
 		return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
 	}
 
-	
-	  @GetMapping("/details")
-	   public ModelAndView getJobDetails(@RequestParam("id") Long jobId) {
-	        // Replace with your service call to fetch the job details using jobId
-			ModelAndView mav = new ModelAndView("V");
-	        return mav;
-	    }
+
+	@GetMapping("/details")
+	public ModelAndView getJobDetails(@RequestParam("id") Long jobId) {
+		// Replace with your service call to fetch the job details using jobId
+		ModelAndView mav = new ModelAndView("V");
+		return mav;
+	}
 
 
-	
+
 
 	public byte[] uuidToBytes(UUID uuid) {
 		ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[256]);
