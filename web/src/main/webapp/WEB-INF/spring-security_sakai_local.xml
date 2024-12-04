@@ -15,7 +15,7 @@
     
     <!-- Password Encoder -->
     <beans:bean id="passwordEncoder" 
-          class="mks.myworkspace.cvhub.service.impl.EncodePasswordImpl"/>
+          class="mks.myworkspace.cvhub.service.impl.Pbkdf2PasswordEncoder"/>
 
     <!-- DataSource Configuration -->
     <beans:bean id="dataSource" 
