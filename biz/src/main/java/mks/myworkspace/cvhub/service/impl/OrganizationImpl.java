@@ -55,6 +55,13 @@ public class OrganizationImpl implements OrganizationService {
 	public Organization findByUserId(Long id) {
 		return repo.findByUserId(id);
 	}
+
+	@Override
+	public List<Organization> searchByTitle(String title) {
+
+		return repo.searchByTitle(title); // thêm bới ledaonhansam
+	}
+	
 	
 	@Override
 	public List<Organization> findByTitleContaining(String title) {

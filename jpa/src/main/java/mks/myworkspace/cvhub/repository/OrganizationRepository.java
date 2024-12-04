@@ -22,7 +22,8 @@ public interface OrganizationRepository extends JpaRepository<Organization,Long>
 	Long getIdByTitle(@Param("title") String title);
 	@Query("SELECT o FROM Organization o WHERE o.user.id = :userId")
 	Organization findByUserId(@Param("userId") Long userId);
-
+	@Query("SELECT o FROM Organization o WHERE LOWER(o.title) LIKE LOWER(CONCAT('%', :title, '%'))")
+	List<Organization> searchByTitle(@Param("title") String title); // thêm b?i LeDaoNhanSam tìm công ty b?ng tên công ty
 	Page<Organization> findAll(@Param("pageRequest") Pageable pageRequest );
 	List<Organization> findByTitleContaining(String title);
 	Page<Organization> findByTitleContaining(@Param("pageRequest") Pageable pageRequest, String title);

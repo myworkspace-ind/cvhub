@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Organization Report</title>
+    <th:block th:include="fragments/head"></th:block>
+   <link rel="stylesheet" th:href="@{/resources/main/organizationReport.css}" />
+</head>
+<body>
+    <th:block th:include="fragments/hmenu"></th:block>
+	<div class="container">
+        <h2>Organization Report</h2>
+                <!-- Tìm kiếm theo tên công ty -->
+		<form method="get" action="/cvhub-web/searchOrganization" class="search-form d-flex align-items-center mb-4">
+			<label for="companyName" class="mr-2">Filter by Company Name:</label>
+			<input type="text" id="companyName" name="companyName"
+				class="form-control mr-2" style="width: 200px;" placeholder="Company Name" >
+			<button type="submit" class="button">Apply</button>
+		</form>
+	</div>
+
+	<div class="container mt-4">
+		<table id="organizationTable" class="table table-striped table-hover table-bordered">
+			<thead class="table-blue">
+				<tr>
+					<th>STT</th>
+					<th>Logo</th>
+					<th>Company Name</th>
+					<th>Location</th>
+					<th>Created Date</th>
+					<th>Details</th>
+					<th>WebSite</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- Kiểm tra nếu organizations có dữ liệu -->
+				<tr th:each="organization, iterStat : ${organizations}">
+					<td th:text="${iterStat.index + 1}"></td>
+					<!-- Hiển thị STT -->
+					<td><img
+						th:src="@{/images/{logoId}(logoId=${organization.logoID})}"
+						alt="Company logo" style="width: 50px; height: 50px;"></td>
+					<td th:text="${organization.title}"></td>
+					<!-- Hiển thị tên công ty -->
+					<td th:text="${organization.location}"></td>
+					<!-- Hiển thị vị trí -->
+					<td
+						th:text="${#dates.format(organization.createdDate, 'dd/MM/yyyy')}"></td>
+					<!-- Hiển thị ngày tạo -->
+					<td th:text="${organization.detail}"></td>
+					<!-- Hiển thị chi tiết -->
+					<td><a th:href="${organization.website}" class="apply-button"
+						target="_blank" rel="noopener noreferrer"
+						style="display: inline-block; text-decoration: none; margin-top: 10px;">
+							<button style="cursor: pointer;">Visit Website</button>
+					</a></td>
+					<!-- Hiển thị Website -->
+				</tr>
+
+				<!-- Hiển thị thông báo nếu không có tổ chức nào -->
+				<tr th:if="${#lists.isEmpty(organizations)}">
+					<td colspan="7"
+						th:text="'No organizations found for the selected period.'"></td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<nav aria-label="Page navigation" class="mt-5">
+        <ul class="pagination justify-content-center">
+            <!-- Previous button -->
+            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link" th:href="${currentPage > 0} ? @{/main/report/organization(page=${currentPage - 1}, size=${size})} : '#'" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <!-- Page numbers -->
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${pageNum == currentPage} ? 'active'">
+                <a class="page-link" th:href="@{/main/report/organization(page=${pageNum}, size=${size})}" th:text="${pageNum + 1}"></a>
+            </li>
+
+            <!-- Next button -->
+            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                <a class="page-link" th:href="${currentPage < totalPages - 1} ? @{/main/report/organization(page=${currentPage + 1}, size=${size})} : '#'" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+	</div>
+	
+	<!--    
+    <th:block th:include="fragments/common_javascript"></th:block> -->
+</body>
+</html>
