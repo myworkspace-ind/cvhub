@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Danh sách Job Roles</title>
+<th:block th:include="fragments/head"></th:block>
+</head>
+<body>
+	<th:block th:include="fragments/hmenu"></th:block>
+	<div class="container mt-5">
+		<h1>Danh sách Job Roles</h1>
+		<!-- Nút Add Job Role -->
+		<div class="mb-3 text-end">
+			<a th:href="@{/jobroles/add}" class="btn btn-primary">Add Job
+				Role</a>
+		</div>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Title</th>
+					<th>Description</th>
+					<th>Created Date</th>
+					<th>Modified Date</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- Lặp qua danh sách JobRoles -->
+				<tr th:each="jobRole, iterStat : ${jobroles}">
+					<td th:text="${iterStat.count}"></td>
+					<!-- Số thứ tự -->
+					<td th:text="${jobRole.title}"></td>
+					<td th:text="${jobRole.description}"></td>
+					<td
+						th:text="${#dates.format(jobRole.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+					<td
+						th:text="${#dates.format(jobRole.modified, 'yyyy-MM-dd HH:mm:ss')}"></td>
+					<td>
+						<div class="d-flex gap-2">
+							<a th:href="@{/jobroles/edit/{id}(id=${jobRole.id})}"
+								class="btn btn-warning btn-sm">Edit</a> <a
+								th:href="@{/jobroles/delete/{id}(id=${jobRole.id})}"
+								class="btn btn-danger btn-sm">Delete</a>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<!--- Phân trang --->
+		<nav aria-label="Page navigation">
+			<ul class="pagination justify-content-center">
+				<li class="page-item"
+					th:classappend="${currentPage == 0} ? 'disabled'"><a
+					class="page-link"
+					th:href="@{/jobroles(page=${currentPage - 1}, size=${10})}">Previous</a>
+				</li>
+				<li class="page-item"
+					th:each="page : ${#numbers.sequence(0, totalPages - 1)}"
+					th:classappend="${page == currentPage} ? 'active'"><a
+					class="page-link" th:href="@{/jobroles(page=${page}, size=${10})}"
+					th:text="${page + 1}"></a></li>
+				<li class="page-item"
+					th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+					<a class="page-link"
+					th:href="@{/jobroles(page=${currentPage + 1}, size=${10})}">Next</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+</body>
+</html>

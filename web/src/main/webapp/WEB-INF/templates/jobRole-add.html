@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Add Job Roles</title>
+<th:block th:include="fragments/head"></th:block>
+</head>
+<body>
+	<th:block th:include="fragments/hmenu"></th:block>
+	<div class="container mt-5">
+		<h1 th:text="${jobrole == null} ? 'Add Job Role' : 'Edit Job Role'"></h1>
+		<form
+			th:action="@{${jobrole == null} ? '/jobroles/add':'/jobroles/edit/' + ${jobrole.id}}"
+			method="post">
+
+			<input type="hidden" name="jobid" th:if="${jobrole != null}"
+				th:value="${jobrole != null} ? ${jobrole.id} : ''" />
+
+			<!-- Title -->
+			<div class="mb-3">
+				<label for="title" class="form-label">Job Title</label> <input
+					type="text" name="title" maxlength="64" class="form-control"
+					th:value="${jobrole != null} ? ${jobrole.title} : ''" required>
+			</div>
+
+			<!-- Description -->
+			<div class="mb-3">
+				<label for="description" class="form-label">Description</label> <input
+					type="text" id="description" name="description"
+					class="form-control"
+					th:value="${jobrole != null} ? ${jobrole.description} : ''">
+			</div>
+
+			<div>
+				<button type="submit" class="btn btn-primary"
+					th:text="${jobrole == null} ? 'Add Job Role' : 'Save Job Role'"></button>
+			</div>
+		</form>
+	</div>
+</body>
+</html>
