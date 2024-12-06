@@ -49,4 +49,7 @@ public class User {
     @UpdateTimestamp
     @Column(name = "modified_date")
     private Date modifiedDate;
+    
+    @Setter
+    private String status ; 
 }
