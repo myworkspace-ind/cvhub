@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -53,7 +54,9 @@ import mks.myworkspace.cvhub.service.LocationService;
 import mks.myworkspace.cvhub.service.OrganizationReviewService;
 import mks.myworkspace.cvhub.service.OrganizationService;
 import mks.myworkspace.cvhub.service.UserService;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 @Controller
 @RequiredArgsConstructor
 public class JobPostingController extends BaseController {
@@ -127,7 +130,7 @@ public class JobPostingController extends BaseController {
 			return mav;
 		}
 	}
-
+/*
 	@GetMapping("/showJob")
 	public ModelAndView showJob(Model model, Authentication authentication) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -154,6 +157,44 @@ public class JobPostingController extends BaseController {
 
 		return new ModelAndView("showJob");
 	}
+	*/
+	
+	@GetMapping("/showJob")
+	public ModelAndView showJob(Model model, Authentication authentication,
+	                            @RequestParam(value = "page", defaultValue = "0") int page,
+	                            @RequestParam(value = "size", defaultValue = "5") int size) {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+	        return new ModelAndView("redirect:/login");
+	    }
+
+	    String userEmail = auth.getName();
+	    User user = userService.findUserByEmail(userEmail);
+	    Organization organization = organizationService.findByUserId(user.getId());
+
+	    if (organization == null) {
+	        return new ModelAndView("redirect:/showRegister");
+	    }
+	    List<JobRequest> listJob = jobRequestService.findAllByOrganizationId(organization.getId());
+	    // Sử dụng pageable để phân trang
+	    Pageable pageable = PageRequest.of(page, size);
+	    Page<JobRequest> jobRequestsPage = jobRequestRepository.findByOrganizationId(organization.getId(), pageable);
+	    if (jobRequestsPage.getTotalElements() == 0) {
+            page = 0;  // Đặt lại trang về 0 nếu không có dữ liệu
+        }
+	    List<String> locationNames = new ArrayList<>();
+	    for (JobRequest jobRequest : listJob) {
+	        locationNames.add(jobRequest.getLocation().getName());  // Thêm tên Location vào danh sách
+	    }
+	    model.addAttribute("locationNames", locationNames);
+	    model.addAttribute("listJob", listJob);
+	    model.addAttribute("currentPage", jobRequestsPage.getNumber());
+	    model.addAttribute("totalPages", jobRequestsPage.getTotalPages());
+	    model.addAttribute("totalItems", jobRequestsPage.getTotalElements());
+
+	    return new ModelAndView("showJob");
+	}
+
 	
 	@GetMapping("/deleteJob/{id}")
 	public String deleteJob(@PathVariable("id") Long id) {
@@ -200,7 +241,7 @@ public class JobPostingController extends BaseController {
                             @RequestParam("jobDescription") String jobDescription,
                             @RequestParam("experience") int experience,
                             @RequestParam("salaryOption") int salaryOption,
-                            @RequestParam(value = "salary", required = false) int salary,
+                            @RequestParam(value = "salary", required = false) Integer salary,
                             @RequestParam("requirementsCandidate") String requirementsCandidate,
                             @RequestParam("benefitCandidate") String benefitCandidate,
                             @RequestParam("deadlineApplication") String deadlineApplication) {
@@ -225,7 +266,9 @@ public class JobPostingController extends BaseController {
 	        jobRequest.setLocation(location);
 	        jobRequest.setJobRole(jobRole);
 	        jobRequest.setExperience(experience);
-	        jobRequest.setSalary(salary);
+	        if (salary != null) {
+	            jobRequest.setSalary(salary);
+	        }
 	        jobRequest.setDetailsJob(jobDescription);
 	        jobRequest.setRequirementsCandidate(requirementsCandidate);
 	        jobRequest.setOrganization(organization);

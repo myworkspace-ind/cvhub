@@ -64,21 +64,19 @@
 					th:value="${jobRequest.title}" required>
 			</div>
 			<div class="form-group mb-3">
-				<label for="jobRoleId" class="form-label fw-bold">Mảng ngành
-					nghề <em class="text-danger">*</em>
-				</label> <select id="jobRoleId" name="jobRoleId" class="form-select"
-					required>
-					<!-- Lựa chọn mặc định -->
-					<option value="" disabled ${jobRequest.jobRole==null ? 'selected' : ''}>Chọn
-						ngành nghề tuyển dụng</option>
+    <label for="jobRoleId" class="form-label fw-bold">Mảng ngành nghề <em class="text-danger">*</em></label>
+    <select id="jobRoleId" name="jobRoleId" class="form-select" required>
+        <!-- Lựa chọn mặc định -->
+        <option value="" disabled th:selected="${jobRequest.jobRole == null}">Chọn ngành nghề tuyển dụng</option>
 
-					<!-- Các lựa chọn từ jobRoles -->
-					<th:block th:each="jobRole : ${jobRoles}">
-						<option th:value="${jobRole.id}" th:text="${jobRole.title}"
-							th:selected="${jobRole.id == jobRequest.jobRole}"></option>
-					</th:block>
-				</select>
-			</div>
+        <!-- Các lựa chọn từ jobRoles -->
+        <th:block th:each="jobRole : ${jobRoles}">
+            <option th:value="${jobRole.id}" 
+                    th:text="${jobRole.title}"
+                    th:selected="${jobRole.id == jobRequest.jobRole?.id}"></option>
+        </th:block>
+    </select>
+</div>
 			<div class="form-group mb-3">
 				<label for="location" class="form-label fw-bold">Địa điểm
 					làm việc <em class="text-danger">*</em>
