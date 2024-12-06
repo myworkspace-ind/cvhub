@@ -6,18 +6,24 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import mks.myworkspace.cvhub.entity.Organization;
 import mks.myworkspace.cvhub.repository.OrganizationRepository;
 
 @Service
 public interface OrganizationService {
 	OrganizationRepository getRepo();
-	Organization createOrganization(String title, MultipartFile logoFile, String website, String summary, String detail, String location);
-	byte[] downloadImage(MultipartFile logoFile) throws IOException ;
-	 boolean isOwner(Long organizationId, String userEmail);
-	 Organization findByUserId(Long id);
-	 List<Organization> searchByTitle(String title); // Thêm ch?c nang tìm ki?m công ty b?ng tên công ty : ngu?i thêm LeDaoNhanSam
-	 
-    List<Organization> findByTitleContaining(String title);
+
+	Organization createOrganization(String title, MultipartFile logoFile, String website, String summary, String detail,
+			String location);
+
+	byte[] downloadImage(MultipartFile logoFile) throws IOException;
+
+	boolean isOwner(Long organizationId, String userEmail);
+
+	Organization findByUserId(Long id);
+
+	List<Organization> searchByTitle(String title); // Thï¿½m ch?c nang tï¿½m ki?m cï¿½ng ty b?ng tï¿½n cï¿½ng ty : ngu?i thï¿½m
+													// LeDaoNhanSam
+
+	List<Organization> findByTitleContaining(String title);
 }
