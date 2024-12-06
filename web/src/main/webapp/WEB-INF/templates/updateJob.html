@@ -50,28 +50,32 @@
 	</nav>
 
 	<div class="container mt-4" style="max-width: 500px;">
-		<form th:action="@{/registerJob1}" method="POST"
+		<form th:action="@{/updateJob}" method="POST"
 			class="p-4 border rounded bg-light shadow-sm">
-			<h3 class="text-center mb-4">Thêm thông tin tuyển dụng</h3>
+			<h3 class="text-center mb-4">Sửa thông tin tuyển dụng</h3>
 			<!-- Trường input ẩn cho organizationId -->
 			<input type="hidden" id="organizationId" name="organizationId"
 				th:value="${organization.id}" />
-
+			<input type="hidden" name="id" th:value="${jobRequest.id}" />
 			<div class="form-group mb-3">
 				<label for="jobRoleId" class="form-label fw-bold">Tên công
 					việc cần tuyển dụng <em class="text-danger">*</em>
 				</label> <input type="text" class="form-control" id="namejob" name="title"
-					required>
+					th:value="${jobRequest.title}" required>
 			</div>
 			<div class="form-group mb-3">
 				<label for="jobRoleId" class="form-label fw-bold">Mảng ngành
 					nghề <em class="text-danger">*</em>
 				</label> <select id="jobRoleId" name="jobRoleId" class="form-select"
 					required>
-					<option value="" disabled selected>Chọn ngành nghề tuyển
-						dụng</option>
+					<!-- Lựa chọn mặc định -->
+					<option value="" disabled ${jobRequest.jobRole==null ? 'selected' : ''}>Chọn
+						ngành nghề tuyển dụng</option>
+
+					<!-- Các lựa chọn từ jobRoles -->
 					<th:block th:each="jobRole : ${jobRoles}">
-						<option th:value="${jobRole.id}" th:text="${jobRole.title}"></option>
+						<option th:value="${jobRole.id}" th:text="${jobRole.title}"
+							th:selected="${jobRole.id == jobRequest.jobRole}"></option>
 					</th:block>
 				</select>
 			</div>
@@ -80,9 +84,14 @@
 					làm việc <em class="text-danger">*</em>
 				</label> <select id="location" name="locationCode" class="form-select"
 					required>
-					<option value="" disabled selected>Chọn địa điểm</option>
+					<!-- Lựa chọn mặc định -->
+					<option value="" disabled ${jobRequest.location==null ? 'selected' : ''}>Chọn
+						địa điểm</option>
+
+					<!-- Các lựa chọn từ locations -->
 					<th:block th:each="location : ${locations}">
-						<option th:value="${location.code}" th:text="${location.name}"></option>
+						<option th:value="${location.code}" th:text="${location.name}"
+							th:selected="${location.code == jobRequest.location}"></option>
 					</th:block>
 				</select>
 			</div>
@@ -92,7 +101,7 @@
 				</label>
 				<textarea id="jobDescription" name="jobDescription"
 					class="form-control border-primary shadow-sm" rows="4"
-					placeholder="Nhập chi tiết công việc" required></textarea>
+					placeholder="Nhập chi tiết công việc" th:text=${jobRequest.detailsJob} required></textarea>
 			</div>
 			<div class="form-group mb-3 row">
 				<div class="col-md-6">
@@ -100,20 +109,24 @@
 						kinh nghiệm <em class="text-danger">*</em>
 					</label> <input type="number" class="form-control" id="experience"
 						name="experience" min="0" placeholder="Nhập số năm kinh nghiệm"
-						required> <small class="form-text text-muted">Nhập
-						số năm kinh nghiệm.</small>
+						th:value="${jobRequest.experience}" required> <small
+						class="form-text text-muted">Nhập số năm kinh nghiệm.</small>
 				</div>
 				<div class="col-md-6">
 					<label for="salary" class="form-label fw-bold">Lương Cơ bản
 						($) <em class="text-danger">*</em>
 					</label> <select class="form-select mb-2" id="salaryOption"
-						name="salaryOption" required onchange="toggleSalaryInput()">
-						<option value="0">Thỏa thuận</option>
-						<option value="1">Nhập lương</option>
+						name="salaryOption" required onchange="toggleSalaryInput()"
+						th:value="${jobRequest.salary != null ? 1 : 0}">
+						<option value="0" th:selected="${jobRequest.salary == null}">Thỏa
+							thuận</option>
+						<option value="1" th:selected="${jobRequest.salary != null}">Nhập
+							lương</option>
 					</select> <input type="number" class="form-control" id="salary"
 						name="salary" style="display: none;" placeholder="Nhập lương"
-						min="0">
+						min="0" th:value="${jobRequest.salary}" />
 				</div>
+
 			</div>
 			<div class="form-group mb-3">
 				<label for="requirementsCandidate" class="form-label fw-bold">Yêu
@@ -121,7 +134,7 @@
 				</label>
 				<textarea id="requirementsCandidate" name="requirementsCandidate"
 					class="form-control border-primary shadow-sm" rows="4"
-					placeholder="Nhập yêu cầu ứng viên" required></textarea>
+					placeholder="Nhập yêu cầu ứng viên" th:text="${jobRequest.requirementsCandidate}" required></textarea>
 			</div>
 
 			<div class="form-group mb-3">
@@ -130,7 +143,7 @@
 				</label>
 				<textarea id="benefitCandidate" name="benefitCandidate"
 					class="form-control border-primary shadow-sm" rows="4"
-					placeholder="Nhập quyền lợi ứng viên" required></textarea>
+					placeholder="Nhập quyền lợi ứng viên" th:text="${jobRequest.benefitCandidate}" required></textarea>
 			</div>
 
 			<div class="form-group mb-3">
@@ -138,8 +151,10 @@
 					nộp hồ sơ <em class="text-danger">*</em>
 				</label> <input type="date" id="deadlineApplication"
 					name="deadlineApplication"
-					class="form-control border-primary shadow-sm" required>
+					class="form-control border-primary shadow-sm" required
+					th:value="${jobRequest.deadlineApplication != null ? jobRequest.deadlineApplication : ''}">
 			</div>
+
 			<div class="d-flex justify-content-center">
 				<button type="submit" class="btn btn-primary">Lưu</button>
 			</div>
