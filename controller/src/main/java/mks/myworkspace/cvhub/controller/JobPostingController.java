@@ -14,8 +14,6 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,20 +30,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import lombok.RequiredArgsConstructor;
 import mks.myworkspace.cvhub.entity.User;
-import mks.myworkspace.cvhub.controller.model.CvDTO;
 import mks.myworkspace.cvhub.controller.model.JobRequestDTO;
-import mks.myworkspace.cvhub.controller.model.OrganizationDTO;
-import mks.myworkspace.cvhub.controller.model.OrganizationReviewDTO;
-import mks.myworkspace.cvhub.entity.JobApplication;
 import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
 import mks.myworkspace.cvhub.entity.Organization;
-import mks.myworkspace.cvhub.entity.OrganizationReview;
 import mks.myworkspace.cvhub.repository.JobApplicationRepository;
 import mks.myworkspace.cvhub.repository.JobRequestRepository;
 import mks.myworkspace.cvhub.repository.OrganizationRepository;
-import mks.myworkspace.cvhub.repository.OrganizationReviewRepository;
 import mks.myworkspace.cvhub.service.JobApplicationService;
 import mks.myworkspace.cvhub.service.JobRequestService;
 import mks.myworkspace.cvhub.service.JobRoleService;
@@ -111,7 +102,7 @@ public class JobPostingController extends BaseController {
 	@RequestMapping(value = "/registerJob1", method = RequestMethod.POST)
 	public ModelAndView registerJob(@ModelAttribute JobRequestDTO jobRequestDTO) {
 		try {
-			// Xử lý logic tạo mới công việc
+		
 			JobRequest jobRequest = jobRequestService.createJobRequest(jobRequestDTO.getTitle(),
 					jobRequestDTO.getLocationCode(), jobRequestDTO.getJobRoleId(), jobRequestDTO.getExperience(),
 					jobRequestDTO.getSalary(), jobRequestDTO.getOrganizationId(), jobRequestDTO.getJobDescription(),
@@ -119,12 +110,12 @@ public class JobPostingController extends BaseController {
 					jobRequestDTO.getDeadlineApplication());
 			jobRequest = jobRequestService.getRepo().save(jobRequest);
 
-			// Redirect sau khi thêm thành công
+			
 			ModelAndView mav = new ModelAndView();
 			mav.setViewName("redirect:/jobPosting");
 			return mav;
 		} catch (Exception e) {
-			// Trường hợp lỗi
+			
 			ModelAndView mav = new ModelAndView("error");
 			mav.addObject("errorMessage", "Có lỗi xảy ra khi đăng ký công việc: " + e.getMessage());
 			return mav;
@@ -176,11 +167,11 @@ public class JobPostingController extends BaseController {
 	        return new ModelAndView("redirect:/showRegister");
 	    }
 	    List<JobRequest> listJob = jobRequestService.findAllByOrganizationId(organization.getId());
-	    // Sử dụng pageable để phân trang
+
 	    Pageable pageable = PageRequest.of(page, size);
 	    Page<JobRequest> jobRequestsPage = jobRequestRepository.findByOrganizationId(organization.getId(), pageable);
 	    if (jobRequestsPage.getTotalElements() == 0) {
-            page = 0;  // Đặt lại trang về 0 nếu không có dữ liệu
+            page = 0;  
         }
 	    List<String> locationNames = new ArrayList<>();
 	    for (JobRequest jobRequest : listJob) {
@@ -218,13 +209,13 @@ public class JobPostingController extends BaseController {
 			return new ModelAndView("redirect:/showRegister");
 		}
 
-		// Lấy thông tin công việc từ database
+		
         JobRequest existingJobRequest = jobRequestService.getRepo().findById(id)
                 .orElseThrow(() -> new IllegalStateException("JobRequest not found"));
         List<JobRole> jobRoles = jobRoleService.getRepo().findAll();
 		List<Location> locations = locationService.getRepo().findAll();
 
-		// Thêm vào model để hiển thị trong form HTML
+		
 		model.addAttribute("jobRoles", jobRoles);
 		model.addAttribute("locations", locations);
 		model.addAttribute("organization", organization);
@@ -259,7 +250,7 @@ public class JobPostingController extends BaseController {
 	        LocalDate deadline = LocalDate.parse(deadlineApplication, formatter);
 			JobRole jobRole = jobRoleService.getRepo().getById(jobRoleId);
 			Location location = locationService.getRepo().getById(locationCode);
-			// Xử lý logic tạo mới công việc
+			
 			JobRequest jobRequest = new JobRequest();
 			jobRequest.setId(id);
 			jobRequest.setTitle(title);
@@ -275,7 +266,7 @@ public class JobPostingController extends BaseController {
 	        jobRequest.setBenefitCandidate(benefitCandidate);
 	        jobRequest.setDeadlineApplication(deadline);
 
-	        // Lưu đối tượng vào database
+	        
 	        jobRequestService.getRepo().save(jobRequest);
 	        mav.setViewName("redirect:/showJob");
 			return mav;	
