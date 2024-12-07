@@ -198,6 +198,15 @@
 			menu.style.position = 'absolute'; // Menu sẽ không ảnh hưởng đến layout chính
 			menu.style.zIndex = '999'; // Đảm bảo menu nằm trên các phần tử khác
 		}
+
+		
+	</script>
+	<script>
+		// Lấy ngày hiện tại theo định dạng YYYY-MM-DD
+		const today = new Date().toISOString().split("T")[0];
+		// Gán giá trị min cho input
+		document.getElementById("deadlineApplication").setAttribute("min",
+				today);
 	</script>
 </body>
 </html>
