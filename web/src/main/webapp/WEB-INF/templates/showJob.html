@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Job request list</title>
+    <th:block th:include="fragments/head"></th:block>
+</head>
+<body>
+<th:block th:include="fragments/hmenu"></th:block>
+    <div class="container mt-4">
+        <h3>Danh sách công việc</h3>
+        
+        <!-- Bảng với DataTables -->
+        <table id="jobTable" class="table table-striped" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Tên công việc</th>
+                    <th>Ngành nghề</th>
+                    <th>Địa điểm</th>
+                    <th>Mô tả công việc</th>
+                    <th>Yêu cầu kinh nghiệm</th>
+                    <th>Lương cơ bản</th>
+                    <th>Hạn nộp hồ sơ</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Lặp qua danh sách công việc -->
+                <tr th:each="job, iterStat : ${listJob}">
+                    <td th:text="${job.title}">Tên công việc</td>
+                    <td th:text="${job.jobRole.title}">Ngành nghề</td>
+                    <td th:text="${locationNames[iterStat.index]}">Địa điểm</td>
+                    <td th:text="${job.detailsJob}">Mô tả công việc</td>
+                    <td th:text="${job.experience}">Kinh nghiệm</td>
+                    <td th:text="${job.salary}">Lương</td>
+                    <td th:text="${job.deadlineApplication}">Hạn nộp hồ sơ</td>
+                
+				<td>
+					<!-- Nút Sửa --> <a th:href="@{/editJob/{id}(id=${job.id})}"
+					class="btn btn-primary">Sửa</a> <a
+					th:href="@{/deleteJob/{id}(id=${job.id})}" class="btn btn-danger"
+					onclick="return confirm('Bạn có chắc chắn muốn xóa công việc này?');">Xóa</a>
+				</td>
+				</tr>
+			</tbody>
+        </table>
+        <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        <!-- Previous Page Button -->
+        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled' : ''">
+            <a class="page-link" th:href="@{/showJob(page=${currentPage - 1}, size=${size})}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+
+        <!-- Loop through pages -->
+        <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+            th:classappend="${i == currentPage} ? 'active' : ''">
+            <a class="page-link" th:href="@{/showJob(page=${i}, size=${size})}" th:text="${i + 1}"></a>
+        </li>
+
+        <!-- Next Page Button -->
+        <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled' : ''">
+            <a class="page-link" th:href="@{/showJob(page=${currentPage + 1}, size=${size})}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+    </div>
+</body>
+</html>
