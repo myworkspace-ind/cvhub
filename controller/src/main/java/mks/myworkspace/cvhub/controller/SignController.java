@@ -128,15 +128,22 @@ public class SignController extends BaseController {
                         passwordEncoder.encode(userDTO.getPassword()), userDTO.getPhone());
                 
                 // Gửi email xác nhận
-                String verificationCode = generateVerificationCode();  // Bạn cần phương thức tạo mã xác nhận
-                emailService.sendEmail(user.getEmail(), "Xác nhận email", 
-                        "Vui lòng xác nhận tài khoản của bạn bằng mã sau: " + verificationCode);
+                if (registerUserConfirm) {
+                    // Nếu cần gửi email xác nhận
+                    String verificationCode = generateVerificationCode();
+                    emailService.sendEmail(user.getEmail(), "Xác nhận email", 
+                            "Vui lòng xác nhận tài khoản của bạn bằng mã sau: " + verificationCode);
 
-                // Lưu mã xác nhận vào cơ sở dữ liệu (ví dụ: bảng EmailVerification)
-                emailVerificationRepository.save(new EmailVerification(user.getEmail(), verificationCode));
+                    // Lưu mã xác nhận vào cơ sở dữ liệu
+                    emailVerificationRepository.save(new EmailVerification(user.getEmail(), verificationCode));
 
-                redirectAttributes.addFlashAttribute("success", "Đăng ký thành công! Vui lòng kiểm tra email của bạn để xác nhận tài khoản.");
-                mav.setViewName("redirect:/login");
+                    redirectAttributes.addFlashAttribute("success", "Đăng ký thành công! Vui lòng kiểm tra email của bạn để xác nhận tài khoản.");
+                    mav.setViewName("redirect:/verify");
+                } else {
+                    // Không cần xác nhận qua email
+                    redirectAttributes.addFlashAttribute("successMessage", "Đăng ký thành công! Vui lòng đăng nhập.");
+                    mav.setViewName("redirect:/login");
+                }
             }
         } catch (Exception e) {
             mav.addObject("error", e.getMessage());
