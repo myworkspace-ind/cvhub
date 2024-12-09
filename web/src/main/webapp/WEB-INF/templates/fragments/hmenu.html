@@ -52,16 +52,19 @@
 		<li><span title="Job roles"> <a style="width: 80px;" id="jobroles"
 				th:href="@{/jobroles}">Job roles</a>
 		</span></li>
+		<li><span title="About"> <a style="width: 80px;"
+				th:href="@{/jobPosting}">Job posting</a>
+		</span></li>
 		
 	</ul>
 	<!-- Right-aligned dropdown button -->
 	<ul class="nav mt-2 me-3">
 		<li class="dropdown">
-			<button button class="btn btn-secondary btn-sm dropdown-toggle"
+			<button button class="btn btn-primary btn-sm dropdown-toggle"
 				type="button" data-bs-toggle="dropdown" aria-expanded="false">
 				username</button>
 			<ul class="dropdown-menu dropdown-menu-end">
-				<li><a class="dropdown-item small" href="#">View Profile</a></li>
+				<li><a  th:href="@{/main/user}"  class="dropdown-item small">View Profile</a></li>
 				<li><a class="dropdown-item small" href="#">Setting</a></li>
 				<li><a class="dropdown-item small" href="#">Log out</a></li>
 			</ul>
