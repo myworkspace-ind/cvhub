@@ -74,7 +74,8 @@ public class JobRequestController {
 	
 	@GetMapping("/{id}")
 	public ModelAndView getDetailJob(@PathVariable Long id) {
-		ModelAndView mav = new ModelAndView("jobDetail");
+		//ModelAndView mav = new ModelAndView("jobDetail");
+		ModelAndView mav = new ModelAndView("job_detail_nguyet");
 		JobRequest jobRequest = jobRequestService.getRepo().findById(id).orElse(null);
 		mav.addObject("jobRequest", jobRequest);
 		List<JobRole> alLJobRole= jobRoleService.getRepo().findAll();

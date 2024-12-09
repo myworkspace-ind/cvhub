@@ -1,5 +1,7 @@
 package mks.myworkspace.cvhub.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,5 +51,4 @@ public class JobRoleImpl implements JobRoleService {
 	public Page<JobRole> getAllJobRole(Pageable pageable) {
 		return repo.findAll(pageable);
 	}
-	
 }
