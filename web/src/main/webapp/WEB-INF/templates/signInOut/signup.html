@@ -1,78 +1,109 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng ký</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" th:href="@{/resources/signInOut/signUp.css}" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đăng ký</title>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" th:href="@{/resources/signInOut/signUp.css}" />
 </head>
 <body>
-    <div class="container">
-        <div class="form-section">
-            <h1>Chào mừng bạn đến với CVHub</h1>
-            <p class="subtitle">Cùng xây dựng một hồ sơ nổi bật và nhận được các cơ hội sự nghiệp lý tưởng</p>
-            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-            
-             <form th:action="@{/register}"  method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label>Họ và tên</label>
-                    <input type="text" placeholder="Nhập họ tên" name="fullName" required>
-                </div>
+	<div class="container">
+		<div class="form-section">
+			<h1>Chào mừng bạn đến với CVHub</h1>
+			<p class="subtitle">Cùng xây dựng một hồ sơ nổi bật và nhận được
+				các cơ hội sự nghiệp lý tưởng</p>
+			<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+			<div th:if="${success}" class="alert alert-success"
+				th:text="${success}"></div>
 
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" placeholder="Nhập email" name="email" required>
-                  
-                </div>
+			<form th:action="@{/register}" method="post"
+				enctype="multipart/form-data">
 				<div class="form-group">
-                    <label>Phone</label>
-<input type="text" placeholder="Nhập số điện thoại" name="phone" required pattern="\d{10,11}" title="Vui lòng nhập số điện thoại hợp lệ (10-11 chữ số)">
-                </div>
-                <div class="form-group">
-                    <label>Mật khẩu</label>
-                    <div class="password-input">
-                        <input type="password" placeholder="Nhập mật khẩu" name="password" required>
-                        <span class="eye-icon">👁️</span>
-                    </div>
-                </div>
+					<label>Họ và tên</label> <input type="text"
+						placeholder="Nhập họ tên" name="fullName" required>
+				</div>
 
-                <div class="form-group">
-                    <label>Xác nhận mật khẩu</label>
-                    <div class="password-input">
-                        <input type="password" placeholder="Nhập lại mật khẩu" name="confirmPassword" required>
-                        <span class="eye-icon">👁️</span>
-                      
+				<div class="form-group">
+					<label>Email</label> <input type="email" placeholder="Nhập email"
+						name="email" required>
 
-                    </div>
-                </div>
-               
- <div class="checkbox-group">
-                    
-                </div>
-                <div class="terms">
-                    <label>
-                        <input type="checkbox">
-                        Tôi đã đọc và đồng ý với <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính sách bảo mật</a>
-                    </label>
-                </div>
+				</div>
+				<div class="form-group">
+					<label>Phone</label> <input type="text"
+						placeholder="Nhập số điện thoại" name="phone" required
+						pattern="\d{10,11}"
+						title="Vui lòng nhập số điện thoại hợp lệ (10-11 chữ số)">
+				</div>
+				<div class="form-group">
+					<label>Mật khẩu</label>
+					<div class="password-input">
+						<input type="password" placeholder="Nhập mật khẩu" name="password"
+							required> <span class="eye-icon fa fa-eye"></span>
+						<!-- Biểu tượng mắt mở -->
+					</div>
+				</div>
 
-                <button type="submit" class="btn btn-primary">Đăng ký</button>
+				<div class="form-group">
+					<label>Xác nhận mật khẩu</label>
+					<div class="password-input">
+						<input type="password" placeholder="Nhập lại mật khẩu"
+							name="confirmPassword" required> <span
+							class="eye-icon fa fa-eye"></span>
+						<!-- Biểu tượng mắt mở -->
+					</div>
+				</div>
 
-                
+				<div class="checkbox-group"></div>
+				<div class="terms">
+					<label> <input type="checkbox"> Tôi đã đọc và đồng
+						ý với <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính
+							sách bảo mật</a>
+					</label>
+				</div>
 
-                <div class="login-link">
-                    Bạn đã có tài khoản? <a th:href="@{login}">Đăng nhập ngay</a>
-                </div>
-            </form>
-        </div>
+				<button type="submit" class="btn btn-primary">Đăng ký</button>
 
-        <div class="banner-section">
-            <img src="/api/placeholder/200/50" alt="Logo">
-            <h2>Tiếp lợi thế<br>Nối thành công</h2>
-            <p>CVHub - Hệ sinh thái nhân sự tiên phong ứng dụng công nghệ tại Việt Nam</p>
-        </div>
-    </div>
+
+
+				<div class="login-link">
+					Bạn đã có tài khoản? <a th:href="@{login}">Đăng nhập ngay</a>
+				</div>
+			</form>
+		</div>
+
+		<div class="banner-section">
+			<img src="/api/placeholder/200/50" alt="Logo">
+			<h2>
+				Tiếp lợi thế<br>Nối thành công
+			</h2>
+			<p>CVHub - Hệ sinh thái nhân sự tiên phong ứng dụng công nghệ tại
+				Việt Nam</p>
+		</div>
+	</div>
+	<script>
+    // Lấy tất cả các biểu tượng mắt
+    const eyeIcons = document.querySelectorAll('.eye-icon');
+    
+    // Lặp qua mỗi biểu tượng mắt và thêm sự kiện click
+    eyeIcons.forEach(icon => {
+        icon.addEventListener('click', function() {
+            // Tìm trường input tương ứng với biểu tượng mắt
+            const passwordInput = this.previousElementSibling;
+            
+            // Kiểm tra nếu trường input có type là "password"
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';  // Đổi type thành text để hiển thị mật khẩu
+                this.classList.remove('fa-eye');  // Loại bỏ biểu tượng mắt mở
+                this.classList.add('fa-eye-slash');  // Thêm biểu tượng mắt nhắm
+            } else {
+                passwordInput.type = 'password';  // Đổi type lại thành password để ẩn mật khẩu
+                this.classList.remove('fa-eye-slash');  // Loại bỏ biểu tượng mắt nhắm
+                this.classList.add('fa-eye');  // Thêm biểu tượng mắt mở
+            }
+        });
+    });
+</script>
 </body>
 </html>
