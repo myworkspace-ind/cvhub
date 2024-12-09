@@ -5,8 +5,12 @@
 <style>
 .dropdown:hover .dropdown-menu {
 	display: block;
+	
 }
 </style>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
+	<script src="/library/webjars/popper.js/2.9.3/umd/popper.min.js"></script>
 </head>
 
 
@@ -58,7 +62,7 @@
 		
 	</ul>
 	<!-- Right-aligned dropdown button -->
-	<ul class="nav mt-2 me-3">
+	<!-- <ul class="nav mt-2 me-3">
 		<li class="dropdown">
 			<button button class="btn btn-secondary btn-sm dropdown-toggle"
 				type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -69,8 +73,49 @@
 				<li><a class="dropdown-item small" href="#">Log out</a></li>
 			</ul>
 		</li>
-	</ul>
+	</ul> -->
+	<div class="auth-buttons">
+					<!-- Khi chưa đăng nhập -->
+					<th:block th:unless="${#httpServletRequest.remoteUser}">
+						<a class="login btn" th:href="@{/login}">Đăng nhập</a>
+						<a class="signup btn" th:href="@{/register}">Đăng ký</a>
+					</th:block>
+					<div class="profile-info" th:if="${#request.userPrincipal != null}">
+						<div class="profile-trigger">
+							<div class="avatar">
+								<span th:text="${#strings.substring(#request.userPrincipal.name,0,1)}"></span>
+							</div>
+							<span class="username" th:text="${#request.userPrincipal.name}"></span>
+						</div>
+
+						<div class="profile-dropdown" id="profileDropdown">
+							<div class="dropdown-content">
+								<script type="text/javascript" th:src="@{/resources/home/profile-dropdown.js}"></script>
+									<a th:href="@{/profile/edit}" class="menu-item">
+										<i class="fas fa-user-edit"></i>
+										Chỉnh sửa thông tin cá nhân
+									</a>
+									<a th:href="@{/profile/cv/manage}" class="menu-item">
+										<i class="fas fa-file-alt"></i>
+										Quản lý CV
+									</a>
+									<a th:href="@{/profile/applications}" class="menu-item">
+										<i class="fas fa-briefcase"></i>
+										Việc làm đã ứng tuyển
+									</a>
+									<div class="divider"></div>
+									<a th:href="@{/logout}" class="menu-item logout">
+										<i class="fas fa-sign-out-alt"></i>
+										Đăng xuất
+									</a>
+							</div>
+
+						</div>
+					</div>
+				</div>
 </div>
 
-<script th:src="@{/resources/report_duy/report_duy.js}"></script>
-<link rel="stylesheet" th:href="@{/resources/report_duy/style.css}">
+<!-- <script th:src="@{/resources/report_duy/report_duy.js}"></script> -->
+<!-- <link rel="stylesheet" th:href="@{/resources/report_duy/style.css}"> -->
+
+<script th:src="@{/resources/home/b.js}"></script>
