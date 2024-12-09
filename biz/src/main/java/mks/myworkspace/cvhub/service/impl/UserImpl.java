@@ -2,6 +2,7 @@ package mks.myworkspace.cvhub.service.impl;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,7 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Getter;
+import mks.myworkspace.cvhub.entity.SakaiUser;
+import mks.myworkspace.cvhub.entity.SakaiUserIdMap;
 import mks.myworkspace.cvhub.entity.User;
+import mks.myworkspace.cvhub.repository.SakaiUserIdMapRepository;
+import mks.myworkspace.cvhub.repository.SakaiUserRepository;
 import mks.myworkspace.cvhub.repository.UserRepository;
 import mks.myworkspace.cvhub.service.UserService;
 @Service
@@ -19,6 +24,11 @@ public class UserImpl implements UserService {
 	@Getter
 	@Autowired
 	UserRepository repo;
+	@Autowired
+    private SakaiUserRepository sakaiUserRepo;
+
+    @Autowired
+    private SakaiUserIdMapRepository sakaiUserIdMapRepo;
 //	 @Autowired
 //	private PasswordEncoder passwordEncoder;
 	@Override
@@ -103,5 +113,49 @@ public class UserImpl implements UserService {
         }
 
         return calendar.getTime();
+    }
+
+	@Override
+	@Transactional
+	public void registerUserInSakai(String fullName, String email, String password, String phone) throws Exception {
+		if (isEmailExists(email)) {
+            throw new Exception("Email already exists");
+        }
+
+        // 2. Tạo userId
+        String userId = generateUniqueId(); // Hàm tạo userId (tùy bạn triển khai)
+
+        // 3. Lưu vào sakai_user
+        SakaiUser sakaiUser = new SakaiUser();
+        sakaiUser.setUserId(userId);
+        sakaiUser.setEmail(email);
+        sakaiUser.setEmailLc(email.toLowerCase());
+        sakaiUser.setFirstName(extractFirstName(fullName));
+        sakaiUser.setLastName(extractLastName(fullName));
+        sakaiUser.setPassword(password); // Có thể mã hóa mật khẩu nếu cần
+        sakaiUser.setPhone(phone);
+        sakaiUser.setRole("ROLE_USER");
+        sakaiUserRepo.save(sakaiUser);
+
+        // 4. Lưu vào sakai_user_id_map
+        SakaiUserIdMap sakaiUserIdMap = new SakaiUserIdMap();
+        sakaiUserIdMap.setUserId(userId);
+        sakaiUserIdMap.setEid(email); // Giả định dùng email làm EID
+        sakaiUserIdMapRepo.save(sakaiUserIdMap);
+	}
+	private String generateUniqueId() {
+        return UUID.randomUUID().toString();
+    }
+
+    // Hàm tách firstName từ fullName
+    private String extractFirstName(String fullName) {
+        String[] parts = fullName.split(" ");
+        return parts.length > 1 ? parts[0] : fullName;
+    }
+
+    // Hàm tách lastName từ fullName
+    private String extractLastName(String fullName) {
+        String[] parts = fullName.split(" ");
+        return parts.length > 1 ? parts[parts.length - 1] : "";
     }
 }

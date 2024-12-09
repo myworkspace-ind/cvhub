@@ -14,6 +14,6 @@ public interface UserService {
 	boolean isEmailExists(String email);
 	User findUserByEmail(String email);
 	User getUser(Long id);
-	
+	void registerUserInSakai(String fullName, String email, String password, String phone) throws Exception;
 	Page<User> findUsersByPeriod(String period, Pageable pageable);
 }

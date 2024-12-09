@@ -10,15 +10,20 @@ import org.springframework.data.repository.query.Param;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
 public interface JobRequestRepository extends JpaRepository<JobRequest, Long> {
 
-	  @Query("SELECT jr FROM JobRequest jr WHERE jr.organization.id = :organizationId")
-	    List<JobRequest> findByOrganizationId(@Param("organizationId") Long organizationId);
+	@Query("SELECT jr FROM JobRequest jr WHERE jr.organization.id = :organizationId")
+	List<JobRequest> findByOrganizationId(@Param("organizationId") Long organizationId);
+
 //	  @Query("SELECT jr FROM JobRequest jr WHERE jr.id = :id")
-	    Optional<JobRequest> findById(@Param("id") Long id);
-	    Page<JobRequest> findAll(@Param("pageRequest") Pageable pageRequest );
-	    JobRequest findByTitle(@Param("title") String title);
+	Optional<JobRequest> findById(@Param("id") Long id);
+
+	Page<JobRequest> findAll(@Param("pageRequest") Pageable pageRequest);
+
+	JobRequest findByTitle(@Param("title") String title);
 
 	Page<JobRequest> findByCreatedDateAfter(Date startDate, Pageable pageable);
 
+	Page<JobRequest> findByOrganizationId(Long organizationId, Pageable pageable);
 }

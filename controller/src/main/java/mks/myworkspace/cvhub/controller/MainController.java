@@ -70,6 +70,15 @@ public class MainController extends BaseController {
 
 		return mav;
 	}
+	@GetMapping("/main/user")
+	public ModelAndView displayUser(HttpServletRequest request, HttpSession httpSession) {
+		ModelAndView mav = new ModelAndView("user_profile");
+
+		initSession(request, httpSession);
+
+		return mav;
+	}
+
 
 	@RequestMapping(value = { "/main/report/organization" }, method = RequestMethod.GET)
 	public ModelAndView displayReportOrganization(@RequestParam(defaultValue = "0") int page,
@@ -78,23 +87,24 @@ public class MainController extends BaseController {
 		ModelAndView mav = new ModelAndView("organization/organizationReport");
 		Page<Organization> organizationPage = organizationService.getRepo().findAll(PageRequest.of(page, size));
 		mav.addObject("organizations", organizationPage.getContent());
-		mav.addObject("currentPage", page); // Trang hi?n t?i
-		mav.addObject("totalPages", organizationPage.getTotalPages()); // T?ng s? trang
+		mav.addObject("currentPage", page); // Trang hien tai
+		mav.addObject("totalPages", organizationPage.getTotalPages()); // Tong so trang
 		return mav;
 	}
 
 	
+
 	@GetMapping("searchOrganization")
 	  public ModelAndView searchOrganizations(@RequestParam(value = "companyName", required = false) String companyName, 
 	 @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, HttpServletRequest request,
 	  HttpSession httpSession) { ModelAndView mav = new ModelAndView("organization/organizationReport");
 
 	 List<Organization>searchResults = organizationService.searchByTitle(companyName);
-	 Page<Organization> organizationPage = new PageImpl<>(searchResults,PageRequest.of(page, size), searchResults.size()); // Thêm k?t qu? vào
+	 Page<Organization> organizationPage = new PageImpl<>(searchResults,PageRequest.of(page, size), searchResults.size()); // Them ket qua vao
 	 mav.addObject("organizations", organizationPage.getContent());
-	 mav.addObject("currentPage", page); // Trang hi?n t?i
-	 mav.addObject("totalPages", organizationPage.getTotalPages()); // T?ng s?trang 
-	 mav.addObject("size", size);  // Kích thu?c m?i trang 
+	 mav.addObject("currentPage", page); // Trang hien tai
+	 mav.addObject("totalPages", organizationPage.getTotalPages()); // Tong so trang
+	 mav.addObject("size", size);  // Kich thuoc moi trang
 	 return mav; }
 	 
 }
