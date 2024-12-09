@@ -61,12 +61,12 @@
 	<ul class="nav mt-2 me-3">
 		<li class="dropdown">
 			<button button class="btn btn-primary btn-sm dropdown-toggle"
-				type="button" data-bs-toggle="dropdown" aria-expanded="false">
-				username</button>
-			<ul class="dropdown-menu dropdown-menu-end">
+				type="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${#request.userPrincipal.name}">
+				</button>
+			<ul class="dropdown-menu">
 				<li><a  th:href="@{/main/user}"  class="dropdown-item small">View Profile</a></li>
 				<li><a class="dropdown-item small" href="#">Setting</a></li>
-				<li><a class="dropdown-item small" href="#">Log out</a></li>
+				<li><a class="dropdown-item small"  th:href="@{/logout}">Log out</a></li>
 			</ul>
 		</li>
 	</ul>
