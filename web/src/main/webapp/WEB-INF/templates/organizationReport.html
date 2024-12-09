@@ -1,92 +1,121 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Organization Report</title>
-    
-    <link rel="stylesheet" th:href="@{/resources/reportSubtabs/organizationReport.css}" />
+<meta charset="UTF-8">
+<title>Organization Report</title>
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<th:block th:include="fragments/head"></th:block>
 
-	<th:block th:include="fragments/head"></th:block>
-    
 </head>
 <body>
 
-<th:block th:include="fragments/hmenu"></th:block>
+	<th:block th:include="fragments/hmenu"></th:block>
 
-<div class="oR-header-container">
-	<h2>Organizations Report</h2>
+	<div class="container mt-3">
+		<h3 class="fw-semibold">Organizations Report</h3>
 
-	<div class="oR-header-filter">
-		<form id="filterForm" th:action="@{/report/organization}">
-			<label for="timePeriod">Hiển thị theo:</label> <select
-				name="timePeriod" id="timePeriod">
-				<option value="today" th:selected="${period == 'today'}">Hôm
-					nay</option>
-				<option value="this_week" th:selected="${period == 'this_week'}">Tuần
-					này</option>
-				<option value="this_month" th:selected="${period == 'this_month'}">Tháng
-					này</option>
-				<option value="this_year" th:selected="${period == 'this_year'}">Năm
-					này</option>
-			</select>
+		<div class="row mb-4">
+    		<div class="col-md-12 text-right">
+				<form id="filterForm" action="organization" class="form-inline">
+					<!-- filter condition -->
+					<div class="form-group">
+						<label for="timePeriod">Hiển thị theo:</label> <select
+							name="timePeriod" id="timePeriod" class="form-control mr-3"
+							style="width: 150px;  margin-right: 20px;" onchange="">
+							<option value="today" th:selected="${period == 'today'}">Hôm nay</option>
+							<option value="this_week" th:selected="${period == 'this_week'}">Tuần này</option>
+							<option value="this_month" th:selected="${period == 'this_month'}">Tháng này</option>
+							<option value="this_year" th:selected="${period == 'this_year'}">Năm này</option>
+							<option value="last_year" th:selected="${period == 'last_year'}">Năm ngoái</option>
+						</select>
+					</div>
+					
+					<!-- records per page -->
+					<div class="form-group ml-3">
+						<label for="limitSelect" class="mr-3">Số dòng:</label> <select
+							id="limitSelect" name="limitSelect" class="form-control mr-2"
+							style="width: 100px; margin-right: 5px;" onchange="">
+							<option value="5" th:selected="${limit == 5}">5</option>
+							<option value="10" th:selected="${limit == 10}">10</option>
+							<option value="15" th:selected="${limit == 15}">15</option>
+							<option value="20" th:selected="${limit == 20}">20</option>
+							<option value="50" th:selected="${limit == 50}">50</option>
+						</select>
+					</div>
+	
+					<button type="submit" class="btn btn-primary ml-3" id="filterButton">Lọc</button>
+				</form>
+			</div>
+	   </div>
 
-			<button type="submit" class="oR-button" id="filterButton">Lọc</button>
-		</form>
+		<!-- datatable -->
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead style="background-color: #f8f9fa;">
+					<tr>
+						<th>Logo</th>
+						<th>Website</th>
+						<th>Organization Name</th>
+						<th>Detail</th>
+						<th>Location</th>
+						<th>Creation Date</th>
+						<th>Jobs Posted</th>
+						<th>Applicants</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="org : ${organizations}">
+						<td><img th:src="@{/images/{logoId}(logoId=${org.logoID})}"
+							alt="Logo" style="height: 60px;"></td>
+						<td><a th:href="${org.website}" th:text="${org.website}"
+							target="_blank"></a></td>
+						<td th:text="${org.title}"></td>
+						<td th:text="${org.detail}"></td>
+						<td th:text="${org.location}"></td>
+						<td
+							th:text="${#dates.format(org.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
+						<td>?</td>
+						<td>?</td>
+					</tr>
+					<tr th:if="${organizations.size() == 0}">
+						<td colspan="8" class="text-center">No data found.</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- navigation -->
+		<nav aria-label="Page navigation" class="d-flex justify-content-center align-items-center"
+			th:if="${totalPages > 0}">
+			<ul class="pagination justify-content-center">
+				<!-- Previous button -->
+				<li class="page-item"
+					th:classappend="${currentPage == 0} ? 'disabled'"><a
+					class="page-link"
+					th:href="${currentPage > 0} ? @{/report/organization(timePeriod=${period}, page=${currentPage - 1})} : '#'"
+					aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+				</a></li>
+
+				<!-- Page numbers -->
+				<li class="page-item"
+					th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+					th:classappend="${pageNum == currentPage} ? 'active'"><a
+					class="page-link"
+					th:href="@{/report/organization(timePeriod=${period}, page=${pageNum})}"
+					th:text="${pageNum + 1}"></a></li>
+
+				<!-- Next button -->
+				<li class="page-item"
+					th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+					<a class="page-link"
+					th:href="${currentPage < totalPages - 1} ? @{/report/organization(timePeriod=${period}, page=${currentPage + 1})} : '#'"
+					aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+				</a>
+				</li>
+			</ul>
+		</nav>
 	</div>
-</div>
 
-<table class="oR-table">
-	<thead>
-		<tr>
-			<th>Logo</th>
-			<th>Website</th>
-			<th>Organization Name</th>
-			<th>Detail</th>
-			<th>Location</th>
-			<th>Created Date</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr th:each="org : ${organizations}">
-			<td><img th:src="@{/images/{logoId}(logoId=${org.logoID})}"
-				alt="Logo" class="img-responsive"></td>
-			<td><a th:href="${org.website}" th:text="${org.website}"
-				target="_blank"></a></td>
-			<td th:text="${org.title}"></td>
-			<td th:text="${org.detail}"></td>
-			<td th:text="${org.location}"></td>
-			<td th:text="${org.createdDate}"></td>
-		</tr>
-	</tbody>
-</table>
-
-<nav aria-label="Page navigation" class="mt-5" th:if="${totalPages > 0}">
-	<ul class="pagination justify-content-center">
-		<!-- Previous button -->
-		<li class="page-item"
-			th:classappend="${currentPage == 0} ? 'disabled'"><a
-			class="page-link"
-			th:href="${currentPage > 0} ? @{/report/organization(timePeriod=${period}, page=${currentPage - 1})} : '#'"
-			aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-		</a></li>
-
-		<!-- Page numbers -->
-		<li class="page-item"
-			th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
-			th:classappend="${pageNum == currentPage} ? 'active'"><a
-			class="page-link"
-			th:href="@{/report/organization(timePeriod=${period}, page=${pageNum})}"
-			th:text="${pageNum + 1}"></a></li>
-
-		<!-- Next button -->
-		<li class="page-item"
-			th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
-			<a class="page-link"
-			th:href="${currentPage < totalPages - 1} ? @{/report/organization(timePeriod=${period}, page=${currentPage + 1})} : '#'"
-			aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-		</a>
-		</li>
-	</ul>
-</nav>
 </body>
 </html>
