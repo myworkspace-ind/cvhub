@@ -8,12 +8,14 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mks.myworkspace.cvhub.entity.Organization;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class JobRequestDTO {
 	private String title;
     private int locationCode;
