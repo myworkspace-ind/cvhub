@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.core.tools.picocli.CommandLine.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -180,10 +182,12 @@ public class OrganizationController extends BaseController {
             ModelAndView mav = new ModelAndView("organization/register");
             List<JobRole> jobRoles = jobRoleService.getRepo().findAll();
             List<Location> locations = locationService.getRepo().findAll();
+            Boolean reg = true;
             
             mav.addObject("userName", currentUser.getFullName());
             mav.addObject("jobRoles", jobRoles);
             mav.addObject("locations", locations);
+            mav.addObject("reg", reg);
             return mav;
         }
 
@@ -278,6 +282,38 @@ public class OrganizationController extends BaseController {
 		mav.addObject("jobRequests", jobRequests);
 		mav.addObject("jobApplications", jobApplications);
 		mav.addObject("organizationId", organizationId);
+		return mav;
+	}
+	
+	@RequestMapping(value = { "/organization/update/{id}" }, method = RequestMethod.GET)
+	public ModelAndView updateOrganization(@PathVariable("id") Long id, HttpServletRequest request, HttpSession httpSession) {
+		ModelAndView mav = new ModelAndView("organization/register");
+		Organization organization = organizationService.getRepo().findById(id).orElse(null);
+		List<JobRequest> jobByOrganization = jobRequestRepository.findByOrganizationId(id);
+		List<JobRole> alLJobRole = jobRoleService.getRepo().findAll();
+		List<Location> locations = locationService.getRepo().findAll();
+		mav.addObject("locations", locations);
+		mav.addObject("alLJobRole", alLJobRole);
+		mav.addObject("org", organization);
+		mav.addObject("jobByOrganization", jobByOrganization);
+		mav.addObject("update", "update");
+		return mav;
+	}
+	
+	@RequestMapping(value = { "/organization/update/{id}" }, method = RequestMethod.POST)
+	public ModelAndView updateOrganization(@PathVariable("id") Long id,
+			@ModelAttribute OrganizationDTO organizationDTO, 
+            HttpServletRequest request,
+            HttpSession httpSession) {
+		Organization organization = organizationService.findByOrganizationId(id);
+		Organization organizationUpdated = organizationService.updateOrganization(organization, organizationDTO.getTitle(),
+				organizationDTO.getLogoFile(), organizationDTO.getWebsite(), organizationDTO.getSummary(),
+				organizationDTO.getDetail(), organizationDTO.getLocation());
+		
+		organizationService.getRepo().save(organizationUpdated);
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("redirect:/organization?id=" + organization.getId());
+		
 		return mav;
 	}
 }

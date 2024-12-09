@@ -20,4 +20,6 @@ public interface OrganizationService {
 	 List<Organization> searchByTitle(String title); // Them chuc nang tim kiem cong ty bang ten cong ty : nguoi them LeDaoNhanSam
 	 
     List<Organization> findByTitleContaining(String title);
+    Organization findByOrganizationId(Long organizationId);
+    public Organization updateOrganization(Organization organization, String title, MultipartFile logoFile, String website, String summary, String detail, String location);
 }

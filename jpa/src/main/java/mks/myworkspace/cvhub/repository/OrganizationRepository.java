@@ -30,4 +30,7 @@ public interface OrganizationRepository extends JpaRepository<Organization,Long>
 	
 	@Query("SELECT o FROM Organization o WHERE o.createdDate >= :startDate")
     Page<Organization> findAllCreatedDateStartFrom(@Param("startDate") Date startDate, @Param("pageRequest") Pageable pageable);
+	
+	@Query("SELECT o FROM Organization o WHERE o.id = :organizationId")
+	Organization findOrganizationById(@Param("organizationId")Long organizationId);
 }

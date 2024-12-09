@@ -34,6 +34,10 @@
 				<button id="toggleJobForm" class="follow-btn">Thêm thông
 					tin tuyển dụng</button>
 			</div>
+			<div th:if="${isOwner}">
+				<form th:action="@{/organization/update/{orgId}(orgId=${organization.id})}" method="get">
+					<button id="" class="follow-btn">Chỉnh sửa thông tin công ty</button>
+				</form>			</div>
 		</div>
 
 		<div class="content-section">
