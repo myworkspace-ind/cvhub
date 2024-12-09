@@ -8,11 +8,14 @@
     <link rel="stylesheet" th:href="@{/resources/reportSubtabs/organizationReport.css}" />
     <link rel="stylesheet" th:href="@{/resources/home/style.css}"/>
     <link rel="stylesheet" th:href="@{/resources/home/jobRequest.css}"/>
+    
+	<th:block th:include="fragments/head"></th:block>
+
 </head>
 <body>
 
 <!-- Header -->
-<div th:replace="~{fragments/header :: header}"></div>
+<th:block th:include="fragments/hmenu"></th:block>
 
 <div class="container">
     <div class="row">
