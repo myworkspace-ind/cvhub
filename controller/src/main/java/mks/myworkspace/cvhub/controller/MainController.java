@@ -70,6 +70,15 @@ public class MainController extends BaseController {
 
 		return mav;
 	}
+	@GetMapping("/main/user")
+	public ModelAndView displayUser(HttpServletRequest request, HttpSession httpSession) {
+		ModelAndView mav = new ModelAndView("user_profile");
+
+		initSession(request, httpSession);
+
+		return mav;
+	}
+
 
 	@RequestMapping(value = { "/main/report/organization" }, method = RequestMethod.GET)
 	public ModelAndView displayReportOrganization(@RequestParam(defaultValue = "0") int page,
@@ -84,6 +93,7 @@ public class MainController extends BaseController {
 	}
 
 	
+
 	@GetMapping("searchOrganization")
 	  public ModelAndView searchOrganizations(@RequestParam(value = "companyName", required = false) String companyName, 
 	 @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, HttpServletRequest request,
