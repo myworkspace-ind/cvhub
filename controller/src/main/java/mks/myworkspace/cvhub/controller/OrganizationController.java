@@ -130,41 +130,35 @@ public class OrganizationController extends BaseController {
                                            HttpServletRequest request,
                                            HttpSession httpSession) 
 	{
-        try {
-            // Get current logged in user
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            User currentUser = userService.findUserByEmail(auth.getName());
-            
-            // Create and save organization
-            Organization organization = organizationService.createOrganization(
-                organizationDTO.getTitle(),
-                organizationDTO.getLogoFile(),
-                organizationDTO.getWebsite(),
-                organizationDTO.getSummary(),
-                organizationDTO.getDetail(),
-                organizationDTO.getLocation()
-            );
-            
-            // Link organization with user
-            organization.setUser(currentUser);
-            organization = organizationService.getRepo().save(organization);
-            
-            // Update user role to ROLE_ADMIN
-            currentUser.setRole("ROLE_ADMIN");
-            userService.getRepo().save(currentUser);
-            
-            // Redirect to organization page
-            ModelAndView mav = new ModelAndView();
-            mav.setViewName("redirect:/organization?id=" + organization.getId());
-            return mav;
-        
-        
-	}catch (Exception e) {
-		// Xử lý lỗi
-		ModelAndView mav = new ModelAndView("error");
-		mav.addObject("errorMessage", "Có lỗi xảy ra khi đăng ký tổ chức: " + e.getMessage());
-		return mav;
-	}
+		try {
+			// Get current logged in user
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			User currentUser = userService.findUserByEmail(auth.getName());
+
+			// Create and save organization
+			Organization organization = organizationService.createOrganization(organizationDTO.getTitle(),
+					organizationDTO.getLogoFile(), organizationDTO.getWebsite(), organizationDTO.getSummary(),
+					organizationDTO.getDetail(), organizationDTO.getLocation());
+
+			// Link organization with user
+			organization.setUser(currentUser);
+			organization = organizationService.getRepo().save(organization);
+
+			// Update user role to ROLE_ADMIN
+			currentUser.setRole("ROLE_ADMIN");
+			userService.getRepo().save(currentUser);
+
+			// Redirect to organization page
+			ModelAndView mav = new ModelAndView();
+			mav.setViewName("redirect:/organization?id=" + organization.getId());
+			return mav;
+
+		} catch (Exception e) {
+			// Xử lý lỗi
+			ModelAndView mav = new ModelAndView("error");
+			mav.addObject("errorMessage", "Có lỗi xảy ra khi đăng ký tổ chức: " + e.getMessage());
+			return mav;
+		}
 	}
         @RequestMapping(value = { "showRegister" }, method = RequestMethod.GET)
         public ModelAndView registerOrganization(HttpServletRequest request) {
@@ -187,7 +181,7 @@ public class OrganizationController extends BaseController {
             List<JobRole> jobRoles = jobRoleService.getRepo().findAll();
             List<Location> locations = locationService.getRepo().findAll();
             
-            
+            mav.addObject("userName", currentUser.getFullName());
             mav.addObject("jobRoles", jobRoles);
             mav.addObject("locations", locations);
             return mav;
