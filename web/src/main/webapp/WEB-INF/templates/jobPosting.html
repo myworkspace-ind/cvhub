@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Job posting</title>
+<th:block th:include="fragments/head"></th:block>
+
+</head>
+</head>
+<body>
+	<th:block th:include="fragments/hmenu"></th:block>
+	<nav id="toolMenu" role="navigation"
+		aria-label="Tools list begins here"
+		class="Mrphs-toolsNav__menu sakai-sitesAndToolsNav h-100 d-flex flex-column">
+		<h2 class="visually-hidden d-none d-md-block" id="totoolmenu">Sites</h2>
+		<div class="sites-section">
+			<h3 class="visually-hidden sites-section-heading">Current site</h3>
+			<ul class="pt-2 mb-0">
+				<li id="site-list-gateway-item-gateway"
+					class="site-list-item py-1 is-current-site mt-2 fw-bold"
+					data-type="gateway" data-site="!gateway">
+					<div
+						class="site-list-item-head d-flex align-items-center pe-2 py-1 w-100 justify-content-between">
+						<div
+							class="site-link-block d-flex align-items-center rounded-end me-1 pe-2">
+							<!-- Nút toggle với icon -->
+							<button class="btn icon-button me-1" data-site-id="!gateway"
+								data-bs-toggle="collapse"
+								data-bs-target="#gateway-site-gateway-page-list"
+								aria-expanded="true" title="Collapse tool list"
+								aria-controls="gateway-site-gateway-page-list"
+								onclick="toggleMenu(this)">
+								<i class="bi-chevron-down" aria-hidden="true"></i><!-- Icon mũi tên xuống -->
+							</button>
+							<label class="sidebar-site-title" title="menu">menu</label>
+						</div>
+					</div> <!-- Menu con -->
+					<div id="gateway-site-gateway-page-list" data-site-id="!gateway"
+						class="site-list-item-collapse collapse"
+						style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease;">
+						<ul class="site-page-list nav flex-column py-1 mb-2">
+							<!-- Các item bên trong menu -->
+							<li class="nav-item"><a href="/cvhub-web/jobPosting">Add job</a></li>
+							<li class="nav-item"><a href="/cvhub-web/showJob">List</a></li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<div class="container mt-4" style="max-width: 500px;">
+		<form th:action="@{/registerJob1}" method="POST"
+			class="p-4 border rounded bg-light shadow-sm">
+			<h3 class="text-center mb-4">Thêm thông tin tuyển dụng</h3>
+			<!-- Trường input ẩn cho organizationId -->
+			<input type="hidden" id="organizationId" name="organizationId"
+				th:value="${organization.id}" />
+
+			<div class="form-group mb-3">
+				<label for="jobRoleId" class="form-label fw-bold">Tên công
+					việc cần tuyển dụng <em class="text-danger">*</em>
+				</label> <input type="text" class="form-control" id="namejob" name="title"
+					required>
+			</div>
+			<div class="form-group mb-3">
+				<label for="jobRoleId" class="form-label fw-bold">Mảng ngành
+					nghề <em class="text-danger">*</em>
+				</label> <select id="jobRoleId" name="jobRoleId" class="form-select"
+					required>
+					<option value="" disabled selected>Chọn ngành nghề tuyển
+						dụng</option>
+					<th:block th:each="jobRole : ${jobRoles}">
+						<option th:value="${jobRole.id}" th:text="${jobRole.title}"></option>
+					</th:block>
+				</select>
+			</div>
+			<div class="form-group mb-3">
+				<label for="location" class="form-label fw-bold">Địa điểm
+					làm việc <em class="text-danger">*</em>
+				</label> <select id="location" name="locationCode" class="form-select"
+					required>
+					<option value="" disabled selected>Chọn địa điểm</option>
+					<th:block th:each="location : ${locations}">
+						<option th:value="${location.code}" th:text="${location.name}"></option>
+					</th:block>
+				</select>
+			</div>
+			<div class="form-group mb-3">
+				<label for="detailsJob" class="form-label fw-bold">Chi tiết
+					công việc <em class="text-danger">*</em>
+				</label>
+				<textarea id="jobDescription" name="jobDescription"
+					class="form-control border-primary shadow-sm" rows="4"
+					placeholder="Nhập chi tiết công việc" required></textarea>
+			</div>
+			<div class="form-group mb-3 row">
+				<div class="col-md-6">
+					<label for="experience" class="form-label fw-bold">Yêu cầu
+						kinh nghiệm <em class="text-danger">*</em>
+					</label> <input type="number" class="form-control" id="experience"
+						name="experience" min="0" placeholder="Nhập số năm kinh nghiệm"
+						required> <small class="form-text text-muted">Nhập
+						số năm kinh nghiệm.</small>
+				</div>
+				<div class="col-md-6">
+					<label for="salary" class="form-label fw-bold">Lương Cơ bản
+						($) <em class="text-danger">*</em>
+					</label> <select class="form-select mb-2" id="salaryOption"
+						name="salaryOption" required onchange="toggleSalaryInput()">
+						<option value="0">Thỏa thuận</option>
+						<option value="1">Nhập lương</option>
+					</select> <input type="number" class="form-control" id="salary"
+						name="salary" style="display: none;" placeholder="Nhập lương"
+						min="0">
+				</div>
+			</div>
+			<div class="form-group mb-3">
+				<label for="requirementsCandidate" class="form-label fw-bold">Yêu
+					cầu ứng viên <em class="text-danger">*</em>
+				</label>
+				<textarea id="requirementsCandidate" name="requirementsCandidate"
+					class="form-control border-primary shadow-sm" rows="4"
+					placeholder="Nhập yêu cầu ứng viên" required></textarea>
+			</div>
+
+			<div class="form-group mb-3">
+				<label for="benefitCandidate" class="form-label fw-bold">Quyền
+					lợi ứng viên <em class="text-danger">*</em>
+				</label>
+				<textarea id="benefitCandidate" name="benefitCandidate"
+					class="form-control border-primary shadow-sm" rows="4"
+					placeholder="Nhập quyền lợi ứng viên" required></textarea>
+			</div>
+
+			<div class="form-group mb-3">
+				<label for="deadlineApplication" class="form-label fw-bold">Hạn
+					nộp hồ sơ <em class="text-danger">*</em>
+				</label> <input type="date" id="deadlineApplication"
+					name="deadlineApplication"
+					class="form-control border-primary shadow-sm" required>
+			</div>
+			<div class="d-flex justify-content-center">
+				<button type="submit" class="btn btn-primary">Lưu</button>
+			</div>
+		</form>
+	</div>
+	<script>
+		function toggleSalaryInput() {
+			var salaryOption = document.getElementById('salaryOption').value;
+			var salaryInput = document.getElementById('salary');
+
+			// Hiển thị input nhập lương khi chọn "Nhập lương", ẩn khi chọn "Thỏa thuận"
+			if (salaryOption == '1') {
+				salaryInput.style.display = 'block';
+			} else {
+				salaryInput.style.display = 'none';
+			}
+		}
+
+		// Gọi hàm để kiểm tra trạng thái khi trang được tải lại
+		toggleSalaryInput();
+	</script>
+	<script>
+		function toggleMenu(button) {
+			const menu = button.closest('.site-list-item').querySelector(
+					'.site-list-item-collapse');
+			const icon = button.querySelector('i'); // Lấy icon trong button
+			const isExpanded = menu.style.maxHeight !== '0px';
+
+			if (isExpanded) {
+				// Thu nhỏ menu (trượt lên trên)
+				menu.style.maxHeight = '0';
+				// Thay đổi icon thành mũi tên xuống
+				icon.classList.remove('bi-chevron-up');
+				icon.classList.add('bi-chevron-down');
+			} else {
+				// Phóng to menu (trượt xuống dưới)
+				menu.style.maxHeight = '500px'; // Bạn có thể điều chỉnh chiều cao tối đa cho phù hợp
+				// Thay đổi icon thành mũi tên lên
+				icon.classList.remove('bi-chevron-down');
+				icon.classList.add('bi-chevron-up');
+			}
+
+			// Đảm bảo menu không ảnh hưởng đến các phần tử khác
+			menu.style.position = 'absolute'; // Menu sẽ không ảnh hưởng đến layout chính
+			menu.style.zIndex = '999'; // Đảm bảo menu nằm trên các phần tử khác
+		}
+	</script>
+	<script>
+		// Lấy ngày hiện tại theo định dạng YYYY-MM-DD
+		const today = new Date().toISOString().split("T")[0];
+		// Gán giá trị min cho input
+		document.getElementById("deadlineApplication").setAttribute("min",
+				today);
+	</script>
+</body>
+</html>
