@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee List - MyWorkspace</title>
+    <th:block th:include="fragments/head"></th:block>
+
+    <link rel="stylesheet" th:href="@{/resources/signInOut/manageCV.css}" />
+	<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
+</head>
+<body>
+	<th:block th:include="fragments/hmenu"></th:block>
+	
+	<div class="page-header">
+		<a th:href="@{/employee}"> < Trở lại </a>
+	</div>
+	
+	<div class="cv-management-container">
+
+		<div class="section" style="margin:0 100px">
+	    <div class="column noColor col" style="height: auto;width:auto; padding:0 30px">
+		<div class="user-profile">
+			<div class="profile-info">
+				<h2 class="profile-name">Thông tin chi tiết ứng viên <span th:text="${user.fullName}"></span></h2><br>
+				<h4>Tên đầy đủ: <span th:text="${user.fullName}"></span></h4>
+				<h4>Email: <span th:text="${user.email}"></span></h4>
+        		<h4>Số điện thoại: <span th:text="${user.phone}"></span></h4>
+        		<h4>Ngày tạo tài khoản: <span th:text="${#dates.format(user.createdDate, 'dd/MM/yyyy HH:mm:ss')}"></span></h4>
+			</div>
+		</div>
+		<div class="user-profile">
+			<div class="company-job-list ">
+		        <h2>Lịch sử ứng tuyển </h2><br>
+		        <div th:if="${#maps.isEmpty(companyJobsMap)}">
+		            <p>Ứng viên chưa ứng tuyển công việc nào.</p>
+		        </div>
+		        <div th:unless="${#maps.isEmpty(companyJobsMap)}">
+		            <ul class="list-group">
+		                <!-- Lặp qua các công ty -->
+		                <li class="list-group-item" th:each="entry : ${companyJobsMap}">
+		                    <strong><span th:text="${entry.key}"></span></strong> 
+		                    <ul>
+		                        <!-- Lặp qua các công việc -->
+		                        <li th:each="job : ${entry.value}">
+		                            <span th:text="'Ứng tuyển vào: ' + ${job.title}"></span> - 
+		                            <span th:text="'Ngày ' + ${#dates.format(job.createdDate, 'dd/MM/yyyy HH:mm:ss')}"></span>
+		                        </li>
+		                    </ul>
+		                </li>
+		            </ul>
+		        </div>
+		    </div>
+		</div>
+		</div>
+		</div>
+		
+		
+		
+		<br><h1 class="text-center mb-4" th:text="'Các CV của ' + ${user.fullName} + ' đã đăng lên hệ thống'"></h1>
+		<div class="cv-grid">
+			<div th:each="cv : ${cvList}" class="cv-card">
+				<div class="cv-preview">
+					<div class="preview-header">
+						<div class="preview-contact-bar">
+							<span>📱 <span th:text="${cv.phone}">0888277472</span></span>
+							<span>✉️ <span th:text="${cv.email}">email@example.com</span></span>
+							<span>📍 <span th:text="${cv.location.name}">TP HCM</span></span>
+						</div>
+						<div class="preview-name" th:text="${cv.fullName}">Le Dinh Minh</div>
+					</div>
+
+					<div class="preview-content">
+						<div class="preview-section">
+							<div class="preview-section-title">WORK EXPERIENCE</div>
+							<div class="preview-section-content" th:text="${cv.experience ?: '-'}"></div>
+						</div>
+
+						<div class="preview-section">
+							<div class="preview-section-title">EDUCATION</div>
+							<div class="preview-section-content" th:text="${cv.education ?: '-'}"></div>
+						</div>
+
+						<div class="preview-section">
+							<div class="preview-section-title">SKILLS</div>
+							<div class="preview-section-content" th:text="${cv.skills ?: '-'}"></div>
+						</div>
+
+						<div class="preview-section">
+							<div class="preview-section-title">CERTIFICATIONS</div>
+							<div class="preview-section-content" th:text="${cv.certifications ?: '-'}"></div>
+						</div>
+
+						<div class="preview-section">
+							<div class="preview-section-title">PROJECTS</div>
+							<div class="preview-section-content" th:text="${cv.projects ?: '-'}"></div>
+						</div>
+
+						<div class="preview-section">
+							<div class="preview-section-title">ACTIVITIES</div>
+							<div class="preview-section-content" th:text="${cv.activities ?: '-'}"></div>
+						</div>
+					</div>
+				</div>
+				<div class="cv-details">
+					<h3 class="cv-title" th:text="${cv.fullName}">CV Title</h3>
+					<div class="cv-meta">
+						<span th:text="${'Cập nhật lần cuối: ' + cv.modifiedDate}"></span>
+					</div>
+					<div class="cv-actions">
+						<div th:if="${cv.isprimary}">
+							<button class="action-btn primary-cv" disabled>CV Chính</button>
+						</div>
+
+						<a th:href="@{'/renderCV/' + ${cv.id}}" class="action-btn">Xem và Tải xuống</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- <a th:href="@{/uploadCV}" class="create-cv-btn">
+			+ Tạo mới
+		</a> -->
+	</div>
+	
+	<script th:src="@{/resources/signInOut/manageCV.js}"></script>
+	<th:block th:include="fragments/about_dialog"></th:block>
+</body>
+</html>
