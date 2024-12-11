@@ -245,6 +245,7 @@ public class OrganizationController extends BaseController {
         }
         return result;
     }
+	
 	// Hiển thị toàn bộ các doanh nghiệp
 	@RequestMapping(value = "/organization/list", method = RequestMethod.GET)
 	public ModelAndView listOrganizations() {
