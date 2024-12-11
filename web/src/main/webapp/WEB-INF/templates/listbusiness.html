@@ -24,6 +24,7 @@
                     <th>Website</th>
                     <th>Địa Chỉ</th>
                     <th>Chi Tiết</th>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -31,7 +32,7 @@
                     <td th:text="${organization.title}"></td>
                     <td th:text="${organization.website}"></td>
                     <td th:text="${organization.location}"></td>
-                    <!-- Cập nhật liên kết để hiển thị tin tuyển dụng của doanh nghiệp -->
+                    <!-- Cập nhật liên kết để hiển thị tin tuyển dụng của doanh nghiệpm    quynh quynh -->
                     <td>
                         <a th:href="@{'/organization/' + ${organization.id} + '/jobs?id=' + ${organization.id}}" th:text="'Xem Tin Tuyển Dụng'">Xem Tin Tuyển Dụng</a>
                     </td>
