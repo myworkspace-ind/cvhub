@@ -4,356 +4,410 @@
 <head>
 	<title>MyWorkspace Platform - User page</title>
 	<th:block th:include="fragments/head"></th:block>
-    <link rel="stylesheet" th:href="@{/resources/user_profile_hoa/user_profile.css}"/>
 </head>
 
 <body>
-	<div class="container mt-4 mb-5">
-		<h1 class="text-center mb-4">Thông tin hồ sơ</h1>
-		<form>
-			<div class="row mb-3">
-				<div class="col-md-3 text-center">
-					<div class="custom-upload">
-						<img src="https://i2.wp.com/genshinbuilds.aipurrjects.com/genshin/characters/chasca/image.png?strip=all&quality=75&w=256">
-					</div>
-					<button class="btn h-10">Upload</button>
+	<th:block th:include="fragments/hmenu"></th:block>
+	<div class="Mrphs-pageColumns Mrphs-pageColumns--single">
+		<div class="Mrphs-container Mrphs-sakai-singleuser">
+			<div class="portletBody">
+				<div class="page-header">
+					<h1>Thông tin hồ sơ</h1>
 				</div>
-				<div class="col-md-9">
-					<div class="row">
-						<div class="col-md-6">
-							<label for="fullname" class="form-label required">Họ và tên</label>
-							<input type="text" class="form-control" id="fullname" required>
-						</div>
-						<div class="col-md-6">
-							<label for="phone" class="form-label required">Số điện thoại</label>
-							<input type="text" class="form-control" id="phone" required>
-						</div>
-						<div class="col-md-6 mt-5">
-							<label class="form-label">Giới tính</label>
-							<div class="form-check form-check-inline">
-								<input type="radio" name="gender" id="male" value="male" checked>
-								<label class="form-check-label" for="male">Nam</label>
+				<form id="useredit">
+					<fieldset>
+						<legend>
+							<strong>Info</strong>
+						</legend>
+						<div class="row mb-3">
+							<div class="col-md-2 text-center">
+								<div class="container mt-3">
+									<img
+										src="https://i2.wp.com/genshinbuilds.aipurrjects.com/genshin/characters/chasca/image.png?strip=all&quality=75&w=256">
+								</div>
+								<button type="button" class="btn btn-primary mt-2">Upload</button>
 							</div>
-							<div class="form-check form-check-inline">
-								<input type="radio" name="gender" id="female" value="female">
-								<label class="form-check-label" for="female">Nữ</label>
-							</div>
-						</div>
-						<div class="col-md-6 mt-3">
-							<label for="email" class="form-label required">Email</label>
-							<input type="email" class="form-control" id="email" required>
-						</div>
-						<div class="col-md-6 mt-3">
-							<label for="birthday" class="form-label required">Ngày sinh</label>
-							<input type="date" class="form-control" id="birthday" required>
-						</div>
-						<div class="col-md-6 mt-3">
-							<label for="address" class="form-label required">Địa chỉ</label>
-							<input type="text" class="form-control" id="address" required>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="section">
-				<h5 class="section-title">Giới thiệu bản thân</h5>
-				<textarea class="form-control mb-2 mt-2 " rows="4"></textarea>
-			</div>
-
-			<!-- Section: Học Vấn -->
-			<div class="section">
-			    <div class="section-header d-flex justify-content-between align-items-center">
-			        <h5 class="section-title mb-0">Học Vấn</h5>
-			        <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#educationModal">
-			            + Thêm học vấn
-			        </button>
-			    </div>
-			    <div id="main-learning" class="mt-3 p-3 border rounded bg-light" style="display:none">
-			        <div class="mb-2">
-			            <label for="mainSchoolName" class="form-label fw-bold">Tên trường</label>
-			            <input type="text" id="mainSchoolName" class="form-control" placeholder="Chưa có dữ liệu" readonly>
-			        </div>
-			        <div class="mb-2">
-			            <label for="mainDegree" class="form-label fw-bold">Bằng cấp</label>
-			            <input type="text" id="mainDegree" class="form-control" placeholder="Chưa có dữ liệu" readonly>
-			        </div>
-			        <div class="row">
-				        <div class="col-md-6 mb-2">
-				            <label for="mainStartDate" class="form-label fw-bold">Từ</label>
-				            <input type="text" id="mainStartDate" class="form-control" placeholder="Chưa có dữ liệu" readonly>
-				        </div>
-				        <div class="col-md-6 mb-2">
-				            <label for="mainEndDate" class="form-label fw-bold">Đến</label>
-				            <input type="text" id="mainEndDate" class="form-control" placeholder="Chưa có dữ liệu" readonly>
-				        </div>
-			        </div>
-			    </div>
-			</div>
-
-			<!-- Section: Kĩ năng -->
-			<div class="section">
-				<div class="section-header">
-					<h5 class="section-title">Kĩ năng</h5>
-					<button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#skillModal">+ Thêm kỹ năng</button>
-				</div>
-				<ul id="skills-list" class="list-group mt-3">
-					<!-- Kỹ năng sẽ được thêm vào đây -->
-				</ul>
-			</div>
-	
-			<!-- Session: Ngoại ngữ -->
-			<div class="section">
-				<div class="section-header">
-					<h5 class="section-title">Ngoại ngữ</h5>
-					<button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#languageModal">+
-						Thêm ngoại ngữ</button>
-				</div>
-				<ul id="languages-list"  class="list-group mt-3">
-					<!-- ngoại ngữ sẽ được thêm vào đây -->
-				</ul>
-			</div>
-
-			<!-- Session: Chứng chỉ khác -->
-			<div class="section">
-				<div class="section-header">
-					<h5 class="section-title">Chứng chỉ khác</h5>
-					<button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#certificateModal">+
-						Thêm chứng chỉ</button>
-				</div>
-				 <ul id="certificateList" class="list-group mt-3">
-			        <!-- Certificates will be appended here -->
-			    </ul>			
-			</div>
-
-			<!-- Session: Kinh nghiệm làm việc -->
-			<div class="section">
-				<div class="section-header">
-					<h5 class="section-title">Kinh nghiệm làm việc</h5>
-					<button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#experienceModal">+
-						Thêm kinh nghiệm làm việc</button>
-				</div>
-				<ul id="experienceList" class="list-group mt-3">
-			        <!-- Certificates will be appended here -->
-			    </ul>	
-			</div>
-
-			<div class="section">
-				<h5 class="section-title">Ghi chú</h5>
-				<textarea class="form-control mb-2 mt-2" id="notes" rows="4"></textarea>
-			</div>
-
-			<div class="text-center mb-20">
-				<button type="submit" class="btn h-50 w-40">Lưu</button>
-			</div>
-
-			<!-- Modal Học vấn -->
-			<div class="modal fade" id="educationModal" tabindex="-1" aria-labelledby="educationModalLabel"
-				aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header custom-modal-header">
-							<h2 class="modal-title" id="educationModalLabel">Học Vấn</h2>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<div class="mb-3">
-								<label for="schoolName" class="form-label required">Tên trường</label>
-								<input type="text" class="form-control" id="schoolName" placeholder="Tên trường"
-									required>
-							</div>
-
-							<div class="mb-3">
-								<label for="degree" class="form-label required">Bằng cấp</label>
-								<select class="form-select" id="degree" required>
-									<option value="">Chọn bằng cấp</option>
-									<option value="1">Trung học</option>
-									<option value="2">Trung cấp</option>
-									<option value="3">Cao đẳng</option>
-									<option value="4">Đại học</option>
-									<option value="5">Thạc sĩ</option>
-									<option value="6">Tiến sĩ</option>
-									<option value="7">Khác</option>
-								</select>
-							</div>
-
-							<div class="mb-3">
-								<label for="startDate" class="form-label required">Từ</label>
-								<input type="month" class="form-control" id="startDate" required>
-							</div>
-
-							<div class="mb-3">
-								<label for="endDate" class="form-label required">Đến</label>
-								<input type="month" class="form-control" id="endDate" required>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-							<button type="button" onclick="getHocVan()" class="btn">Lưu</button>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<!-- Modal Chứng chỉ -->
-			<div class="modal fade" id="certificateModal" tabindex="-1" aria-labelledby="certificateModalLabel"
-				aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header custom-modal-header">
-							<h2 class="modal-title" id="certificateModalLabel">Chứng chỉ khác</h2>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<div class="mb-3">
-								<label for="certificateName" class="form-label required">Tên chứng chỉ</label>
-								<input type="text" class="form-control" id="certificateName" placeholder="Tên chứng chỉ"
-									required>
-							</div>
-
-							<div class="mb-3">
-								<label for="certificateAuth" class="form-label required">Cấp bởi</label>
-								<input type="text" class="form-control" id="certificateAuth" placeholder="Cấp bởi"
-									required>
-							</div>
-
-							<div class="mb-3">
-								<label for="startDate" class="form-label required">Từ</label>
-								<input type="month" class="form-control" id="cc-startDate" required>
-							</div>
-
-							<div class="mb-3">
-								<label for="endDate" class="form-label required">Đến</label>
-								<input type="month" class="form-control" id="cc-endDate" required>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-							<button type="button" onclick="getChungChi()" class="btn">Lưu</button>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<!-- Modal KNLV -->
-			<div class="modal fade" id="experienceModal" tabindex="-1" aria-labelledby="experienceModalLabel"
-				aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header custom-modal-header">
-							<h2 class="modal-title" id="experienceModalLabel">Kinh nghiệm làm việc</h2>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<div class="mb-3">
-								<label for="company" class="form-label required">Công ty</label>
-								<input type="text" class="form-control" id="company" placeholder="Công ty" required>
-							</div>
-
-							<div class="mb-3">
-								<label for="position" class="form-label required">Chức danh</label>
-								<input type="text" class="form-control" id="position" placeholder="Chức danh" required>
-							</div>
-
-							<div class="mb-3">
-								<label for="startDate" class="form-label required">Từ</label>
-								<input type="month" class="form-control" id="startDateWorking" required>
-							</div>
-
-							<div class="mb-3">
-								<label for="endDate" class="form-label required">Đến</label>
-								<input type="month" class="form-control" id="endDateWorking" required>
-							</div>
-
-							<div class="mb-3">
-								<label for="description" class="form-label required">Mô tả</label>
-								<textarea class="form-control mb-2 mt-2" id="description" rows=3></textarea>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-							<button type="button" class="btn" onclick="getKNLV()">Lưu</button>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<!-- Modal Kĩ năng -->
-			<div class="modal fade" id="skillModal" tabindex="-1" aria-labelledby="skillModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header custom-modal-header">
-							<h2 class="modal-title" id="skillModalLabel">Kĩ năng</h2>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<div class="mb-3">
-								<label for="skillName" class="form-label required">Tên kĩ năng</label>
-								<input type="text" class="form-control" id="skillName" placeholder="Tên kĩ năng"
-									required>
-							</div>
-
-							<div class="container mt-4">
-								<label for="slider" class="form-label">Chọn mức độ:</label>
-								<input type="range" class="form-range" id="slider" min="1" max="5" step="1" value="3">
-								<div class="d-flex justify-content-between">
-									<span>1</span>
-									<span>2</span>
-									<span>3</span>
-									<span>4</span>
-									<span>5</span>
+							<div class="col-md-9">
+								<div class="mb-4 row">
+									<div class="col-md-4">
+										<label for="fullname" class="form-label required">Họ
+											và tên</label> <input type="text" class="form-control sakai-glow"
+											id="fullname" required>
+									</div>
+									<div class="col-md-4">
+										<label for="phone" class="form-label required">Số điện
+											thoại</label> <input type="text" class="form-control" id="phone"
+											required>
+									</div>
+								</div>
+								<div class="mb-3 row">
+									<div class="col-md-4 mt-5">
+										<label class="form-label">Giới tính</label>
+										<div class="form-check form-check-inline">
+											<input type="radio" name="gender" id="male" value="male"
+												checked> <label class="form-check-label" for="male">Nam</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input type="radio" name="gender" id="female" value="female">
+											<label class="form-check-label" for="female">Nữ</label>
+										</div>
+									</div>
+									<div class="col-md-4 mt-3">
+										<label for="email" class="form-label required">Email</label> <input
+											type="email" class="form-control" id="email" required>
+									</div>
+								</div>
+								<div class="mb-3 row">
+									<div class="col-md-4 mt-3">
+										<label for="birthday" class="form-label required">Ngày
+											sinh</label> <input type="date" class="form-control" id="birthday"
+											required>
+									</div>
+									<div class="col-md-4 mt-3">
+										<label for="address" class="form-label required">Địa
+											chỉ</label> <input type="text" class="form-control" id="address"
+											required>
+									</div>
 								</div>
 							</div>
 						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-							<button type="button" class="btn" onclick="getKiNang()">Lưu</button>
-						</div>
+					</fieldset>
+
+					<div class="card section p-3 mt-4">
+						<h5 class="section-title">Giới thiệu bản thân</h5>
+						<textarea class="form-control mb-2 mt-2 " rows="4"></textarea>
 					</div>
-				</div>
-			</div>
 
-			<!-- Modal Ngoại ngữ -->
-			<div class="modal fade" id="languageModal" tabindex="-1" aria-labelledby="languageModalLabel"
-				aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header custom-modal-header">
-							<h2 class="modal-title" id="languageModalLabel">Ngoại ngữ</h2>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					<!-- Section: Học Vấn -->
+					<div class="card section p-3 mt-4">
+						<div class="section-header d-flex justify-content-between align-items-center">
+							<h5 class="section-title mb-2">Học Vấn</h5>
+							<button type="button" class="btn btn-primary btn-sm"
+								data-bs-toggle="modal" data-bs-target="#educationModal">
+								+ Thêm học vấn</button>
 						</div>
-						<div class="modal-body">
-							<div class="mb-3">
-								<label for="languageName" class="form-label required">Ngoại ngữ</label>
-								<input type="text" class="form-control" id="languageName" placeholder="Ngoại ngữ"
-									required>
+						<ul class="list-group mt-3 border-bottom-0">
+						</ul>
+						<div id="main-learning" class="mt-3 p-3 border rounded bg-light" style="display:none">
+							<div class="mb-2">
+								<label for="mainSchoolName" class="form-label fw-bold">Tên
+									trường</label> <input type="text" id="mainSchoolName"
+									class="form-control" placeholder="Chưa có dữ liệu" readonly>
 							</div>
-
-							<div class="container mt-4">
-								<label for="slider1" class="form-label">Chọn mức độ:</label>
-								<input type="range" class="form-range" id="slider1" min="1" max="5" step="1" value="3">
-								<div class="d-flex justify-content-between">
-									<span>1</span>
-									<span>2</span>
-									<span>3</span>
-									<span>4</span>
-									<span>5</span>
+							<div class="mb-2">
+								<label for="mainDegree" class="form-label fw-bold">Bằng
+									cấp</label> <input type="text" id="mainDegree" class="form-control"
+									placeholder="Chưa có dữ liệu" readonly>
+							</div>
+							<div class="row">
+								<div class="col-md-6 mb-2">
+									<label for="mainStartDate" class="form-label fw-bold">Từ</label>
+									<input type="text" id="mainStartDate" class="form-control"
+										placeholder="Chưa có dữ liệu" readonly>
+								</div>
+								<div class="col-md-6 mb-2">
+									<label for="mainEndDate" class="form-label fw-bold">Đến</label>
+									<input type="text" id="mainEndDate" class="form-control"
+										placeholder="Chưa có dữ liệu" readonly>
 								</div>
 							</div>
-
-							<div class="mb-3">
-								<label for="certi" class="form-label">Bằng cấp</label>
-								<input type="text" class="form-control" id="certi" placeholder="Bằng cấp" required>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-							<button type="button" class="btn"  onclick="getNgoaiNgu()">Lưu</button>
 						</div>
 					</div>
-				</div>
+
+					<!-- Section: Kĩ năng -->
+					<div class="card section p-3 mt-4">
+						<div
+							class="section-header d-flex justify-content-between align-items-center">
+							<h5 class="section-title">Kĩ năng</h5>
+							<button type="button" class="btn btn-primary btn-sm"
+								data-bs-toggle="modal" data-bs-target="#skillModal">+
+								Thêm kỹ năng</button>
+						</div>
+						<ul id="skills-list" class="list-group mt-3">
+							<!-- Kỹ năng sẽ được thêm vào đây -->
+						</ul>
+
+					</div>
+
+					<!-- Session: Ngoại ngữ -->
+					<div class="card section p-3 mt-4">
+						<div
+							class="section-header d-flex justify-content-between align-items-center">
+							<h5 class="section-title">Ngoại ngữ</h5>
+							<button type="button" class="btn btn-primary btn-sm"
+								data-bs-toggle="modal" data-bs-target="#languageModal">+
+								Thêm ngoại ngữ</button>
+						</div>
+						<ul id="languages-list" class="list-group mt-3">
+							<!-- ngoại ngữ sẽ được thêm vào đây -->
+						</ul>
+					</div>
+
+					<!-- Session: Chứng chỉ khác -->
+					<div class="card section p-3 mt-4">
+						<div
+							class="section-header d-flex justify-content-between align-items-center">
+							<h5 class="section-title">Chứng chỉ khác</h5>
+							<button type="button" class="btn btn-primary btn-sm"
+								data-bs-toggle="modal" data-bs-target="#certificateModal">+
+								Thêm chứng chỉ</button>
+						</div>
+						<ul id="certificateList" class="list-group mt-3">
+							<!-- Certificates will be appended here -->
+						</ul>
+					</div>
+
+					<!-- Session: Kinh nghiệm làm việc -->
+					<div class="card section p-3 mt-4">
+						<div
+							class="section-header d-flex justify-content-between align-items-center">
+							<h5 class="section-title">Kinh nghiệm làm việc</h5>
+							<button type="button" class="btn btn-primary btn-sm"
+								data-bs-toggle="modal" data-bs-target="#experienceModal">+
+								Thêm kinh nghiệm làm việc</button>
+						</div>
+						<ul id="experienceList" class="list-group mt-3">
+							<!-- Certificates will be appended here -->
+						</ul>
+					</div>
+
+					<div class="card section p-3 mt-4">
+						<h5 class="section-title">Ghi chú</h5>
+						<textarea class="form-control mb-2 mt-2" id="notes" rows="4"></textarea>
+					</div>
+
+					<div class="text-center mb-20">
+						<button type="submit" class="btn btn-primary mt-5 mb-5">Lưu</button>
+					</div>
+
+					<!-- Modal Học vấn -->
+					<div class="modal fade" id="educationModal" tabindex="-1"
+						aria-labelledby="educationModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header custom-modal-header">
+									<h2 class="modal-title" id="educationModalLabel">Học Vấn</h2>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<div class="mb-3">
+										<label for="schoolName" class="form-label required">Tên
+											trường</label> <input type="text" class="form-control"
+											id="schoolName" placeholder="Tên trường" required>
+									</div>
+
+									<div class="mb-3">
+										<label for="degree" class="form-label required">Bằng
+											cấp</label> <select class="form-select" id="degree" required>
+											<option value="">Chọn bằng cấp</option>
+											<option value="1">Trung học</option>
+											<option value="2">Trung cấp</option>
+											<option value="3">Cao đẳng</option>
+											<option value="4">Đại học</option>
+											<option value="5">Thạc sĩ</option>
+											<option value="6">Tiến sĩ</option>
+											<option value="7">Khác</option>
+										</select>
+									</div>
+
+									<div class="mb-3">
+										<label for="startDate" class="form-label required">Từ</label>
+										<input type="month" class="form-control" id="startDate"
+											required>
+									</div>
+
+									<div class="mb-3">
+										<label for="endDate" class="form-label required">Đến</label> <input
+											type="month" class="form-control" id="endDate" required>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">Đóng</button>
+									<button type="button" onclick="getHocVan()"
+										class="btn btn-primary">Lưu</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Modal Chứng chỉ -->
+					<div class="modal fade" id="certificateModal" tabindex="-1"
+						aria-labelledby="certificateModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header custom-modal-header">
+									<h2 class="modal-title" id="certificateModalLabel">Chứng
+										chỉ khác</h2>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<div class="mb-3">
+										<label for="certificateName" class="form-label required">Tên
+											chứng chỉ</label> <input type="text" class="form-control"
+											id="certificateName" placeholder="Tên chứng chỉ" required>
+									</div>
+
+									<div class="mb-3">
+										<label for="certificateAuth" class="form-label required">Cấp
+											bởi</label> <input type="text" class="form-control"
+											id="certificateAuth" placeholder="Cấp bởi" required>
+									</div>
+
+									<div class="mb-3">
+										<label for="startDate" class="form-label required">Từ</label>
+										<input type="month" class="form-control" id="cc-startDate"
+											required>
+									</div>
+
+									<div class="mb-3">
+										<label for="endDate" class="form-label required">Đến</label> <input
+											type="month" class="form-control" id="cc-endDate" required>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">Đóng</button>
+									<button type="button" onclick="getChungChi()" class="btn btn-primary">Lưu</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Modal KNLV -->
+					<div class="modal fade" id="experienceModal" tabindex="-1"
+						aria-labelledby="experienceModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header custom-modal-header">
+									<h2 class="modal-title" id="experienceModalLabel">Kinh
+										nghiệm làm việc</h2>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<div class="mb-3">
+										<label for="company" class="form-label required">Công
+											ty</label> <input type="text" class="form-control" id="company"
+											placeholder="Công ty" required>
+									</div>
+
+									<div class="mb-3">
+										<label for="position" class="form-label required">Chức
+											danh</label> <input type="text" class="form-control" id="position"
+											placeholder="Chức danh" required>
+									</div>
+
+									<div class="mb-3">
+										<label for="startDate" class="form-label required">Từ</label>
+										<input type="month" class="form-control" id="startDateWorking"
+											required>
+									</div>
+
+									<div class="mb-3">
+										<label for="endDate" class="form-label required">Đến</label> <input
+											type="month" class="form-control" id="endDateWorking"
+											required>
+									</div>
+
+									<div class="mb-3">
+										<label for="description" class="form-label required">Mô
+											tả</label>
+										<textarea class="form-control mb-2 mt-2" id="description"
+											rows=3></textarea>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">Đóng</button>
+									<button type="button" class="btn btn-primary" onclick="getKNLV()">Lưu</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Modal Kĩ năng -->
+					<div class="modal fade" id="skillModal" tabindex="-1"
+						aria-labelledby="skillModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header custom-modal-header">
+									<h2 class="modal-title" id="skillModalLabel">Kĩ năng</h2>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<div class="mb-3">
+										<label for="skillName" class="form-label required">Tên
+											kĩ năng</label> <input type="text" class="form-control"
+											id="skillName" placeholder="Tên kĩ năng" required>
+									</div>
+
+									<div class="container mt-4">
+										<label for="slider" class="form-label">Chọn mức độ:</label> <input
+											type="range" class="form-range" id="slider" min="1" max="5"
+											step="1" value="3">
+										<div class="d-flex justify-content-between">
+											<span>1</span> <span>2</span> <span>3</span> <span>4</span> <span>5</span>
+										</div>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">Đóng</button>
+									<button type="button" class="btn btn-primary" onclick="getKiNang()">Lưu</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Modal Ngoại ngữ -->
+					<div class="modal fade" id="languageModal" tabindex="-1"
+						aria-labelledby="languageModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header custom-modal-header">
+									<h2 class="modal-title" id="languageModalLabel">Ngoại ngữ</h2>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<div class="mb-3">
+										<label for="languageName" class="form-label required">Ngoại
+											ngữ</label> <input type="text" class="form-control" id="languageName"
+											placeholder="Ngoại ngữ" required>
+									</div>
+
+									<div class="container mt-4">
+										<label for="slider1" class="form-label">Chọn mức độ:</label> <input
+											type="range" class="form-range" id="slider1" min="1" max="5"
+											step="1" value="3">
+										<div class="d-flex justify-content-between">
+											<span>1</span> <span>2</span> <span>3</span> <span>4</span> <span>5</span>
+										</div>
+									</div>
+
+									<div class="mb-3">
+										<label for="certi" class="form-label">Bằng cấp</label> <input
+											type="text" class="form-control" id="certi"
+											placeholder="Bằng cấp" required>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">Đóng</button>
+									<button type="button" class="btn btn-primary" onclick="getNgoaiNgu()">Lưu</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
 			</div>
-		</form>
-	</div> 
-	<script th:src="@{/resources/user_profile_hoa/user_profile.js}"></script>
+		</div>
+	</div>
+
 </body>
+<script th:src="@{/resources/user_profile_hoa/user_profile.js}"></script>
 </html>
