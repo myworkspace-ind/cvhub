@@ -30,7 +30,8 @@
 								aria-expanded="true" title="Collapse tool list"
 								aria-controls="gateway-site-gateway-page-list"
 								onclick="toggleMenu(this)">
-								<i class="bi-chevron-down" aria-hidden="true"></i><!-- Icon mũi tên xuống -->
+								<i class="bi-chevron-down" aria-hidden="true"></i>
+								<!-- Icon mũi tên xuống -->
 							</button>
 							<label class="sidebar-site-title" title="menu">menu</label>
 						</div>
@@ -40,7 +41,8 @@
 						style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease;">
 						<ul class="site-page-list nav flex-column py-1 mb-2">
 							<!-- Các item bên trong menu -->
-							<li class="nav-item"><a href="/cvhub-web/jobPosting">Add job</a></li>
+							<li class="nav-item"><a href="/cvhub-web/jobPosting">Add
+									job</a></li>
 							<li class="nav-item"><a href="/cvhub-web/showJob">List</a></li>
 						</ul>
 					</div>
@@ -49,7 +51,7 @@
 		</div>
 	</nav>
 
-	<div class="container mt-4" style="max-width: 500px;">
+	<div class="container mt-4" style="max-width: 750px;">
 		<form th:action="@{/registerJob1}" method="POST"
 			class="p-4 border rounded bg-light shadow-sm">
 			<h3 class="text-center mb-4">Thêm thông tin tuyển dụng</h3>
@@ -57,34 +59,46 @@
 			<input type="hidden" id="organizationId" name="organizationId"
 				th:value="${organization.id}" />
 
-			<div class="form-group mb-3">
-				<label for="jobRoleId" class="form-label fw-bold">Tên công
-					việc cần tuyển dụng <em class="text-danger">*</em>
-				</label> <input type="text" class="form-control" id="namejob" name="title"
-					required>
+			<div class="form-group mb-3 row">
+				<div class="col-md-6">
+					<label for="jobRoleId" class="form-label fw-bold">Tên công
+						việc cần tuyển dụng <em class="text-danger">*</em>
+					</label> <input type="text" class="form-control" id="namejob" name="title"
+						required>
+				</div>
+
+				<div class="col-md-6">
+					<label for="jobRoleId" class="form-label fw-bold">Mảng
+						ngành nghề <em class="text-danger">*</em>
+					</label> <select id="jobRoleId" name="jobRoleId" class="form-select"
+						required>
+						<option value="" disabled selected>Chọn ngành nghề tuyển
+							dụng</option>
+						<th:block th:each="jobRole : ${jobRoles}">
+							<option th:value="${jobRole.id}" th:text="${jobRole.title}"></option>
+						</th:block>
+					</select>
+				</div>
 			</div>
-			<div class="form-group mb-3">
-				<label for="jobRoleId" class="form-label fw-bold">Mảng ngành
-					nghề <em class="text-danger">*</em>
-				</label> <select id="jobRoleId" name="jobRoleId" class="form-select"
-					required>
-					<option value="" disabled selected>Chọn ngành nghề tuyển
-						dụng</option>
-					<th:block th:each="jobRole : ${jobRoles}">
-						<option th:value="${jobRole.id}" th:text="${jobRole.title}"></option>
-					</th:block>
-				</select>
-			</div>
-			<div class="form-group mb-3">
-				<label for="location" class="form-label fw-bold">Địa điểm
-					làm việc <em class="text-danger">*</em>
-				</label> <select id="location" name="locationCode" class="form-select"
-					required>
-					<option value="" disabled selected>Chọn địa điểm</option>
-					<th:block th:each="location : ${locations}">
-						<option th:value="${location.code}" th:text="${location.name}"></option>
-					</th:block>
-				</select>
+			<div class="form-group mb-3 row">
+				<div class="col-md-6">
+					<label for="location" class="form-label fw-bold">Địa điểm
+						làm việc <em class="text-danger">*</em>
+					</label> <select id="location" name="locationCode" class="form-select"
+						required>
+						<option value="" disabled selected>Chọn địa điểm</option>
+						<th:block th:each="location : ${locations}">
+							<option th:value="${location.code}" th:text="${location.name}"></option>
+						</th:block>
+					</select>
+				</div>
+				<div class="col-md-6">
+					<label for="deadlineApplication" class="form-label fw-bold">Hạn
+						nộp hồ sơ <em class="text-danger">*</em>
+					</label> <input type="date" id="deadlineApplication"
+						name="deadlineApplication"
+						class="form-control border-primary shadow-sm" required>
+				</div>
 			</div>
 			<div class="form-group mb-3">
 				<label for="detailsJob" class="form-label fw-bold">Chi tiết
@@ -131,14 +145,6 @@
 				<textarea id="benefitCandidate" name="benefitCandidate"
 					class="form-control border-primary shadow-sm" rows="4"
 					placeholder="Nhập quyền lợi ứng viên" required></textarea>
-			</div>
-
-			<div class="form-group mb-3">
-				<label for="deadlineApplication" class="form-label fw-bold">Hạn
-					nộp hồ sơ <em class="text-danger">*</em>
-				</label> <input type="date" id="deadlineApplication"
-					name="deadlineApplication"
-					class="form-control border-primary shadow-sm" required>
 			</div>
 			<div class="d-flex justify-content-center">
 				<button type="submit" class="btn btn-primary">Lưu</button>
