@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import mks.myworkspace.cvhub.entity.CV;
 import mks.myworkspace.cvhub.entity.User;
 
 @Repository
@@ -23,4 +24,14 @@ public interface UserRepository extends JpaRepository<User,Long> {
 	
 	@Query("SELECT u FROM User u WHERE u.createdDate >= :startOfPeriod AND u.role = 'ROLE_USER'")
 	Page<User> findUsersByCreationDateWithRoleUser(@Param("startOfPeriod") Date startOfPeriod, Pageable pageable);
+	
+	@Query("SELECT DISTINCT u FROM User u JOIN u.cvList c WHERE c IS NOT NULL")
+    Page<User> findUsersWithCVs(Pageable pageable);
+	
+	// Tim kiem va phan trang theo ten, email, sdt 
+    @Query("SELECT c FROM User c WHERE " +
+            "LOWER(c.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(c.email) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(c.phone) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    Page<User> search(@Param("keyword") String keyword, Pageable pageable);
 }

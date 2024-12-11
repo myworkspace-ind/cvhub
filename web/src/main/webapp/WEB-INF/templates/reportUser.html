@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>User Report</title>
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/library/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
+    <th:block th:include="fragments/head"></th:block>
 </head>
 <body>
 <th:block th:include="fragments/hmenu"></th:block>
@@ -11,27 +12,28 @@
     <h2>User Report</h2>
 
     <!-- Filter options -->
-    <form method="get" action="user" class="form-inline mb-4">
-        <label for="period" class="mr-2">Filter by:</label>
-        <select id="period" name="period" class="form-control mr-2" style="width: 150px;">
-            <option value="today" th:selected="${selectedPeriod == 'today'}">Today</option>
-            <option value="week" th:selected="${selectedPeriod == 'week'}">This Week</option>
-            <option value="month" th:selected="${selectedPeriod == 'month'}">This Month</option>
-            <option value="year" th:selected="${selectedPeriod == 'year'}">This Year</option>
-        </select>
-        
-        <label for="limit" class="mr-2">Records per page:</label>
-	    <select id="limit" name="limit" class="form-control mr-2" style="width: 100px;">
-	        <option value="5" th:selected="${limit == 5}">5</option>
-	        <option value="10" th:selected="${limit == 10}">10</option>
-	        <option value="20" th:selected="${limit == 20}">20</option>
-	        <option value="50" th:selected="${limit == 50}">50</option>
-	    </select>
-	    
-	    <input type="hidden" name="page" th:value="${currentPage}" />
-	    
-	    <button type="submit" class="btn btn-primary">Apply</button>
-    </form>
+	<form method="get" action="user" class="form-inline mb-4">
+	    <div class="d-flex align-items-center w-100">
+	        <label for="period" class="mr-2">Filter by:</label>
+	        <select id="period" name="period" class="form-control mr-3" style="width: 150px;">
+	            <option value="today" th:selected="${selectedPeriod == 'today'}">Today</option>
+	            <option value="week" th:selected="${selectedPeriod == 'week'}">This Week</option>
+	            <option value="month" th:selected="${selectedPeriod == 'month'}">This Month</option>
+	            <option value="year" th:selected="${selectedPeriod == 'year'}">This Year</option>
+	        </select>
+	
+	        <label for="limit" class="mr-2">Records per page:</label>
+	        <select id="limit" name="limit" class="form-control mr-3" style="width: 100px;">
+	            <option value="5" th:selected="${limit == 5}">5</option>
+	            <option value="10" th:selected="${limit == 10}">10</option>
+	            <option value="20" th:selected="${limit == 20}">20</option>
+	            <option value="50" th:selected="${limit == 50}">50</option>
+	        </select>
+	
+	        <input type="hidden" name="page" th:value="${currentPage}" />
+	        <button type="submit" class="btn btn-primary">Apply</button>
+	    </div>
+	</form>
 
     <!-- User table -->
     <div class="table-responsive">
@@ -44,6 +46,7 @@
                 <th>Email</th>
                 <th>Phone</th>
                 <th>Created Date</th>
+                <th>Action</th>
             </tr>
             </thead>
             <tbody>
@@ -52,11 +55,16 @@
                 <td th:text="${user.id}"></td>
                 <td th:text="${user.fullName}"></td>
                 <td th:text="${user.email}"></td>
-                <td th:text="${user.phone}"></td>
-                <td th:text="${#dates.format(user.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${'(+84) ' + user.phone.substring(1)}"></td>
+                <td th:text="${#dates.format(user.createdDate, 'dd-MM-yyyy')}"></td>
+                <td>
+                <form method="post" th:action="@{/report/user/delete/{id}(id=${user.id})}" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
             </tr>
             <tr th:if="${users.size() == 0}">
-                <td colspan="6" class="text-center">No users found for the selected period.</td>
+                <td colspan="7" class="text-center">No users found for the selected period.</td>
             </tr>
             </tbody>
         </table>

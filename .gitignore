@@ -29,8 +29,6 @@ replay_pid*
 .factorypath
 .project
 target
-<<<<<<< HEAD
 /.metadata/
-=======
 /.idea
->>>>>>> remotes/origin/develop
+.DS_Store

@@ -5,7 +5,15 @@ function getHocVan() {
     const degree = document.getElementById("degree").options[document.getElementById("degree").selectedIndex].text;
     const startDate = document.getElementById("startDate").value;
     const endDate = document.getElementById("endDate").value;
-
+	
+	if (!schoolName)
+		{alert("Vui lòng nhập tên trường!"); return;}
+    if (!degree)
+		{alert("Vui lòng chọn bằng cấp!"); return;}
+    if (!startDate)
+		{alert("Vui lòng nhập ngày bắt đầu!"); return;}
+    if (!endDate)
+		{alert("Vui lòng nhập ngày kết thúc!"); return;}
 
     // Truyền dữ liệu từ Modal lên Form chính
     document.getElementById("mainSchoolName").value = schoolName;
@@ -13,13 +21,10 @@ function getHocVan() {
     document.getElementById("mainStartDate").value = startDate;
     document.getElementById("mainEndDate").value = endDate;
 
-    // Đóng Modal (Bootstrap 5)
-    const modal = bootstrap.Modal.getInstance(document.getElementById('educationModal'));
-    modal.hide();
-    const mainLearning = document.getElementById("main-learning");
-    mainLearning.style.display = "block";
-}
 
+    const mainLearning = document.getElementById("main-learning");
+	mainLearning.style.display = "block";
+}
 function getKiNang() {
 	// Lấy dữ liệu từ Modal
 	const skillName = document.getElementById("skillName").value.trim();
@@ -53,8 +58,9 @@ function getKiNang() {
 	skillsList.appendChild(skillItem);
 
 	// Đóng Modal và xóa dữ liệu nhập vào
-	const modal = bootstrap.Modal.getInstance(document.getElementById('skillModal'));
-	modal.hide();
+
+	/*const modal = bootstrap.Modal.getInstance(document.getElementById('skillModal'));
+	modal.hide();*/
 	document.getElementById("skillName").value = "";
 	document.getElementById("slider").value = "3";
 }
@@ -110,8 +116,7 @@ function getNgoaiNgu() {
     languagesList.appendChild(languageItem);
 
     // Đóng Modal và reset các trường
-    const modal = bootstrap.Modal.getInstance(document.getElementById('languageModal'));
-    modal.hide();
+	
     document.getElementById("languageName").value = "";
     document.getElementById("slider1").value = "3";
     document.getElementById("certi").value = "";
@@ -146,8 +151,6 @@ function getChungChi() {
     document.getElementById('cc-endDate').value = '';
 
     // Close the modal
-    const modal = bootstrap.Modal.getInstance(document.getElementById('certificateModal'));
-    modal.hide();
 
     // Update the certificate list
     updateCertificateList();
@@ -203,9 +206,6 @@ function getKNLV() {
     document.getElementById('endDateWorking').value = '';
     document.getElementById('description').value = '';
 
-    // Close the modal
-    const exModal = bootstrap.Modal.getInstance(document.getElementById('experienceModal'));
-    exModal.hide();
 
     // Update the experience list
     updateKNLVList();
