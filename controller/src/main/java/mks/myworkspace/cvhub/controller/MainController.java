@@ -91,7 +91,6 @@ public class MainController extends BaseController {
 		mav.addObject("totalPages", organizationPage.getTotalPages()); // Tong so trang
 		return mav;
 	}
-
 	
 
 	@GetMapping("searchOrganization")
