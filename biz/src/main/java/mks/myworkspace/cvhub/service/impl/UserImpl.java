@@ -158,4 +158,8 @@ public class UserImpl implements UserService {
         String[] parts = fullName.split(" ");
         return parts.length > 1 ? parts[parts.length - 1] : "";
     }
+    
+    public void deleteUserById(Long id) {
+    	repo.deleteById(id);
+    }
 }
