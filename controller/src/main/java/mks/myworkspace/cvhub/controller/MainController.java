@@ -102,6 +102,7 @@ public class MainController extends BaseController {
 	    mav.addObject("jobCount", totalJobRequestsMap);
 		return mav;
 	}
+
 	
 	@GetMapping("/api/organizationsReport")
 	public ResponseEntity<Map<String, Object>> getOrganizations(

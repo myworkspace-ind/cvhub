@@ -4,9 +4,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import mks.myworkspace.cvhub.entity.Organization;
+import mks.myworkspace.cvhub.repository.JobRequestRepository_Khoi_22110357;
 import mks.myworkspace.cvhub.service.OrganizationExportExcelService;
 
 import org.apache.poi.ss.usermodel.*;
@@ -16,6 +18,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 @Service
 public class OrgannizationExportExcelServiceImpl implements OrganizationExportExcelService {
 
+    @Autowired
+    private JobRequestRepository_Khoi_22110357 jobRequestRepository;
+    
 	@Override
 	public ByteArrayOutputStream createExcelFile(List<Organization> organizations) throws IOException {
 		Workbook workbook = new XSSFWorkbook();
@@ -70,7 +75,7 @@ public class OrgannizationExportExcelServiceImpl implements OrganizationExportEx
 
 		// Header Row
 		Row headerRow = sheet.createRow(1);
-		String[] headers = { "ID", "Title", "Logo", "Website", "Summary", "Location", "Created Date" };
+		String[] headers = { "ID", "Title", "Logo", "Website", "Summary", "Location", "Created Date","Job Postings"};
 		for (int i = 0; i < headers.length; i++) {
 			Cell cell = headerRow.createCell(i);
 			cell.setCellValue(headers[i]);
@@ -127,6 +132,12 @@ public class OrgannizationExportExcelServiceImpl implements OrganizationExportEx
 				dateCell.setCellValue("");
 				dateCell.setCellStyle(borderStyle);
 			}
+			
+            // Add Job Postings Count
+            Cell jobPostingsCell = row.createCell(7);
+            Long jobPostingsCount = jobRequestRepository.countJobPostingsByOrganizationId(org.getId());
+            jobPostingsCell.setCellValue(jobPostingsCount != null ? jobPostingsCount : 0);
+            jobPostingsCell.setCellStyle(borderStyle);
 
 			rowIdx++;
 		}

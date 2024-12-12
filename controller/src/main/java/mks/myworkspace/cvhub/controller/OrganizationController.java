@@ -246,37 +246,6 @@ public class OrganizationController extends BaseController {
         return result;
     }
 
-// Hiển thị toàn bộ các doanh nghiệp
-	@RequestMapping(value = "/organization/list", method = RequestMethod.GET)
-	public ModelAndView listOrganizations() {
-	    ModelAndView mav = new ModelAndView("listbusiness");
-	    try {
-	        List<Organization> organizations = organizationService.getRepo().findAll();     
-	        mav.addObject("organizations", organizations);
-	    } catch (Exception e) {
-	        mav.addObject("error", "An error occurred while fetching the organization list: " + e.getMessage());
-	        e.printStackTrace();
-	    }
-	    return mav;
-	}
-
-	@RequestMapping(value = "/organization/{organizationId}/jobs", method = RequestMethod.GET)
-	public ModelAndView getJobsByOrganization(@PathVariable Long organizationId) {
-	    ModelAndView mav = new ModelAndView("organizationJobs");
-	    try {
-	        // Xử lý danh sách việc làm cho doanh nghiệp với ID = organizationId
-	        List<JobRequest> jobRequests = jobRequestService.getRepo().findByOrganizationId(organizationId);
-	        mav.addObject("jobRequests", jobRequests);
-	        mav.addObject("organizationId", organizationId); // Đảm bảo thêm organizationId vào model
-	    } catch (Exception e) {
-	        mav.setViewName("error");
-	        mav.addObject("errorMessage", "Có lỗi xảy ra khi lấy danh sách việc làm: " + e.getMessage());
-	        e.printStackTrace();
-	    }
-	    return mav;
-	}
-
-
 	@RequestMapping(value = { "/{organizationId}/getCVs/setStatusDeny/{id}" }, method = RequestMethod.POST)
 	public ModelAndView setStatus(@PathVariable("id") Long jobApplicationId, @PathVariable("organizationId") Long organizationId, 
 								HttpServletRequest request, HttpSession httpSession) {

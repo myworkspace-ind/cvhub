@@ -16,5 +16,4 @@ public interface UserService {
 	User getUser(Long id);
 	void registerUserInSakai(String fullName, String email, String password, String phone) throws Exception;
 	Page<User> findUsersByPeriod(String period, Pageable pageable);
-	void deleteUserById(Long id);
 }
