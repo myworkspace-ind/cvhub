@@ -57,15 +57,18 @@ function removeFilter(link) {
 	if (optionToShow) {
 		optionToShow.style.display = 'block';  // Hiển thị lại option
 	}
+	
+	console.log("Calling searchJobs");
+	searchJobs(0);
 }
 
 let currentPage = 0; // Biến lưu số trang hiện tại
 const pageSize = 5; // Số lượng công việc mỗi trang
 
 
-document.getElementById('searchButton').addEventListener('click', function() {
-	searchJobs(0); // Khi nhấn nút tìm kiếm, luôn bắt đầu từ trang đầu tiên
-});
+//document.getElementById('searchButton').addEventListener('click', function() {
+//	searchJobs(0); // Khi nhấn nút tìm kiếm, luôn bắt đầu từ trang đầu tiên
+//});
 
 // Hàm định dạng ngày theo kiểu "19 Oct, 2024"
 function formatDate(dateString) {
@@ -90,11 +93,11 @@ function searchJobs(page) {
 		selectedIndustries.push(tag.getAttribute('data-value'));
 	});
 
-	if (selectedIndustries.length === 0) {
-		const jobRoleSelect = document.getElementById('jobRoleSelect');
-		const options = jobRoleSelect?.querySelectorAll('option') || [];
-		selectedIndustries = Array.from(options).map(option => option.value);
-	}
+//	if (selectedIndustries.length === 0) {
+//		const jobRoleSelect = document.getElementById('jobRoleSelect');
+//		const options = jobRoleSelect?.querySelectorAll('option') || [];
+//		selectedIndustries = Array.from(options).map(option => option.value);
+//	}
 
 	console.log(selectedIndustries);
 
@@ -208,6 +211,7 @@ const searchName = document.getElementById('search-for-name');
 toggleCheck(searchName)
 
 
+// Lấy dữ liệu về location và job role
 document.addEventListener('DOMContentLoaded', function() {
 	const locationSelect = document.getElementById('locationSelect');
 	const jobRoleSelect = document.getElementById('jobRoleSelect');
