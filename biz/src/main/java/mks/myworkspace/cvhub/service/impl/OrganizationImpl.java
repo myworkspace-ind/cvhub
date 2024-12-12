@@ -67,4 +67,27 @@ public class OrganizationImpl implements OrganizationService {
 	public List<Organization> findByTitleContaining(String title) {
 		return repo.findByTitleContaining(title);
 	}
+
+	@Override
+	public Long getTotalJobRequestsByOrganizationId(Long organizationId) {
+		return repo.countByOrganizationId(organizationId);
+	}
+
+	@Override
+	public List<Organization> getSortedOrganizations(String sort) {
+		switch (sort) {
+        case "created_date_asc":
+            return repo.findAllByOrderByCreatedDateAsc();
+        case "created_date_desc":
+            return repo.findAllByOrderByCreatedDateDesc();
+        case "job_count_asc":
+            return repo.findAllByOrderByJobCountAsc();
+        case "job_count_desc":
+            return repo.findAllByOrderByJobCountDesc();
+        default:
+            return repo.findAll(); 
+    }
+	  
+
+	}
 }

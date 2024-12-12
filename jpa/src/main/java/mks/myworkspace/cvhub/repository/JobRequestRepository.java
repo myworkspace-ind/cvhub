@@ -26,4 +26,6 @@ public interface JobRequestRepository extends JpaRepository<JobRequest, Long> {
 	Page<JobRequest> findByCreatedDateAfter(Date startDate, Pageable pageable);
 
 	Page<JobRequest> findByOrganizationId(Long organizationId, Pageable pageable);
+	
+
 }

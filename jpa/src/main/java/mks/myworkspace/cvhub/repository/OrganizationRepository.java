@@ -29,4 +29,14 @@ public interface OrganizationRepository extends JpaRepository<Organization,Long>
 	Page<Organization> findByTitleContaining(@Param("pageRequest") Pageable pageRequest, String title);
 	@Query("SELECT o FROM Organization o WHERE o.createdDate >= :startDate")
     Page<Organization> findAllCreatedDateStartFrom(@Param("startDate") Date startDate, @Param("pageRequest") Pageable pageable);
+	@Query("SELECT COUNT(jr) FROM JobRequest jr WHERE jr.organization.id = :organizationId")
+	Long countByOrganizationId(@Param("organizationId") Long organizationId);
+	@Query("SELECT o, COUNT(jr) AS jobCount FROM Organization o LEFT JOIN JobRequest jr ON o.id = jr.organization.id GROUP BY o.id ORDER BY o.createdDate ASC")
+	List<Organization> findAllByOrderByCreatedDateAsc();
+	@Query("SELECT o, COUNT(jr) AS jobCount FROM Organization o LEFT JOIN JobRequest jr ON o.id = jr.organization.id GROUP BY o.id ORDER BY o.createdDate DESC")
+	List<Organization> findAllByOrderByCreatedDateDesc();
+	@Query("SELECT o, COUNT(jr) AS jobCount FROM Organization o LEFT JOIN JobRequest jr ON o.id = jr.organization.id GROUP BY o.id ORDER BY jobCount ASC")
+	List<Organization> findAllByOrderByJobCountAsc();
+	@Query("SELECT o, COUNT(jr) AS jobCount FROM Organization o LEFT JOIN JobRequest jr ON o.id = jr.organization.id GROUP BY o.id ORDER BY jobCount DESC")
+	List<Organization> findAllByOrderByJobCountDesc();
 }

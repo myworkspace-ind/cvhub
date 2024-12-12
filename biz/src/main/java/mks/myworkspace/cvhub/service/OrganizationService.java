@@ -20,4 +20,6 @@ public interface OrganizationService {
 	 List<Organization> searchByTitle(String title); // Them chuc nang tim kiem cong ty bang ten cong ty : nguoi them LeDaoNhanSam
 	 
     List<Organization> findByTitleContaining(String title);
+    Long getTotalJobRequestsByOrganizationId(Long organizationId);
+    List<Organization> getSortedOrganizations(String sort);
 }
