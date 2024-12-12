@@ -15,13 +15,16 @@
 			<p class="subtitle">Tiếp cận 40,000+ tin tuyển dụng việc làm mới ngày từ hàng nghìn doanh nghiệp uy tín tại
 				Việt Nam</p>
 			<nav class="navbar" th:fragment="searchCondition">
-				<form class="search-form" action="search" method="GET">
+				<form class="search-form" action="searchUI" method="GET">
 					<input type="text" name="keyword" placeholder="Software Developer" >
 					<div class="select-wrapper">
 
 						<select name="location" id="locationSelect">
 							<option value="0">Tất cả tỉnh/thành phố</option>
-							
+							 <option th:each="location : ${locations}" 
+                                    th:value="${location.code}" 
+                                    th:text="${location.name}" 
+                                    th:selected="${location.name == defaultLocation}"></option>
 						</select>
 					</div>
 
