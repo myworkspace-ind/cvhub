@@ -1,10 +1,8 @@
 package mks.myworkspace.cvhub.controller;
 
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,14 +18,10 @@ import org.springframework.web.servlet.ModelAndView;
 import mks.myworkspace.cvhub.controller.model.JobApplicationSummaryDTO;
 import mks.myworkspace.cvhub.controller.model.JobRequestSummaryDTO;
 import mks.myworkspace.cvhub.controller.model.OrganizationSummaryDTO;
-import mks.myworkspace.cvhub.entity.JobApplication;
-import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.Organization;
 import mks.myworkspace.cvhub.repository.JobApplicationRepository;
-import mks.myworkspace.cvhub.service.JobApplicationService;
 import mks.myworkspace.cvhub.service.JobRequestService;
 import mks.myworkspace.cvhub.service.OrganizationService;
-import mks.myworkspace.cvhub.service.impl.JobRequestImpl;
 
 @Controller
 public class OrganizationReportController {
