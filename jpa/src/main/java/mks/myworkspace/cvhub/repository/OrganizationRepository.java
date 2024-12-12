@@ -28,5 +28,5 @@ public interface OrganizationRepository extends JpaRepository<Organization,Long>
 	List<Organization> findByTitleContaining(String title);
 	Page<Organization> findByTitleContaining(@Param("pageRequest") Pageable pageRequest, String title);
 	@Query("SELECT o FROM Organization o WHERE o.createdDate >= :startDate")
-    Page<Organization> findAllCreatedDateStartFrom(@Param("startDate") Date startDate, @Param("pageRequest") Pageable pageable);
+    Page<Organization> findAllCreatedDateStartFrom(@Param("startDate") Date startDate, @Param("pageRequest") Pageable pageable);	// #organizationReport
 }
