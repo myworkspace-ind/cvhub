@@ -1,8 +1,11 @@
 package mks.myworkspace.cvhub.controller;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,16 +15,26 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import mks.myworkspace.cvhub.controller.model.OrganizationSummaryDTO;
 import mks.myworkspace.cvhub.entity.Organization;
+import mks.myworkspace.cvhub.repository.JobApplicationRepository;
+import mks.myworkspace.cvhub.service.JobApplicationService;
+import mks.myworkspace.cvhub.service.JobRequestService;
 import mks.myworkspace.cvhub.service.OrganizationService;
+import mks.myworkspace.cvhub.service.impl.JobRequestImpl;
 
 @Controller
 public class OrganizationReportController {
 
 	@Autowired
 	OrganizationService organizationService;
+	@Autowired
+	JobRequestService jobRequestService;
+	@Autowired
+	JobApplicationRepository jobApplicationRepos;
 
 	public static Date getStartDate(String period) {
 		Calendar calendar = Calendar.getInstance();
@@ -68,7 +81,20 @@ public class OrganizationReportController {
 		int totalPages = orgRequestPage.getTotalPages();
 		
 		// objects
-		List<Organization> organizations = orgRequestPage.getContent();
+		List<OrganizationSummaryDTO> organizationDTOs = orgRequestPage.getContent().stream().map(org -> {
+			return new OrganizationSummaryDTO(
+				org.getId(),
+				org.getLogoID(),
+				org.getLogo(),
+				org.getWebsite(),
+				org.getTitle(),
+				org.getDetail(),
+				org.getLocation(),
+				org.getCreatedDate(),
+				jobRequestService.getRepo().getJobCountByOrgId(org.getId()),
+				jobApplicationRepos.getApplicantCountByOrgId(org.getId())
+			);
+		}).collect(Collectors.toList());
 		
 		// view
 		ModelAndView mav = new ModelAndView("organizationReport");
@@ -76,7 +102,7 @@ public class OrganizationReportController {
 		mav.addObject("limit", limit);
 		mav.addObject("currentPage", page);
 		mav.addObject("totalPages", totalPages);
-		mav.addObject("organizations", organizations);
+		mav.addObject("organizations", organizationDTOs);
 
 		return mav;
 	}
