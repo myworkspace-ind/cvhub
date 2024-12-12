@@ -21,8 +21,6 @@ import mks.myworkspace.cvhub.service.JobRequestService;
 import mks.myworkspace.cvhub.service.JobRoleService;
 import mks.myworkspace.cvhub.service.LocationService;
 import mks.myworkspace.cvhub.service.OrganizationService;
-import mks.myworkspace.cvhub.entity.JobApplication;
-import mks.myworkspace.cvhub.service.JobApplicationService;
 
 import java.util.List;
 
@@ -60,9 +58,24 @@ public class JobRequestController {
 		return mav;
 	}
 
+	@GetMapping("/jobrequests_kn")
+	public ModelAndView getAllJobRoles1(@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "limit", defaultValue = "9") int limit) {
+		ModelAndView mav = new ModelAndView("searchJob");
+		PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("createdDate").descending());
+		Page<JobRequest> jobRequestPage = jobRequestService.getRepo().findAll(pageRequest);
+		int totalPages = jobRequestPage.getTotalPages();
+		List<JobRequest> jobRequests = jobRequestPage.getContent();
+		mav.addObject("jobrequests", jobRequests);
+		mav.addObject("totalPages", totalPages);
+		mav.addObject("currentPage", page);
+		return mav;
+	}
+	
 	@GetMapping("/{id}")
 	public ModelAndView getDetailJob(@PathVariable Long id) {
-		ModelAndView mav = new ModelAndView("jobDetail");
+		//ModelAndView mav = new ModelAndView("jobDetail");
+		ModelAndView mav = new ModelAndView("job_detail_nguyet");
 		JobRequest jobRequest = jobRequestService.getRepo().findById(id).orElse(null);
 		mav.addObject("jobRequest", jobRequest);
 		List<JobRole> alLJobRole= jobRoleService.getRepo().findAll();
@@ -146,23 +159,5 @@ public class JobRequestController {
 	        mav.addObject("errorMessage", "Có lỗi xảy ra khi xóa thông tin công việc: " + e.getMessage());
 	    }
 	    return mav;
-	}
-	@RequestMapping("/job")
-	public class JobApplicationController {
-
-	    @Autowired
-	    private JobApplicationService jobApplicationService;
-
-	    @GetMapping("/{jobRequestId}/applications")
-	    public String showJobApplications(@PathVariable Long jobRequestId, Model model) {
-	        // Lấy danh sách ứng viên cho công việc với jobRequestId
-	        List<JobApplication> jobApplications = jobApplicationService.getApplicationsForJobRequest(jobRequestId);
-
-	        // Truyền dữ liệu vào model
-	        model.addAttribute("jobApplications", jobApplications);
-
-	        // Trả về view hiển thị danh sách ứng viên
-	        return "jobApplications"; 
-	    }
 	}
 }

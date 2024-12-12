@@ -16,6 +16,7 @@ body {
   margin-bottom: 15px;
   position: relative;
   overflow: hidden;
+  padding: 10px;
 }
 
 .job-card:hover {
@@ -23,7 +24,7 @@ body {
 }
 
 .card-body {
-  padding: 15px;
+  padding: 10px;
 }
 
 .company-logo {

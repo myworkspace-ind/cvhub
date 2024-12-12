@@ -24,7 +24,11 @@ hs_err_pid*
 replay_pid*
 \tool
 .settings
+.idea
 .classpath
 .factorypath
 .project
 target
+/.metadata/
+/.idea
+.DS_Store

@@ -1,8 +1,13 @@
+
 package mks.myworkspace.cvhub.service.impl;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import lombok.Getter;
@@ -24,10 +29,12 @@ public class JobApplicationImpl implements JobApplicationService{
 	public void AddJobApplication(User user, JobRequest jobRequest) {
 		JobApplication jobApplication = new JobApplication();
 		jobApplication.setJobRequest(jobRequest);
+
         jobApplication.setUser(user);
-        jobApplication.setStatus(null);
+        jobApplication.setStatus("PENDING");
         jobApplication.setNote(null);
         repo.save(jobApplication);
+
 	}
 	@Override
 	public List<JobApplication> getApplicationsByUser(User currentUser) {
@@ -39,20 +46,44 @@ public class JobApplicationImpl implements JobApplicationService{
 		List<JobApplication> applications = getApplicationsByUser(user);
 	    return applications.stream().anyMatch(app -> app.getJobRequest().getId().equals(jobRequestId));
 	}
-	
+	@Override
+	public List<JobApplication> getApplicationsByJobRequest(JobRequest jobRequest) {
+		return repo.findByUserAndJobRequest(jobRequest);
+	}
 	@Override
 	public List<JobApplication> findAll() {
 		// TODO Auto-generated method stub
 		return repo.findAll();
 	}
+
+	@Override
+	public Page<JobApplication> findAll(PageRequest pageRequest) {
+		return repo.findAll(pageRequest);
+	}
+
+	@Override
+	public Page<JobApplication> findByCreatedDateBetween(Date start, Date end, PageRequest pageRequest) {
+		return repo.findByCreatedDateBetween(start, end, pageRequest);
+	}
+
+	@Override
+	public List<JobApplication> findByCreatedDateBetween(Date start, Date end) {
+		return repo.findByCreatedDateBetween(start, end);
+	}
+
 	@Override
 	public void deleteApplicationById(Long id) {
 		repo.deleteById(id);
 		
 	}
-	public List<JobApplication> getApplicationsForJobRequest(Long jobRequestId) {
-		JobRequest jobRequest = new JobRequest();
-		jobRequest.setId(jobRequestId); // Tạo đối tượng JobRequest với jobRequestId
-		return repo.findByUserAndJobRequest(jobRequest);
+	@Override
+	public JobApplication getApplicationsByJobApplicationId(Long id) {
+		// TODO Auto-generated method stub
+		return repo.findByJobApplicationId(id).get();
+	}
+	@Override
+	public List<JobApplication> findJobApplicationByOption(Long organizationId, String option) {
+		return repo.findJobApplicationByStatusAndOrganizationId(option, organizationId);
 	}
 }
+

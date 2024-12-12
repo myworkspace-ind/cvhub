@@ -20,9 +20,13 @@
 package mks.myworkspace.cvhub.controller;
 
 import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -37,6 +41,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -77,13 +83,13 @@ public class HomeController extends BaseController {
 	@Autowired
 	SearchJobService searchjobService;
 	@Autowired
-    private JobRequestRepository jobRequestRepository;
-	
+	private JobRequestRepository jobRequestRepository;
+
 	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
 
 	/**
 	 * This method is called when binding the HTTP parameter to bean (or model).
-	 * 
+	 *
 	 * @param binder
 	 */
 	@InitBinder
@@ -98,33 +104,45 @@ public class HomeController extends BaseController {
 
 	/**
 	 * Simply selects the home view to render by returning its name.
-	 * 
+	 *
 	 * @return
 	 */
-	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
-	public ModelAndView displayHome(HttpServletRequest request, 
-									HttpSession httpSession, 
+
+	@RequestMapping(value = { "/", "/home","/searchJob" }, method = RequestMethod.GET)
+	public ModelAndView displayHome(HttpServletRequest request,
+									HttpSession httpSession,
 									@RequestParam(value = "page", defaultValue = "0") int page,
-						            @RequestParam(value ="limit", defaultValue = "10") int limit) {
-		ModelAndView mav = new ModelAndView("home");
+									@RequestParam(value ="limit", defaultValue = "9") int limit) {
+		ModelAndView mav;
+
+		// Xác định view dựa trên URL
+		String requestURI = request.getRequestURI();
+		String viewName = "home";  // Mặc định view cho trang home
+
+		if (requestURI.contains("/searchJob")) {
+			viewName = "searchJob";  // Nếu là /searchJob, trả về view searchJob
+		}
+
+		mav = new ModelAndView(viewName);	// Trả về dữ liệu chung cho cả 2 trang
 
 		initSession(request, httpSession);
 		PageRequest pageRequest = PageRequest.of(
-                page, limit,
-                Sort.by("createdDate").descending()
-        );
-        Page<JobRequest> jobRequestPage = jobRequestRepository.findAll(pageRequest);
-        int totalPages = jobRequestPage.getTotalPages();
-        List<JobRequest> jobRequests = jobRequestPage.getContent();
-        mav.addObject("jobrequests", jobRequests);
-        mav.addObject("totalPages", totalPages);
-        mav.addObject("currentPage", page);
+				page, limit,
+				Sort.by("createdDate").descending()
+		);
+		Page<JobRequest> jobRequestPage = jobRequestRepository.findAll(pageRequest);
+		int totalPages = jobRequestPage.getTotalPages();
+		List<JobRequest> jobRequests = jobRequestPage.getContent();
+		mav.addObject("jobrequests", jobRequests);
+		mav.addObject("totalPages", totalPages);
+		mav.addObject("currentPage", page);
 		mav.addObject("currentSiteId", getCurrentSiteId());
 		mav.addObject("userDisplayName", getCurrentUserDisplayName());
 		List<Location> locations = locationService.getRepo().findAll();
 		mav.addObject("locations", locations);
 		return mav;
 	}
+
 
 	@GetMapping("/job-roles")
 	@ResponseBody
@@ -134,38 +152,53 @@ public class HomeController extends BaseController {
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public ModelAndView searchJobs(@ModelAttribute JobSearchDTO jobSearchDTO, HttpServletRequest request,
-			HttpSession httpSession) {
+								   HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("searchResult");
 		List<JobRequest> searchResults = searchjobService.searchJobRequest(jobSearchDTO.getKeyword(),
 				jobSearchDTO.getLocation(), jobSearchDTO.getIndustry());
 		mav.addObject("searchResults", searchResults);
-
 		return mav;
 	}
 
 	@GetMapping(value = "/images/{logoId}")
 	@ResponseBody
-	public ResponseEntity<byte[]> getImage(@PathVariable("logoId") UUID logoId) {
-		byte[] image = organizationService.getRepo().getImageByLogoId(logoId);
+	public ResponseEntity<byte[]> getImage(@PathVariable("logoId") UUID logoId, HttpServletRequest request) {
+	    byte[] image = organizationService.getRepo().getImageByLogoId(logoId);
 
-		if (image == null || image.length == 0) {
-			logger.warn("Image not found or empty for logoId: " + logoId);
-			return ResponseEntity.notFound().build();
-		}
-
-		return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
-	}
-
-	
-	  @GetMapping("/details")
-	   public ModelAndView getJobDetails(@RequestParam("id") Long jobId) {
-	        // Replace with your service call to fetch the job details using jobId
-			ModelAndView mav = new ModelAndView("V");
-	        return mav;
+	    if (image == null || image.length == 0) {
+	        logger.warn("Image not found or empty for logoId: " + logoId);
+	        return ResponseEntity.notFound().build();
 	    }
 
+	    // Tạo ETag (có thể dựa trên hash của ảnh hoặc version ID)
+	    String eTag = Integer.toHexString(Arrays.hashCode(image));
+	    
+	    // Kiểm tra header "If-None-Match" từ client
+	    String ifNoneMatch = request.getHeader("If-None-Match");
+	    if (ifNoneMatch != null && ifNoneMatch.equals(eTag)) {
+	        // Trả về 304 nếu ETag khớp
+	        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+	    }
 
-	
+	    // Nếu không khớp, trả về ảnh
+	    return ResponseEntity.ok()
+	            .contentType(MediaType.IMAGE_JPEG)
+	            .eTag(eTag) // Thêm ETag vào header phản hồi
+	            .cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS)) // Lưu cache 60 giây
+	            .body(image);
+	}
+
+
+
+	@GetMapping("/details")
+	public ModelAndView getJobDetails(@RequestParam("id") Long jobId) {
+		// Replace with your service call to fetch the job details using jobId
+		ModelAndView mav = new ModelAndView("V");
+		return mav;
+	}
+
+
+
 
 	public byte[] uuidToBytes(UUID uuid) {
 		ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[256]);

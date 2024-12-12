@@ -250,11 +250,15 @@ public class ResumeController  extends BaseController  {
 	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	    User currentUser = userService.findUserByEmail(auth.getName());
 	    ModelAndView mav = new ModelAndView("redirect:/profile/applications");
+	    if (currentUser == null) {
+	    	mav.setViewName("/signInOut/signin");
+	    	mav.addObject("error", "Hãy đăng nhập để ứng tuyển !");
+	    	return mav;
+	    }
 	    // Kiểm tra xem người dùng đã ứng tuyển chưa
 	    boolean hasApplied = jobApplicationService.hasUserApplied(currentUser, jobRequestId);
 	    if (hasApplied) {
-
-	    	 redirectAttributes.addFlashAttribute("errorMessage", "Bạn đã ứng tuyển vào công việc này.");
+	    	redirectAttributes.addFlashAttribute("errorMessage", "Bạn đã ứng tuyển vào công việc này.");
 	        return mav;
 	    }
 	    

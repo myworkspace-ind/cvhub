@@ -64,6 +64,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+         <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-core</artifactId>
+        <version>5.8.0</version> <!-- Chỉnh sửa phiên bản tùy theo yêu cầu -->
+    </dependency>
 
         <!-- Add SLF4J bridge for commons-logging -->
         <dependency>
@@ -81,6 +86,11 @@
         <artifactId>poi-ooxml</artifactId>
         <version>5.2.3</version> <!-- Kiểm tra phiên bản mới nhất -->
     </dependency>
+    <dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-core</artifactId>
+    <version>5.5.7</version> <!-- Kiểm tra phiên bản để sử dụng phiên bản mới nhất -->
+</dependency>
 	</dependencies>
 	<build>
 		<!-- configure the build to use the standard maven structure -->

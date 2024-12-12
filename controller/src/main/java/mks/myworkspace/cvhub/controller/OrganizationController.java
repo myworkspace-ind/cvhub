@@ -33,6 +33,7 @@ import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
 import mks.myworkspace.cvhub.entity.Organization;
 import mks.myworkspace.cvhub.entity.OrganizationReview;
+import mks.myworkspace.cvhub.repository.JobApplicationRepository;
 import mks.myworkspace.cvhub.repository.JobRequestRepository;
 import mks.myworkspace.cvhub.repository.OrganizationRepository;
 import mks.myworkspace.cvhub.repository.OrganizationReviewRepository;
@@ -61,10 +62,12 @@ public class OrganizationController extends BaseController {
 	private UserService userService;
 	@Autowired
 	private JobApplicationService jobApplicationService;
+	@Autowired
+	private JobApplicationRepository jobApplicationRepository;
 	
 	private final OrganizationReviewService reviewService;
 	private final OrganizationRepository organizationRepo;
-	
+
 	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
 
 	@RequestMapping(value = { "/organization/{id}" }, method = RequestMethod.GET)
@@ -127,41 +130,35 @@ public class OrganizationController extends BaseController {
                                            HttpServletRequest request,
                                            HttpSession httpSession) 
 	{
-        try {
-            // Get current logged in user
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            User currentUser = userService.findUserByEmail(auth.getName());
-            
-            // Create and save organization
-            Organization organization = organizationService.createOrganization(
-                organizationDTO.getTitle(),
-                organizationDTO.getLogoFile(),
-                organizationDTO.getWebsite(),
-                organizationDTO.getSummary(),
-                organizationDTO.getDetail(),
-                organizationDTO.getLocation()
-            );
-            
-            // Link organization with user
-            organization.setUser(currentUser);
-            organization = organizationService.getRepo().save(organization);
-            
-            // Update user role to ROLE_ADMIN
-            currentUser.setRole("ROLE_ADMIN");
-            userService.getRepo().save(currentUser);
-            
-            // Redirect to organization page
-            ModelAndView mav = new ModelAndView();
-            mav.setViewName("redirect:/organization?id=" + organization.getId());
-            return mav;
-        
-        
-	}catch (Exception e) {
-		// Xử lý lỗi
-		ModelAndView mav = new ModelAndView("error");
-		mav.addObject("errorMessage", "Có lỗi xảy ra khi đăng ký tổ chức: " + e.getMessage());
-		return mav;
-	}
+		try {
+			// Get current logged in user
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			User currentUser = userService.findUserByEmail(auth.getName());
+
+			// Create and save organization
+			Organization organization = organizationService.createOrganization(organizationDTO.getTitle(),
+					organizationDTO.getLogoFile(), organizationDTO.getWebsite(), organizationDTO.getSummary(),
+					organizationDTO.getDetail(), organizationDTO.getLocation());
+
+			// Link organization with user
+			organization.setUser(currentUser);
+			organization = organizationService.getRepo().save(organization);
+
+			// Update user role to ROLE_ADMIN
+			currentUser.setRole("ROLE_ADMIN");
+			userService.getRepo().save(currentUser);
+
+			// Redirect to organization page
+			ModelAndView mav = new ModelAndView();
+			mav.setViewName("redirect:/organization?id=" + organization.getId());
+			return mav;
+
+		} catch (Exception e) {
+			// Xử lý lỗi
+			ModelAndView mav = new ModelAndView("error");
+			mav.addObject("errorMessage", "Có lỗi xảy ra khi đăng ký tổ chức: " + e.getMessage());
+			return mav;
+		}
 	}
         @RequestMapping(value = { "showRegister" }, method = RequestMethod.GET)
         public ModelAndView registerOrganization(HttpServletRequest request) {
@@ -184,7 +181,7 @@ public class OrganizationController extends BaseController {
             List<JobRole> jobRoles = jobRoleService.getRepo().findAll();
             List<Location> locations = locationService.getRepo().findAll();
             
-            
+            mav.addObject("userName", currentUser.getFullName());
             mav.addObject("jobRoles", jobRoles);
             mav.addObject("locations", locations);
             return mav;
@@ -218,6 +215,7 @@ public class OrganizationController extends BaseController {
 			mav.addObject("jobRequests", jobRequests);
 			mav.addObject("jobApplications", applicationsNeed2);
 			mav.addObject("cvs", users2);
+			mav.addObject("organizationId", id);
 			return mav;
 		}
 		catch (Exception e) {
@@ -227,6 +225,7 @@ public class OrganizationController extends BaseController {
 			return mav;
 		}
 	}
+	
 	public static List<User> removeDuplicatesManually(List<User> list) {
         List<User> result = new ArrayList<>();
         for (User item : list) {
@@ -236,6 +235,7 @@ public class OrganizationController extends BaseController {
         }
         return result;
     }
+	
 	public static List<JobApplication> removeDuplicatesManually2(List<JobApplication> list) {
         List<JobApplication> result = new ArrayList<>();
         for (JobApplication item : list) {
@@ -245,7 +245,8 @@ public class OrganizationController extends BaseController {
         }
         return result;
     }
-	// Hiển thị toàn bộ các doanh nghiệp
+
+// Hiển thị toàn bộ các doanh nghiệp
 	@RequestMapping(value = "/organization/list", method = RequestMethod.GET)
 	public ModelAndView listOrganizations() {
 	    ModelAndView mav = new ModelAndView("listbusiness");
@@ -273,5 +274,41 @@ public class OrganizationController extends BaseController {
 	        e.printStackTrace();
 	    }
 	    return mav;
+	}
+
+
+	@RequestMapping(value = { "/{organizationId}/getCVs/setStatusDeny/{id}" }, method = RequestMethod.POST)
+	public ModelAndView setStatus(@PathVariable("id") Long jobApplicationId, @PathVariable("organizationId") Long organizationId, 
+								HttpServletRequest request, HttpSession httpSession) {
+		JobApplication jobApplication = jobApplicationService.getApplicationsByJobApplicationId(jobApplicationId);
+		jobApplication.setStatus("DENY");
+		jobApplicationRepository.save(jobApplication);
+		return new ModelAndView("redirect:/organization/" + organizationId + "/getCVs");
+	}
+	
+	@RequestMapping(value = { "/{organizationId}/getCVs/setStatusApprove/{id}" }, method = RequestMethod.POST)
+	public ModelAndView setStatusApprove(@PathVariable("id") Long jobApplicationId, @PathVariable("organizationId") Long organizationId, 
+								HttpServletRequest request, HttpSession httpSession) {
+		JobApplication jobApplication = jobApplicationService.getApplicationsByJobApplicationId(jobApplicationId);
+		jobApplication.setStatus("APPROVED");
+		jobApplicationRepository.save(jobApplication);
+		return new ModelAndView("redirect:/organization/" + organizationId + "/getCVs");
+	}
+	
+	@RequestMapping(value = { "/organization/{organizationId}/getCVs/option" }, method = RequestMethod.GET)
+	public ModelAndView findJobApplicationByOption(@RequestParam String status, @PathVariable("organizationId") Long organizationId, 
+								HttpServletRequest request, HttpSession httpSession)
+	{
+		List<JobApplication> jobApplications = new ArrayList<>();
+		if (status.equals("ALL")) 
+			jobApplications = jobApplicationService.findAll();
+		else
+			jobApplications = jobApplicationService.findJobApplicationByOption(organizationId, status);
+		List<JobRequest> jobRequests = jobRequestService.findAllByOrganizationId(organizationId);
+		ModelAndView mav = new ModelAndView("organization/getCVs.html");
+		mav.addObject("jobRequests", jobRequests);
+		mav.addObject("jobApplications", jobApplications);
+		mav.addObject("organizationId", organizationId);
+		return mav;
 	}
 }
