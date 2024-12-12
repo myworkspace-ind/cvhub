@@ -117,6 +117,35 @@
 <!--         </dependency> -->
 		
 		<!-- Sakai dependencies -->
+		<!-- Spring Context -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>5.3.20</version> <!-- Kiểm tra phiên bản phù hợp -->
+    </dependency>
+
+    <!-- Spring Mail -->
+
+<dependency>
+    <groupId>javax.activation</groupId>
+    <artifactId>activation</artifactId>
+    <version>1.1.1</version>
+</dependency>
+
+
+    <!-- JavaMail API -->
+    <dependency>
+        <groupId>com.sun.mail</groupId>
+        <artifactId>javax.mail</artifactId>
+        <version>1.6.2</version> <!-- JavaMail phiên bản mới -->
+    </dependency>
+
+    <!-- Commons Logging (cho việc log) -->
+    <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>1.2</version>
+    </dependency>
         <dependency>
             <groupId>org.sakaiproject.kernel</groupId>
             <artifactId>sakai-kernel-api</artifactId>

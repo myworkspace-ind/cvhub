@@ -1,4 +1,6 @@
-<!-- <head>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Fragment: Horizontal menu -->
+<head>
 <th:block th:include="fragments/head"></th:block>
 <style>
 .dropdown:hover .dropdown-menu {
@@ -6,10 +8,8 @@
 	
 }
 </style>
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-	<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
-	<script src="/library/webjars/popper.js/2.9.3/umd/popper.min.js"></script>
-</head> -->
+</head>
+
 
 <div class="d-flex justify-content-between">
 	<!-- Left-aligned menu items -->
@@ -56,11 +56,6 @@
 		<li><span title="About"> <a style="width: 80px;"
 				th:href="@{/jobPosting}">Job posting</a>
 		</span></li>
-				<li>
-      <span title="listbusiness" th:class="${isSelectedConfiguration != null && isSelectedConfiguration ? 'current' : ''}">
-        <a th:href="@{/organization/list}">Doanh Nghiệp</a>
-      </span>
-  </li>
 		
 	</ul>
 	<!-- Right-aligned dropdown button -->
@@ -77,28 +72,47 @@
 		</li>
 	</ul> -->
 	<div class="auth-buttons">
-					<!-- Khi chưa đăng nhập -->
-					<th:block th:unless="${#httpServletRequest.remoteUser}">
-						<a class="login btn" th:href="@{/login}">Đăng nhập</a>
-						<a class="signup btn" th:href="@{/register}">Đăng ký</a>
-					</th:block>
-					<!-- Khi đã đăng nhập -->
-		<div class="dropdown" th:if="${#request.userPrincipal != null}">
-			<button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown"  aria-expanded="false">
-				<span style="color: black" th:text="${#request.userPrincipal.name}"></span>
-			</button>
-			<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-				<li><a class="dropdown-item" th:href="@{/profile/edit}">Chỉnh sửa thông tin cá nhân</a></li>
-				<li><a class="dropdown-item" th:href="@{/profile/cv/manage}">Quản lý CV</a></li>
-				<li><a class="dropdown-item" th:href="@{/profile/applications}">Việc làm đã ứng tuyển</a></li>
-				<li><hr class="dropdown-divider"></li>
-				<li><a class="dropdown-item text-danger" th:href="@{/logout}">Đăng xuất</a></li>
-			</ul>
-		</div>
-				</div>
+    <!-- Khi chưa đăng nhập -->
+    <div th:unless="${#httpServletRequest.remoteUser}">
+        <a th:href="@{/login}" class="btn btn-primary">Đăng nhập</a>
+        <a th:href="@{/register}" class="btn btn-secondary">Đăng ký</a>
+    </div>
+
+    <!-- Khi đã đăng nhập -->
+    <div class="profile-info" th:if="${#request.userPrincipal != null}">
+        <div class="dropdown">
+            <button class="btn btn-light d-flex align-items-center" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="avatar bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-2" style="width: 40px; height: 40px;">
+                    <span th:text="${#strings.substring(#request.userPrincipal.name,0,1)}"></span>
+                </div>
+                <span class="username" th:text="${#request.userPrincipal.name}"></span>
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                <li>
+                    <a th:href="@{/profile/edit}" class="dropdown-item">
+                        <i class="fas fa-user-edit me-2"></i>Chỉnh sửa thông tin cá nhân
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/profile/cv/manage}" class="dropdown-item">
+                        <i class="fas fa-file-alt me-2"></i>Quản lý CV
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/profile/applications}" class="dropdown-item">
+                        <i class="fas fa-briefcase me-2"></i>Việc làm đã ứng tuyển
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <a th:href="@{/logout}" class="dropdown-item text-danger">
+                        <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
-
-<!-- <script th:src="@{/resources/report_duy/report_duy.js}"></script> -->
-<!-- <link rel="stylesheet" th:href="@{/resources/report_duy/style.css}"> -->
-
+</div>
 <script th:src="@{/resources/home/b.js}"></script>
