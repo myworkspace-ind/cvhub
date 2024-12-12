@@ -140,6 +140,13 @@ public class HomeController extends BaseController {
 		mav.addObject("userDisplayName", getCurrentUserDisplayName());
 		List<Location> locations = locationService.getRepo().findAll();
 		mav.addObject("locations", locations);
+		
+		
+		String defaultLocation = "Thành phố Hà Nội";
+	    if (defaultLocation == null || defaultLocation.trim().isEmpty()) {
+	        defaultLocation = "Tất cả tỉnh/thành phố";  
+	    }
+	    mav.addObject("defaultLocation", defaultLocation);
 		return mav;
 	}
 
@@ -150,10 +157,17 @@ public class HomeController extends BaseController {
 		return jobRoleService.getRepo().findAll();
 	}
 
-	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	@RequestMapping(value = {"/search","/searchUI"}, method = RequestMethod.GET)
 	public ModelAndView searchJobs(@ModelAttribute JobSearchDTO jobSearchDTO, HttpServletRequest request,
 								   HttpSession httpSession) {
-		ModelAndView mav = new ModelAndView("searchResult");
+		ModelAndView mav;
+		String viewName = "searchResult";
+		String requestURL = request.getRequestURI();
+		if (requestURL.contains("/searchUI"))
+			viewName = "searchResultUI";
+		
+		mav = new ModelAndView(viewName);
+		
 		List<JobRequest> searchResults = searchjobService.searchJobRequest(jobSearchDTO.getKeyword(),
 				jobSearchDTO.getLocation(), jobSearchDTO.getIndustry());
 		mav.addObject("searchResults", searchResults);
