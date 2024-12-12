@@ -21,3 +21,13 @@ Sửa file spring-security_cas_local.xml line 17-18 đổi lớp cấu hình mã
                     WHERE sim.EID = ?"
 
    Với điều kiện: Phải chạy được sakai, có database của sakai233.
+   
+   
+Nếu muốn đăng ký tài khoản có gửi xác nhận qua mail thì trong database sakai đến table cvhub_user thêm cột status. 
+Khi đăng ký thì nó sẽ tạo ra account status ở trạng thái null, sau đó gửi mail xác nhận verify thì sẽ ra trạng thái accept, và tôi đã tạo ra file cấu hình đăng nhập  spring-security_cas_local2.xml tức là chỉ đăng nhập với các account có status là accept
+<password-encoder ref="passwordEncoder"/>
+            <jdbc-user-service data-source-ref="dataSource"
+                 users-by-username-query="select email as username, password, 1 as enabled from cvhub_user where email=? and status='accept'"
+                authorities-by-username-query="select email as username, role as authority from cvhub_user where email=?"
+            />
+Với điều kiện trong file cấu hình app-config.properties có register.user.confirm = true
