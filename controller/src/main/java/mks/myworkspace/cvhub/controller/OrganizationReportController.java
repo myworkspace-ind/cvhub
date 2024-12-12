@@ -18,7 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import mks.myworkspace.cvhub.controller.model.JobApplicationSummaryDTO;
+import mks.myworkspace.cvhub.controller.model.JobRequestSummaryDTO;
 import mks.myworkspace.cvhub.controller.model.OrganizationSummaryDTO;
+import mks.myworkspace.cvhub.entity.JobApplication;
+import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.Organization;
 import mks.myworkspace.cvhub.repository.JobApplicationRepository;
 import mks.myworkspace.cvhub.service.JobApplicationService;
@@ -65,6 +69,34 @@ public class OrganizationReportController {
 			return calendar.getTime();
 		}
 	}
+	
+	@GetMapping("/report/org/jobRequests")
+	@ResponseBody
+	public List<JobRequestSummaryDTO> getJobsByOrgId(@RequestParam Long orgId) {
+	    return jobRequestService.findAllByOrganizationId(orgId).stream().map(jr -> {
+	    	return new JobRequestSummaryDTO(
+	    		jr.getId(),
+	    		jr.getTitle(),
+	    		jr.getLocation().getName(),
+	    		jr.getExperience(),
+	    		jr.getSalary()
+	    	);
+	    }).collect(Collectors.toList());
+	}
+	
+	@GetMapping("/report/org/jobApplications")
+	@ResponseBody
+	public List<JobApplicationSummaryDTO> getApplicantsByOrgId(@RequestParam Long orgId) {
+	    return jobApplicationRepos.findApplicantByOrgId(orgId).stream().map(ja -> {
+	    	return new JobApplicationSummaryDTO(
+	    		ja.getJobRequest().getId(),
+	    		ja.getJobRequest().getTitle(),
+	    		ja.getUser().getFullName(),
+	    		ja.getUser().getEmail(),
+	    		ja.getUser().getPhone()
+	    	);
+	    }).collect(Collectors.toList());
+	}
 
 	@GetMapping("/report/organization")
 	public ModelAndView showOrganizationReport(
@@ -74,12 +106,12 @@ public class OrganizationReportController {
 
 		// filter
 		Date startDate = getStartDate(period);
-		
+
 		// pagination
 		PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("createdDate").descending());
 		Page<Organization> orgRequestPage = organizationService.getRepo().findAllCreatedDateStartFrom(startDate, pageRequest);
 		int totalPages = orgRequestPage.getTotalPages();
-		
+
 		// objects
 		List<OrganizationSummaryDTO> organizationDTOs = orgRequestPage.getContent().stream().map(org -> {
 			return new OrganizationSummaryDTO(

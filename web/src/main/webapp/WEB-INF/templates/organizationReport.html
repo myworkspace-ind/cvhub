@@ -93,8 +93,8 @@
 	   </div>
 
 		<!-- datatable -->
- 		<div >
-            <table >
+ 		<div>
+            <table>
 				<thead style="background-color: #f8f9fa;">
 					<tr>
 						<th>Logo</th>
@@ -115,8 +115,8 @@
 						<td th:text="${org.detail}"></td>
 						<td th:text="${org.location}"></td>
 						<td	th:text="${#dates.format(org.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
-						<td th:text="${org.jobCount}"></td>
-						<td th:text="${org.applicantCount}"></td>
+						<td><a href="#" class="job-count-link" th:data-org-id="${org.id}" th:text="${org.jobCount}"></a></td>
+						<td><a href="#" class="applicant-count-link" th:data-org-id="${org.id}" th:text="${org.applicantCount}"></a></td>
 					</tr>
 					<tr th:if="${organizations.size() == 0}">
 						<td colspan="8" class="text-center">No data found.</td>
@@ -157,5 +157,111 @@
 		</nav>
 	</div>
 	
+	<!-- modal -->
+	<div class="modal" id="detailsModal" tabindex="-1"	aria-labelledby="detailsModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="detailsModalLabel">Details</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<!-- datatable -->
+					<table class="table">
+						<thead>
+							<tr id="detailsTableHeader">
+								<!-- table headers/columns -->
+							</tr>
+						</thead>
+						<tbody id="detailsTableBody">
+							<!-- table rows -->
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		document.querySelectorAll('.job-count-link').forEach(link => {
+		  link.addEventListener('click', function (e) {
+		    e.preventDefault();
+		    const orgId = this.dataset.orgId;
+		
+		    fetch(`/cvhub-web/report/org/jobRequests?orgId=${orgId}`)
+		      .then(response => response.json())
+		      .then(data => {
+		        populateModal('Jobs', data, ['Job ID', 'Title', 'Location', 'Experience (years)', 'Salary']);
+		      });
+		  });
+		});
+	
+		document.querySelectorAll('.applicant-count-link').forEach(link => {
+		  link.addEventListener('click', function (e) {
+		    e.preventDefault();
+		    const orgId = this.dataset.orgId;
+		
+		    fetch(`/cvhub-web/report/org/jobApplications?orgId=${orgId}`)
+		      .then(response => response.json())
+		      .then(data => {
+		        populateModal('Applicants', data, ['Job ID', 'Job Title', 'Full Name', 'Email', 'Phone']);
+		      });
+		  });
+		});
+
+		function populateModal(title, data, headers) {
+		  document.getElementById('detailsModalLabel').innerText = `${title} Details`;
+		
+		  // table headers/columns
+		  const headerRow = document.getElementById('detailsTableHeader');
+		  headerRow.innerHTML = headers.map(header => `<th>${header}</th>`).join('');
+		
+		  // table rows
+		  const body = document.getElementById('detailsTableBody');
+		  body.innerHTML = data
+		    .map(item => {
+		      if (title === 'Jobs') {
+		        // JobRequestSummaryDTO
+		        return `
+		          <tr>
+		            <td>${item.id}</td>
+		            <td>${item.title}</td>
+		            <td>${item.location}</td>
+		            <td>${item.experience || 'N/A'}</td>
+		            <td>${item.salary || 'N/A'}</td>
+		          </tr>`;
+		      } else if (title === 'Applicants') {
+		        // JobApplicationSummaryDTO
+		        return `
+		          <tr>
+		            <td>${item.jobId}</td>
+		            <td>${item.jobTitle}</td>
+		            <td>${item.fullName}</td>
+		            <td>${item.email}</td>
+		            <td>${item.phone || 'N/A'}</td>
+		          </tr>`;
+		      }
+		    })
+		    .join('');
+		
+		  new bootstrap.Modal(document.getElementById('detailsModal')).show();
+		  
+		  const modal = document.getElementById('detailsModal');
+
+		  modal.addEventListener('hidden.bs.modal', () => {
+		      const triggerElement = document.querySelector('[data-bs-toggle="modal"]');
+		      if (triggerElement) {
+		          triggerElement.focus();
+		      }
+		  });
+		}
+	});
+	</script>
 </body>
 </html>
