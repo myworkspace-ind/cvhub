@@ -14,4 +14,6 @@ import mks.myworkspace.cvhub.entity.JobRole;
 @Repository
 public interface JobRoleRepository extends JpaRepository<JobRole, Long> {
 	Page<JobRole> findAll(Pageable pageable);
+	
+	JobRole findByTitle(String title);
 }

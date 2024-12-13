@@ -1,11 +1,9 @@
 package mks.myworkspace.cvhub.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -28,46 +26,55 @@ public class JobRoleController {
 
 	@GetMapping("")
 	public ModelAndView getAllJobRoles(@RequestParam(defaultValue = "0") int page,
-	        @RequestParam(defaultValue = "10") int size) {
-		
+			@RequestParam(defaultValue = "10") int size) {
+
 		Pageable pageable = PageRequest.of(page, size);
 		Page<JobRole> jobRolesPage = jobRoleService.getAllJobRole(pageable);
 
 		ModelAndView mav = new ModelAndView("jobRoles");
 		mav.addObject("currentPage", page);
-	    mav.addObject("totalPages", jobRolesPage.getTotalPages());
+		mav.addObject("totalPages", jobRolesPage.getTotalPages());
 		mav.addObject("jobroles", jobRolesPage.getContent());
 
 		return mav;
 	}
 
 	// Show add job role form
-	@GetMapping({"/add", "/edit/{id}"})
+	@GetMapping({ "/add", "/edit/{id}" })
 	public ModelAndView showRegisterForm(@PathVariable(required = false) Long id) {
 		ModelAndView mav = new ModelAndView("jobRole-add");
 		String alert = "";
-		if(id != null) {
+		if (id != null) {
 			JobRole jobrole = jobRoleService.getRepo().findById(id).orElse(null);
-			if(jobrole != null) {
-				
+			if (jobrole != null) {
+
 				alert = "isedit";
 				mav.addObject("jobrole", jobrole);
 				mav.addObject("alert", alert);
 			}
 		}
-		
+
 		return mav;
-		
+
 	}
 
 	@PostMapping("/add")
 	public ModelAndView addJobRole(@ModelAttribute JobRoleDTO jobDTO) {
 		ModelAndView mav = new ModelAndView();
 
-		JobRole job = jobRoleService.createJobRole(jobDTO.getTitle(), jobDTO.getDescription());
-		job = jobRoleService.getRepo().save(job);
+		String title = jobDTO.getTitle();
 
-		mav.setViewName("redirect:/jobroles");
+		// neu trung title thi thong bao
+		if (jobRoleService.checkExistTitle(title)) {
+			mav.addObject("exception", "Add không thành công, title đã tồn tại trước đó: " + title);
+			mav.addObject("url", "/add/");
+			mav.setViewName("error");
+		} else {
+			JobRole job = jobRoleService.createJobRole(jobDTO.getTitle(), jobDTO.getDescription());
+			job = jobRoleService.getRepo().save(job);
+			mav.setViewName("redirect:/jobroles");
+		}
+
 		return mav;
 	}
 
@@ -82,21 +89,31 @@ public class JobRoleController {
 			mav.setViewName("redirect:/jobroles");
 		} else {
 			// Nếu không tìm thấy JobRole
+			mav.addObject("exception", "Không tìm thấy thông tin job role để xóa.");
 			mav.setViewName("error");
-			mav.addObject("errorMessage", "Không tìm thấy thông tin job role để xóa.");
 		}
 
 		return mav;
 	}
-	
+
 	@PostMapping("/edit/{id}")
 	public ModelAndView updateJobRole(@PathVariable Long id, @ModelAttribute JobRoleDTO jobDTO) {
 		ModelAndView mav = new ModelAndView();
-		
+
 		JobRole job = jobRoleService.getRepo().findById(id).orElse(null);
-		if(job != null) {
-			JobRole updateJob = jobRoleService.updateJobRole(job, jobDTO.getTitle(), jobDTO.getDescription());
-			mav.setViewName("redirect:/jobroles");
+		if (job != null) {
+			String title = jobDTO.getTitle();
+
+			// neu trung title thi set thong bao
+			if (jobRoleService.checkExistTitle(title)) {
+				mav.addObject("exception", "Update không thành công, title đã tồn tại trước đó: " + title);
+				mav.addObject("url", "/edit/" + id);
+				mav.setViewName("error");
+			} else {
+				JobRole updateJob = jobRoleService.updateJobRole(job, jobDTO.getTitle(), jobDTO.getDescription());
+				mav.setViewName("redirect:/jobroles");
+			}
+
 		}
 		return mav;
 	}
