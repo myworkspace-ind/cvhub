@@ -7,16 +7,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import mks.myworkspace.cvhub.entity.User;
+import mks.myworkspace.cvhub.service.PhoneNumberFormatService;
 import mks.myworkspace.cvhub.service.UserService;
 
 @Controller
 public class ReportUserController {
 	@Autowired
     private UserService userService;
+
+    @Autowired
+	private PhoneNumberFormatService phoneNumberFormatService;
 
     /**
      * Display user list with filter options (today, this week, this month, this year).
@@ -40,6 +46,11 @@ public class ReportUserController {
         // Retrieve users based on the selected period
         Page<User> userPage = userService.findUsersByPeriod(period, pageable);
 
+        // Format the phone numbers for each user
+        for (User user : userPage.getContent()) {
+            user.setPhone(phoneNumberFormatService.formatPhoneNumber(user.getPhone()));  // Format phone number
+        }
+
         // Add data to the model
         mav.addObject("users", userPage.getContent());
         mav.addObject("totalPages", userPage.getTotalPages());
@@ -48,5 +59,17 @@ public class ReportUserController {
         mav.addObject("limit", limit);
 
         return mav;
+    }
+    
+    /**
+     * Delete a user by ID.
+     *
+     * @param id User ID to delete.
+     * @return Redirect to the user report page.
+     */
+    @PostMapping("/report/user/delete/{id}")
+    public String deleteUser(@PathVariable Long id) {
+        userService.deleteUserById(id);
+        return "redirect:/report/user"; // Redirect back to the user report page
     }
 }
