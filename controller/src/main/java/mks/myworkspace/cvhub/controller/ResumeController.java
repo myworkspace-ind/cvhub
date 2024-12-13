@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -232,12 +234,18 @@ public class ResumeController  extends BaseController  {
         mav.addObject("cv", cv);
         return mav;
     }
-	@RequestMapping(value = { "/profile/applications" }, method = RequestMethod.GET)
-	public ModelAndView viewAppliedJobs() {
-	    ModelAndView mav = new ModelAndView("signInOut/appliedJobs");
+	
+	@RequestMapping(value = { "/profile/applications","/profile/application" }, method = RequestMethod.GET)
+	public ModelAndView viewAppliedJobs(HttpServletRequest request) {
+	    ModelAndView mav ;
+	    String requestURI = request.getRequestURI();
+		String viewName = "signInOut/appliedJobs";
+		if (requestURI.contains("/profile/application")) {
+			viewName = "signInOut/appliedJob";  // Nếu là /searchJob, trả về view searchJob
+		}
+		mav = new ModelAndView(viewName);
 	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	    User currentUser = userService.findUserByEmail(auth.getName());
-
 	    // Lấy danh sách các JobApplication của người dùng
 	    List<JobApplication> applications = jobApplicationService.getApplicationsByUser(currentUser);
 	  
@@ -245,11 +253,15 @@ public class ResumeController  extends BaseController  {
 	    mav.addObject("applications", applications);
 	    return mav;
 	}
+	
 	@PostMapping("/applyJob/{jobRequestId}")
 	public ModelAndView applyForJob(@PathVariable Long jobRequestId,RedirectAttributes redirectAttributes) {
 	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+			return new ModelAndView("redirect:/login");
+		}
 	    User currentUser = userService.findUserByEmail(auth.getName());
-	    ModelAndView mav = new ModelAndView("redirect:/profile/applications");
+	    ModelAndView mav = new ModelAndView("redirect:/profile/application");
 	    // Kiểm tra xem người dùng đã ứng tuyển chưa
 	    boolean hasApplied = jobApplicationService.hasUserApplied(currentUser, jobRequestId);
 	    if (hasApplied) {
@@ -265,9 +277,22 @@ public class ResumeController  extends BaseController  {
 	    
 	    return mav;
 	}
+	
 	@PostMapping("/profile/applications/delete/{id}")
 	public ModelAndView deleteApplication(@PathVariable Long id, RedirectAttributes redirectAttributes) {
 	    ModelAndView mav = new ModelAndView("redirect:/profile/applications");
+	    try {
+	        jobApplicationService.deleteApplicationById(id);
+	        redirectAttributes.addFlashAttribute("successMessage", "Đã xóa đơn ứng tuyển thành công.");
+	    } catch (Exception e) {
+	        redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi xóa đơn ứng tuyển: " + e.getMessage());
+	    }
+	    return mav;
+	}
+	
+	@PostMapping("/profile/application/delete/{id}")
+	public ModelAndView deleteApplication1(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+	    ModelAndView mav = new ModelAndView("redirect:/profile/application");
 	    try {
 	        jobApplicationService.deleteApplicationById(id);
 	        redirectAttributes.addFlashAttribute("successMessage", "Đã xóa đơn ứng tuyển thành công.");
