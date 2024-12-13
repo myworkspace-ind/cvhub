@@ -88,4 +88,35 @@ public class OrganizationImpl implements OrganizationService {
     }	  
 
 	}
+	
+	@Override
+	public Organization findByOrganizationId(Long organizationId) {
+		return repo.findOrganizationById(organizationId);
+	}
+	
+	@Override
+	public Organization updateOrganization(Organization organization, String title, MultipartFile logoFile, String website, String summary, String detail, String location) {
+	    try {
+	        byte[] logo = downloadImage(logoFile);
+	        UUID logoID = UUID.randomUUID(); // Tạo một UUID ngẫu nhiên
+	        organization.setTitle(title);
+	        organization.setLogoID(logoID);
+	        organization.setLogo(logo);
+	        organization.setWebsite(website);
+	        organization.setSummary(summary);
+	        organization.setDetail(detail);
+	        organization.setLocation(location);
+	        return organization;
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        organization.setTitle(title);
+	        organization.setLogoID(null);
+	        organization.setLogo(null);
+	        organization.setWebsite(website);
+	        organization.setSummary(summary);
+	        organization.setDetail(detail);
+	        organization.setLocation(location);
+	        return organization; // Trả về tổ chức mà không có logo nếu xảy ra lỗi
+	    }
+	}
 }

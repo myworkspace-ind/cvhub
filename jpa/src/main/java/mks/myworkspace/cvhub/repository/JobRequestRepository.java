@@ -27,5 +27,6 @@ public interface JobRequestRepository extends JpaRepository<JobRequest, Long> {
 
 	Page<JobRequest> findByOrganizationId(Long organizationId, Pageable pageable);
 	
-
+	@Query("SELECT COALESCE(COUNT(jr.id), 0) FROM JobRequest jr WHERE jr.organization.id = :organizationId")
+	Long getJobCountByOrgId(@Param("organizationId") Long organizationId);		// #organizationReport
 }
