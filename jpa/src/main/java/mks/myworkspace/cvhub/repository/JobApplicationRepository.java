@@ -45,4 +45,11 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate,
             @Param("pageRequest") org.springframework.data.domain.Pageable pageable);
+	
+	@Query("SELECT COUNT(ja.id) FROM JobApplication ja WHERE ja.jobRequest.organization.id = :organizationId")
+	Long getApplicantCountByOrgId(@Param("organizationId") Long organizationId);				// #organizationReport
+	@Query("SELECT ja FROM JobApplication ja " +
+		       "JOIN ja.jobRequest jr " +
+		       "WHERE jr.organization.id = :organizationId")
+	List<JobApplication> findApplicantByOrgId(@Param("organizationId") Long organizationId);	// #organizationReport
 }

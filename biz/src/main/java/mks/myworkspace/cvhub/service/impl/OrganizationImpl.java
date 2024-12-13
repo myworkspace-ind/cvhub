@@ -67,4 +67,58 @@ public class OrganizationImpl implements OrganizationService {
 	public List<Organization> findByTitleContaining(String title) {
 		return repo.findByTitleContaining(title);
 	}
+
+	@Override
+	public Long getTotalJobRequestsByOrganizationId(Long organizationId) {
+		return repo.countByOrganizationId(organizationId);
+	}
+
+	@Override
+	public List<Organization> getSortedOrganizations(String sort) {
+		switch (sort) {
+        case "created_date_asc":
+            return repo.findAllByOrderByCreatedDateAsc();
+        case "created_date_desc":
+            return repo.findAllByOrderByCreatedDateDesc();
+        case "job_count_asc":
+            return repo.findAllByOrderByJobCountAsc();
+        case "job_count_desc":
+            return repo.findAllByOrderByJobCountDesc();
+        default:
+            return repo.findAll(); 
+    }
+	  
+
+	}
+	
+	@Override
+	public Organization findByOrganizationId(Long organizationId) {
+		return repo.findOrganizationById(organizationId);
+	}
+	
+	@Override
+	public Organization updateOrganization(Organization organization, String title, MultipartFile logoFile, String website, String summary, String detail, String location) {
+	    try {
+	        byte[] logo = downloadImage(logoFile);
+	        UUID logoID = UUID.randomUUID(); // Tạo một UUID ngẫu nhiên
+	        organization.setTitle(title);
+	        organization.setLogoID(logoID);
+	        organization.setLogo(logo);
+	        organization.setWebsite(website);
+	        organization.setSummary(summary);
+	        organization.setDetail(detail);
+	        organization.setLocation(location);
+	        return organization;
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        organization.setTitle(title);
+	        organization.setLogoID(null);
+	        organization.setLogo(null);
+	        organization.setWebsite(website);
+	        organization.setSummary(summary);
+	        organization.setDetail(detail);
+	        organization.setLocation(location);
+	        return organization; // Trả về tổ chức mà không có logo nếu xảy ra lỗi
+	    }
+	}
 }
