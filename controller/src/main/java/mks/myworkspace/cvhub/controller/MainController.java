@@ -120,15 +120,19 @@ public class MainController extends BaseController {
 	  HttpSession httpSession) { ModelAndView mav = new ModelAndView("organization/organizationReport");
 
 	  List<Organization> searchResults;
-	    if (companyName != null && !companyName.isEmpty() && location !="Tất cả tỉnh/thành phố" && !location.isEmpty()) {
-	        searchResults = organizationService.searchByTitleAndLocation(companyName, location);
-	    } else if (companyName != null && !companyName.isEmpty()) {
-	        searchResults = organizationService.searchByTitle(companyName);
-	    } else if (location !="Tất cả tỉnh/thành phố" && !location.isEmpty()) {
-	        searchResults = organizationService.searchByLocation(location);
-	    } else {
-	        searchResults = organizationService.getRepo().findAll(); // Nếu không có tham số tìm kiếm
-	    }
+	  	if (companyName != null && !companyName.isEmpty() && !"0".equals(location) && !location.isEmpty()) {
+		    // Tìm kiếm theo tên công ty và địa điểm
+		    searchResults = organizationService.searchByTitleAndLocation(companyName, location);
+		} else if (companyName != null && !companyName.isEmpty()) {
+		    // Tìm kiếm theo tên công ty
+		    searchResults = organizationService.searchByTitle(companyName);
+		} else if (!"0".equals(location) && !location.isEmpty()) {
+		    // Tìm kiếm theo địa điểm
+		    searchResults = organizationService.searchByLocation(location);
+		} else {
+		    // Nếu không có tham số tìm kiếm -> lấy tất cả
+		    searchResults = organizationService.getRepo().findAll();
+		}
 
 	 Page<Organization> organizationPage = new PageImpl<>(searchResults,PageRequest.of(page, size), searchResults.size()); // Them ket qua vao
 	  Map<Long, Long> totalJobRequestsMap = new HashMap<>();
