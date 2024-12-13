@@ -13,28 +13,12 @@
 		<form method="get" action="/cvhub-web/searchOrganization"  class="form-inline">
 			<label for="companyName" class="mr-2">Filter by Company Name:</label>
 			<input type="text" id="companyName" name="companyName" style="width: 200px;" placeholder="Company Name" >
+			 <label for="location" class="mr-2 ml-3"> Location:</label>
+       		 <input type="text" id="location" name="location" style="width: 200px;" placeholder="Location">
 			<button type="submit" class="button">Apply</button>
 		</form>
 	</div>
 <div class="card container">
-
-
-		<div class="row justify-content-start align-items-center d-flex ml-auto" >
-			<div class="col-auto">
-				<select id="sort-organization" name="sort-organization"
-					class="form-select" onchange="filterAndSort()">
-					<option value="default" selected>Sắp xếp</option>
-					<option value="created_date_asc">Ngày tạo (Cũ đến Mới)</option>
-					<option value="created_date_desc">Ngày tạo (Mới đến Cũ)</option>
-					<option value="job_count_asc">Số lượng công việc (Tăng
-						dần)</option>
-					<option value="job_count_desc">Số lượng công việc (Giảm
-						dần)</option>
-				</select>
-			</div>
-			<script type="text/javascript"
-							th:src="@{/resources/main/report_sam.js}"></script>
-		</div>
 		
 		<div class="table-responsive mt-4 card-header bg-transparent px-0 pt-0 pb-7">
 		<table id="organizationTable" class="table table-striped table-hover table-bordered">
@@ -51,7 +35,7 @@
 					<th>WebSite</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody id="organizationTableBody">
 				<!-- Kiểm tra nếu organizations có dữ liệu -->
 				<tr th:each="organization, iterStat : ${organizations}">
 					<td th:text="${iterStat.index + 1}"></td>

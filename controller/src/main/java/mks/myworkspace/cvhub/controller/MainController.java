@@ -32,12 +32,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.slf4j.Slf4j;
@@ -93,7 +95,6 @@ public class MainController extends BaseController {
 	    Map<Long, Long> totalJobRequestsMap = new HashMap<>();
 	    for (Organization organization : organizationPage.getContent()) {
 	        Long totalRequests = organizationService.getTotalJobRequestsByOrganizationId(organization.getId());
-	        System.out.println("Organization ID: " + organization.getId() + ", Total Job Requests: " + totalRequests);
 	        totalJobRequestsMap.put(organization.getId(), totalRequests);
 	    }
 		mav.addObject("organizations", organizationPage.getContent());
@@ -103,33 +104,36 @@ public class MainController extends BaseController {
 		return mav;
 	}
 
-	
-	@GetMapping("/api/organizationsReport")
-	public ResponseEntity<Map<String, Object>> getOrganizations(
-	        @RequestParam(required = false) String sort) {
-		System.out.println("Nhận được dữ liệu " +sort);
-	    Map<String, Object> response = new HashMap<>();
-
-	    // Lấy danh sách tổ chức, có thể áp dụng sắp xếp tùy theo giá trị sort
-	    List<Organization> organizations = organizationService.getSortedOrganizations(sort);
-	    for (Organization organization : organizations) {
-	        System.out.println("Organization: " + organization.getTitle()); // Gọi phương thức toString
-	    }
-	    response.put("organizations", organizations);
-	    return ResponseEntity.ok(response);
-	}
 
 	@GetMapping("searchOrganization")
 	  public ModelAndView searchOrganizations(@RequestParam(value = "companyName", required = false) String companyName, 
+			  @RequestParam(value = "location", required = false) String location,
 	 @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, HttpServletRequest request,
 	  HttpSession httpSession) { ModelAndView mav = new ModelAndView("organization/organizationReport");
 
-	 List<Organization>searchResults = organizationService.searchByTitle(companyName);
+	  List<Organization> searchResults;
+	    if (companyName != null && !companyName.isEmpty() && location != null && !location.isEmpty()) {
+	        searchResults = organizationService.searchByTitleAndLocation(companyName, location);
+	    } else if (companyName != null && !companyName.isEmpty()) {
+	        searchResults = organizationService.searchByTitle(companyName);
+	    } else if (location != null && !location.isEmpty()) {
+	        searchResults = organizationService.searchByLocation(location);
+	    } else {
+	        searchResults = organizationService.getRepo().findAll(); // Nếu không có tham số tìm kiếm
+	    }
+
 	 Page<Organization> organizationPage = new PageImpl<>(searchResults,PageRequest.of(page, size), searchResults.size()); // Them ket qua vao
+	  Map<Long, Long> totalJobRequestsMap = new HashMap<>();
+	    for (Organization organization : organizationPage.getContent()) {
+	        Long totalRequests = organizationService.getTotalJobRequestsByOrganizationId(organization.getId());
+	        System.out.println("Organization ID: " + organization.getId() + ", Total Job Requests: " + totalRequests);
+	        totalJobRequestsMap.put(organization.getId(), totalRequests);
+	 }
 	 mav.addObject("organizations", organizationPage.getContent());
 	 mav.addObject("currentPage", page); // Trang hien tai
 	 mav.addObject("totalPages", organizationPage.getTotalPages()); // Tong so trang
 	 mav.addObject("size", size);  // Kich thuoc moi trang
+	 mav.addObject("jobCount", totalJobRequestsMap);
 	 return mav; }
 	 
 }
