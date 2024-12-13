@@ -35,6 +35,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,8 +46,11 @@ import org.springframework.web.servlet.ModelAndView;
 import lombok.extern.slf4j.Slf4j;
 import mks.myworkspace.cvhub.controller.model.OrganizationDTO;
 import mks.myworkspace.cvhub.entity.JobRequest;
+import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
 import mks.myworkspace.cvhub.entity.Organization;
+import mks.myworkspace.cvhub.repository.JobRequestRepository;
+import mks.myworkspace.cvhub.service.JobRoleService;
 import mks.myworkspace.cvhub.service.LocationService;
 import mks.myworkspace.cvhub.service.OrganizationService;
 
@@ -58,6 +62,8 @@ import mks.myworkspace.cvhub.service.OrganizationService;
 public class MainController extends BaseController {
 	@Autowired
 	OrganizationService organizationService;
+	@Autowired
+	JobRequestRepository jobRequestRepository;
 
 	/**
 	 * Handles requests for the application home page on Platform MyWorkspace/Sakai.
@@ -66,6 +72,8 @@ public class MainController extends BaseController {
 	 */
 	@Autowired
 	LocationService locationService;
+	@Autowired
+	JobRoleService jobRoleService;
 
 	@GetMapping("/main")
 	public ModelAndView displayMain(HttpServletRequest request, HttpSession httpSession) {
@@ -112,11 +120,11 @@ public class MainController extends BaseController {
 	  HttpSession httpSession) { ModelAndView mav = new ModelAndView("organization/organizationReport");
 
 	  List<Organization> searchResults;
-	    if (companyName != null && !companyName.isEmpty() && location != null && !location.isEmpty()) {
+	    if (companyName != null && !companyName.isEmpty() && location !="Tất cả tỉnh/thành phố" && !location.isEmpty()) {
 	        searchResults = organizationService.searchByTitleAndLocation(companyName, location);
 	    } else if (companyName != null && !companyName.isEmpty()) {
 	        searchResults = organizationService.searchByTitle(companyName);
-	    } else if (location != null && !location.isEmpty()) {
+	    } else if (location !="Tất cả tỉnh/thành phố" && !location.isEmpty()) {
 	        searchResults = organizationService.searchByLocation(location);
 	    } else {
 	        searchResults = organizationService.getRepo().findAll(); // Nếu không có tham số tìm kiếm
@@ -136,4 +144,23 @@ public class MainController extends BaseController {
 	 mav.addObject("jobCount", totalJobRequestsMap);
 	 return mav; }
 	 
+	@RequestMapping(value = { "/main/organization/{id}" }, method = RequestMethod.GET)
+	public ModelAndView displayHome(@PathVariable("id") Long id, HttpServletRequest request, HttpSession httpSession) {
+		ModelAndView mav = new ModelAndView("organization/organizationDetails");
+		Organization organization = organizationService.getRepo().findById(id).orElse(null);
+		List<JobRequest> jobByOrganization = jobRequestRepository.findByOrganizationId(id);
+		List<JobRole> alLJobRole = jobRoleService.getRepo().findAll();
+		List<Location> locations = locationService.getRepo().findAll();
+		mav.addObject("locations", locations);
+		mav.addObject("alLJobRole", alLJobRole);
+		mav.addObject("organization", organization);
+		mav.addObject("jobByOrganization", jobByOrganization);
+		boolean isOwner = false;
+		if (request.getUserPrincipal() != null) {
+			isOwner = organizationService.isOwner(id, request.getUserPrincipal().getName());
+		}
+		mav.addObject("isOwner", isOwner);
+		return mav;
+	}
+
 }
