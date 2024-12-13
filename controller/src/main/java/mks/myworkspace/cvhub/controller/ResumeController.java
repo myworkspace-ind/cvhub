@@ -28,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import mks.myworkspace.cvhub.controller.model.CvDTO;
 import mks.myworkspace.cvhub.entity.CV;
 import mks.myworkspace.cvhub.entity.JobApplication;
+import mks.myworkspace.cvhub.entity.JobSaved;
 import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
@@ -248,6 +249,19 @@ public class ResumeController  extends BaseController  {
 	    mav.addObject("applications", applications);
 	    return mav;
 	}
+	@RequestMapping(value = { "/profile/savedjob" }, method = RequestMethod.GET)
+	public ModelAndView viewSavedJobs() {
+	    ModelAndView mav = new ModelAndView("signInOut/savedJob");
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    User currentUser = userService.findUserByEmail(auth.getName());
+
+	    // Lấy danh sách các JobApplication của người dùng
+	    List<JobSaved> savedJobs = jobSavedService.getJobSavedByUser(currentUser);
+	  
+	    // Thêm danh sách vào model
+	    mav.addObject("savedJobs", savedJobs);
+	    return mav;
+	}
 	@PostMapping("/applyJob/{jobRequestId}")
 	public ModelAndView applyForJob(@PathVariable Long jobRequestId,RedirectAttributes redirectAttributes) {
 	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -297,6 +311,17 @@ public class ResumeController  extends BaseController  {
 	        redirectAttributes.addFlashAttribute("successMessage", "Đã xóa đơn ứng tuyển thành công.");
 	    } catch (Exception e) {
 	        redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi xóa đơn ứng tuyển: " + e.getMessage());
+	    }
+	    return mav;
+	}
+	@PostMapping("/profile/savedjob/delete/{id}")
+	public ModelAndView deleteJobSaved(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+	    ModelAndView mav = new ModelAndView("redirect:/profile/savedjob");
+	    try {
+	    	jobSavedService.deleteJobSavedById(id);
+	        redirectAttributes.addFlashAttribute("successMessage", "Đã xóa công việc thành công.");
+	    } catch (Exception e) {
+	        redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi xóa công việc: " + e.getMessage());
 	    }
 	    return mav;
 	}
