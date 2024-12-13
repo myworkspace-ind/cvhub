@@ -23,5 +23,6 @@ public interface OrganizationService {
     Organization findByOrganizationId(Long organizationId);
     public Organization updateOrganization(Organization organization, String title, MultipartFile logoFile, String website, String summary, String detail, String location);
     Long getTotalJobRequestsByOrganizationId(Long organizationId);
-    List<Organization> getSortedOrganizations(String sort);
+    List<Organization> searchByLocation(String location);
+    List<Organization> searchByTitleAndLocation(String companyName, String location);
 }
