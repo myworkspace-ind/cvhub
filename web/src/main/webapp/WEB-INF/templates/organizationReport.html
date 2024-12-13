@@ -79,7 +79,7 @@
 			    <!-- filter condition -->
 			    <div>
 			        <label for="timePeriod">Hiển thị theo:</label>
-			        <select name="timePeriod" id="timePeriod" class="form-control mr-3" style="width: 150px;" onchange="">
+			        <select name="timePeriod" id="timePeriod" class="mr-3" style="width: 150px;" onchange="">
 			            <option value="today" th:selected="${period == 'today'}">Hôm nay</option>
 			            <option value="this_week" th:selected="${period == 'this_week'}">Tuần này</option>
 			            <option value="this_month" th:selected="${period == 'this_month'}">Tháng này</option>
@@ -93,7 +93,7 @@
 	   </div>
 
 		<!-- datatable -->
- 		<div>
+ 		<div class="mb-3">
             <table>
 				<thead style="background-color: #f8f9fa;">
 					<tr>
