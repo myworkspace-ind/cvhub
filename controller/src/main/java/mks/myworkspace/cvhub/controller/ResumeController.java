@@ -34,6 +34,7 @@ import mks.myworkspace.cvhub.entity.Location;
 import mks.myworkspace.cvhub.entity.User;
 import mks.myworkspace.cvhub.service.CvService;
 import mks.myworkspace.cvhub.service.JobApplicationService;
+import mks.myworkspace.cvhub.service.JobSavedService;
 import mks.myworkspace.cvhub.service.JobRequestService;
 import mks.myworkspace.cvhub.service.JobRoleService;
 import mks.myworkspace.cvhub.service.LocationService;
@@ -51,6 +52,8 @@ public class ResumeController  extends BaseController  {
 	JobRoleService jobRoleService;
 	@Autowired
 	JobApplicationService jobApplicationService;
+	@Autowired
+	JobSavedService jobSavedService;
 	@Autowired
 	LocationService locationService;
 	 @Autowired
@@ -265,6 +268,27 @@ public class ResumeController  extends BaseController  {
 	    
 	    return mav;
 	}
+	@PostMapping("/saveJob/{jobRequestId}")
+	public ModelAndView savedJob(@PathVariable Long jobRequestId,RedirectAttributes redirectAttributes) {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    User currentUser = userService.findUserByEmail(auth.getName());
+	    ModelAndView mav = new ModelAndView("redirect:/jobrequests/{jobRequestId}");
+	    // Kiểm tra xem người dùng đã ứng tuyển chưa
+	    boolean hasSaved = jobSavedService.hasJobSaved(currentUser, jobRequestId);
+	    if (hasSaved) {
+
+	    	 redirectAttributes.addFlashAttribute("errorMessage", "Bạn đã lưu công việc này.");
+	        return mav;
+	    }
+	    
+	    JobRequest jobRequest = jobRequestService.getRepo().findById(jobRequestId).orElse(null);
+	    if (jobRequest != null) {
+	    	jobSavedService.AddJobSaved(currentUser, jobRequest);
+            mav.addObject("success", "Đã lưu công việc thành công");
+	    }
+	    return mav;
+	}
+	
 	@PostMapping("/profile/applications/delete/{id}")
 	public ModelAndView deleteApplication(@PathVariable Long id, RedirectAttributes redirectAttributes) {
 	    ModelAndView mav = new ModelAndView("redirect:/profile/applications");
