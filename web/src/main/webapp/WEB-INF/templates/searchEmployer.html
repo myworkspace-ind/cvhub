@@ -1,101 +1,80 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Danh sách công ty</title>
-	<link
-		href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-		rel="stylesheet">
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-	<link rel="stylesheet" th:href="@{/resources/searchEmployer/style.css}" />
-	<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
-	
-	<th:block th:include="fragments/head"></th:block>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách công ty</title>
+    <link rel="stylesheet" th:href="@{/resources/searchEmployer/style.css}" />
+    <link rel="stylesheet" th:href="@{/resources/home/style.css}" />
+    <th:block th:include="fragments/head"></th:block>
 </head>
 
 <body>
-	<th:block th:include="fragments/hmenu"></th:block>
-    <nav class="navbar">
-	    <div class="search-container d-flex align-items-center">
-	        <form class="search-form" action="search-employer" method="GET">
-	            <input type="text" name="keyword" placeholder="Nhập tên công ty" th:value="${keyword}">
-	            <input type="hidden" name="limit" th:value="${limit}"> <!-- Truyền giá trị limit -->
-	            <button type="submit">Tìm kiếm</button>
-	        </form>
-	        <!-- Nút Xuất Excel -->
-			<form class="search-form" action="export-employers" method="GET">
-				<input type="hidden" name="keyword" th:value="${param.keyword}" />
-				<button type="submit" class="btn btn-success ms-3">Xuất Excel</button>
-			</form>
-	    </div>
-	</nav>
+    <th:block th:include="fragments/hmenu"></th:block>
 
-    <div class="employer-list-container">
-	    <h2 class="text-center">Danh sách Công Ty</h2>
-	    <div class="employer-list">
-	        <div th:each="employer : ${employers}" class="employer-card">
-	            <img
-	                th:src="@{/images/{logoId}(logoId=${employer.logoID})}"
-	                alt="Company logo"
-	                class="company-logo">
-	
-	            <div class="card-body">
-	                <h3 class="company-name" th:text="${employer.title}"></h3>
-	                <!-- Kiểm tra nếu địa chỉ không null, nếu null thì hiển thị dấu gạch ngang -->
-	                <p class="location-tag" th:text="${employer.location != null ? 'Địa chỉ: ' + employer.location : 'Địa chỉ: -'}"></p>
-	                
-	                <!-- Kiểm tra nếu ngày cập nhật không null, nếu null thì hiển thị dấu gạch ngang -->
-	                <p class="update-tag" th:text="${employer.modified != null ? 'Ngày cập nhật: ' + #dates.format(employer.modified, 'dd/MM/yyyy') : 'Ngày cập nhật: -'}"></p>
-	                
-	                <!-- Kiểm tra nếu website không null, nếu null thì hiển thị dấu gạch ngang -->
-	                <p class="website-tag" th:text="${employer.website != null ? 'Website: ' + employer.website : 'Website: -'}"></p>
-	                
-	                <a th:href="@{/organization/{id}(id=${employer.id})}" class="view-details">Chi tiết</a>
-	            </div>
-	        </div>
-	    </div>
-	</div>
-	
-	<nav aria-label="Page navigation" class="mt-5 d-flex justify-content-between align-items-center">
-	    <!-- Dropdown chọn số lượng bản ghi -->
-	    <div class="d-flex align-items-center">
-	        <label for="limit-select" class="me-2">Số lượng mỗi trang:</label>
-	        <form class="limit-form" method="GET" action="search-employer">
-	            <select id="limit-select" name="limit" onchange="this.form.submit()">
-	                <option th:value="5" th:selected="${limit == 5}">5</option>
-	                <option th:value="10" th:selected="${limit == 10}">10</option>
-	                <option th:value="20" th:selected="${limit == 20}">20</option>
-	                <option th:value="50" th:selected="${limit == 50}">50</option>
-	            </select>
-	            <input type="hidden" name="page" th:value="${currentPage}">
-	            <input type="hidden" name="keyword" th:value="${keyword}"> <!-- Giữ từ khóa tìm kiếm -->
-	        </form>
-	    </div>
-	
-	    <!-- Phân trang -->
-	    <ul class="pagination mb-0">
-	        <!-- Previous button -->
-			<li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-			    <a class="page-link" th:href="${currentPage > 0} ? @{/search-employer(page=${currentPage - 1}, limit=${limit}, keyword=${keyword})} : '#'" aria-label="Previous">
-			        <span aria-hidden="true">&laquo;</span>
-			    </a>
-			</li>
-			
-			<!-- Page numbers -->
-			<li class="page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${pageNum == currentPage} ? 'active'">
-			    <a class="page-link" th:href="@{/search-employer(page=${pageNum}, limit=${limit}, keyword=${keyword})}" th:text="${pageNum + 1}"></a>
-			</li>
-			
-			<!-- Next button -->
-			<li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
-			    <a class="page-link" th:href="${currentPage < totalPages - 1} ? @{/search-employer(page=${currentPage + 1}, limit=${limit}, keyword=${keyword})} : '#'" aria-label="Next">
-			        <span aria-hidden="true">&raquo;</span>
-			    </a>
-			</li>
-	    </ul>
-	</nav>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Danh sách Công Ty</h1>
+
+        <!-- Form tìm kiếm và nút Xuất Excel -->
+        <div class="search-export-container">
+            <form method="GET" action="search-employer" class="search-form">
+                <div class="input-group">
+                    <input type="text" name="keyword" class="form-control" placeholder="Nhập tên công ty...">
+                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                </div>
+            </form>
+            <form method="GET" action="export-employers" class="export-form">
+                <input type="hidden" name="keyword" th:value="${param.keyword}" />
+                <button type="submit" class="btn btn-primary">Xuất Excel</button>
+            </form>
+        </div>
+
+        <!-- Bảng danh sách Công Ty -->
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="table-header">
+                    <tr>
+                        <th>#</th>
+                        <th>Hình ảnh</th>
+                        <th>Tên công ty</th>
+                        <th>Địa chỉ</th>
+                        <th>Ngày cập nhật</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Thymeleaf lặp qua danh sách employers -->
+                    <tr th:each="employer, iterStat : ${employers}">
+                        <td th:text="${iterStat.index + 1}"></td>
+                        <td>
+                            <img th:src="@{/images/{logoId}(logoId=${employer.logoID})}" alt="Company logo" class="img-thumbnail employer-logo">
+                        </td>
+                        <td th:text="${employer.title}"></td>
+                        <td th:text="${employer.location != null ? employer.location : '-'}"></td>
+                        <td th:text="${employer.modified != null ? #dates.format(employer.modified, 'dd/MM/yyyy') : '-'}"></td>
+                        <td>
+                            <a th:href="@{/organization/{id}(id=${employer.id})}" class="btn btn-primary btn-sm">Xem chi tiết</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Phân trang -->
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link" th:href="${currentPage > 0} ? @{/resources(page=${currentPage - 1}, limit=${limit})} : '#'">Trước</a>
+                </li>
+                <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${pageNum == currentPage} ? 'active'">
+                    <a class="page-link" th:href="@{/resources(page=${pageNum}, limit=${limit})}" th:text="${pageNum + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                    <a class="page-link" th:href="${currentPage < totalPages - 1} ? @{/resources(page=${currentPage + 1}, limit=${limit})} : '#'">Sau</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </body>
 
 </html>
