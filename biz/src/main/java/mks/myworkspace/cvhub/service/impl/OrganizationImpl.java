@@ -62,7 +62,6 @@ public class OrganizationImpl implements OrganizationService {
 		return repo.searchByTitle(title); // thêm bới ledaonhansam
 	}
 	
-	
 	@Override
 	public List<Organization> findByTitleContaining(String title) {
 		return repo.findByTitleContaining(title);
@@ -86,8 +85,7 @@ public class OrganizationImpl implements OrganizationService {
             return repo.findAllByOrderByJobCountDesc();
         default:
             return repo.findAll(); 
-    }
-	  
+    }	  
 
 	}
 }
