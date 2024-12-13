@@ -1,6 +1,7 @@
 package mks.myworkspace.cvhub.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -71,5 +72,14 @@ public class ReportUserController {
     public String deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
         return "redirect:/report/user"; // Redirect back to the user report page
+    }
+    @GetMapping("/thongke")
+    public ModelAndView getUserReport(@RequestParam(value = "year", defaultValue = "2024") int year) {
+        List<Long> userCounts = userService.getUserCountsPerYear(year);  // Lấy danh sách số lượng người dùng theo từng tháng trong năm
+        
+        ModelAndView mav = new ModelAndView("thongke");
+        mav.addObject("userCounts", userCounts);  // Truyền số lượng người dùng
+        mav.addObject("year", year);  // Truyền năm để hiển thị trong view
+        return mav;
     }
 }
