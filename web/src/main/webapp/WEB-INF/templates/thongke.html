@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biểu đồ Thống kê</title>
+    <!-- Thêm Chart.js từ CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <!-- Form để người dùng chọn năm -->
+    <div style="width: 50%; margin: auto; padding: 20px;">
+        <a href="http://localhost:8080/cvhub-web/main#" class="btn btn-primary mb-4">Trở về</a>
+        <h2>Biểu đồ thống kê</h2>
+        <form action="/cvhub-web/thongke" method="get">
+            <label for="year">Chọn năm:</label>
+            <input type="number" id="year" name="year" required value="${year}"> <!-- Truyền giá trị year từ controller -->
+            <button type="submit">Xem thống kê</button>
+        </form>
+    </div>
+
+    <!-- Đặt một canvas để vẽ biểu đồ -->
+    <div style="width: 50%; margin: auto;">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <script>
+        // Lấy context của canvas để vẽ biểu đồ
+        var ctx = document.getElementById('myChart').getContext('2d');
+
+        // Lấy giá trị userCounts từ controller
+        var userCounts = [[${userCounts}]];  // Giá trị này được pass từ controller vào file HTML
+
+        // Tạo biểu đồ
+        var myChart = new Chart(ctx, {
+            type: 'bar', // Loại biểu đồ (cột)
+            data: {
+                labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'], // Nhãn cho các thanh cột
+                datasets: [{
+                    label: 'Số lượng người dùng',
+                    data: userCounts, // Sử dụng giá trị từ controller
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Màu nền cho các cột
+                    borderColor: 'rgba(54, 162, 235, 1)', // Màu viền cho các cột
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true // Đảm bảo trục Y bắt đầu từ 0
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
