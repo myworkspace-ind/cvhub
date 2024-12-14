@@ -56,6 +56,17 @@
 		<li><span title="About"> <a style="width: 80px;"
 				th:href="@{/jobPosting}">Job posting</a>
 		</span></li>
+		<li>
+	      <span title="listbusiness" th:class="${isSelectedConfiguration != null && isSelectedConfiguration ? 'current' : ''}">
+	        <a th:href="@{/organization/list}">Doanh Nghiệp</a>
+	      </span>
+	  </li>
+	  <li>
+    <span title="thongke" th:class="${isSelectedConfiguration != null && isSelectedConfiguration ? 'current' : ''}">
+	        <a th:href="@{/thongke}">Thống Kê</a>
+	    </span>
+	</li>
+	  
 		
 	</ul>
 	<!-- Right-aligned dropdown button -->
