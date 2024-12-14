@@ -40,18 +40,25 @@
 				<label class="btn btn-outline-primary" for="sort1">Ngày đăng</label>
 
 				<input type="radio" class="btn-check" name="sort" id="sort2">
-				<label class="btn btn-outline-primary" for="sort2">Ngày cập
-					nhật</label> <input type="radio" class="btn-check" name="sort" id="sort3">
-				<label class="btn btn-outline-primary" for="sort3">Kinh
-					nghiệm</label> <input type="radio" class="btn-check" name="sort" id="sort4">
-				<label class="btn btn-outline-primary" for="sort4">Lương cao
-					đến thấp</label>
+				<label class="btn btn-outline-primary" for="sort2">Ngày cập nhật</label> 
+
+				<input type="radio" class="btn-check" name="sort" id="sort3">
+				<label class="btn btn-outline-primary" for="sort3">Kinh nghiệm</label> 
+
+				<input type="radio" class="btn-check" name="sort" id="sort4">
+				<label class="btn btn-outline-primary" for="sort4">Lương</label>
 			</div>
 		</div>
 
+
+		<div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="sortOrder" checked >
+            <label class="form-check-label" for="sortOrder" id="sortLabel">Sắp xếp tăng dần</label>
+        </div>
+
 		<div class="job-list-container">
 			<div class="job-list">
-				<div th:each="job : ${searchResults}" class="job-card">
+				<div th:each="job : ${searchResults}" class="job-card p-3">
 					<div class="card-body">
 						<div class="row align-items-center">
 							<div class="col-2">
@@ -70,15 +77,23 @@
 									</p>
 								</form>
 								<div class="d-flex align-items-center">
+									<span>
+										Kinh nghiệm:
+									</span>
 									<span class="location-tag"
-										th:text="'Kinh Nghiệm: ' + ${job.experience}"></span> <span
+										th:text="${job.experience}">
+									</span> 
+
+									<span>Ngày cập nhật: </span>
+									<span
 										class="update-tag"
-										th:text="'Ngày cập nhật: ' + ${job.modified}"></span>
+										th:text="${job.modified}">
+									</span>
 								</div>
 							</div>
 							<div class="col-2 text-end">
 								<p class="salary mb-2"
-									th:text="${job.salary != null ? job.salary : 'Thỏa thuận'} + ' $'"></p>
+									th:text="${(job.salary != null && job.salary > 0) ? job.salary : 'Thỏa thuận'} + ' $'"></p>
 							</div>
 						</div>
 					</div>
@@ -87,6 +102,10 @@
 			</div>
 		</div>
 	</div>
+
+	<script>
+        
+    </script>
 </body>
 <th:block th:include="fragments/javascript"></th:block>
 </html>
