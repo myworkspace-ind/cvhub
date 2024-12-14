@@ -9,7 +9,8 @@ import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
+import org.springframework.stereotype.Service;
+@Service
 public interface JobSavedService {
 	void AddJobSaved(User user, JobRequest jobRequest);
 
