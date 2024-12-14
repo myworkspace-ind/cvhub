@@ -62,7 +62,6 @@ public class OrganizationImpl implements OrganizationService {
 		return repo.searchByTitle(title); // thêm bới ledaonhansam
 	}
 	
-	
 	@Override
 	public List<Organization> findByTitleContaining(String title) {
 		return repo.findByTitleContaining(title);
@@ -71,24 +70,6 @@ public class OrganizationImpl implements OrganizationService {
 	@Override
 	public Long getTotalJobRequestsByOrganizationId(Long organizationId) {
 		return repo.countByOrganizationId(organizationId);
-	}
-
-	@Override
-	public List<Organization> getSortedOrganizations(String sort) {
-		switch (sort) {
-        case "created_date_asc":
-            return repo.findAllByOrderByCreatedDateAsc();
-        case "created_date_desc":
-            return repo.findAllByOrderByCreatedDateDesc();
-        case "job_count_asc":
-            return repo.findAllByOrderByJobCountAsc();
-        case "job_count_desc":
-            return repo.findAllByOrderByJobCountDesc();
-        default:
-            return repo.findAll(); 
-    }
-	  
-
 	}
 	
 	@Override
@@ -121,4 +102,13 @@ public class OrganizationImpl implements OrganizationService {
 	        return organization; // Trả về tổ chức mà không có logo nếu xảy ra lỗi
 	    }
 	}
+	
+	 public List<Organization> searchByLocation(String location) {
+	        return repo.searchByLocation(location);
+	    }
+
+	    // Tìm kiếm theo tên công ty và vị trí
+	public List<Organization> searchByTitleAndLocation(String companyName, String location) {
+	        return repo.searchByTitleAndLocation(companyName, location);
+	    }
 }

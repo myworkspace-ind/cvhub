@@ -1,0 +1,233 @@
+    body {
+    	font-family: Arial, sans-serif;
+    	margin: 0;
+    	padding: 20px;
+    	background-color: #f0f0f0;
+    }
+
+    .container {
+    	max-width: 1200px;
+    	margin: 0 auto;
+    	padding: 20px;
+    }
+
+    .org-header {
+    	margin-top: 55px;
+    	background: #004080;
+    	color: white;
+    	padding: 20px;
+    	border-radius: 8px;
+    	display: flex;
+    	align-items: center;
+    	justify-content: space-between;
+    }
+
+    .org-logo {
+    	width: 80px;
+    	height: 80px;
+    	border-radius: 50%;
+    	background-color: white;
+    	display: flex;
+    	align-items: center;
+    	justify-content: center;
+    }
+
+    .org-logo img {
+    	max-width: 60px;
+    	max-height: 60px;
+    }
+
+    .org-info {
+    	flex-grow: 1;
+    	margin-left: 20px;
+    }
+
+    .org-name {
+    	font-size: 24px;
+    	margin: 0;
+    }
+
+    .org-details {
+    	font-size: 14px;
+    	margin: 5px 0;
+    }
+
+    .follow-btn {
+    	background-color: white;
+    	color: #004080;
+    	border: none;
+    	padding: 10px 20px;
+    	border-radius: 20px;
+    	cursor: pointer;
+    }
+
+    .content-section {
+    	background-color: white;
+    	border-radius: 8px;
+    	padding: 20px;
+    	margin-top: 20px;
+    }
+
+    .section-title {
+    	color: #004080;
+    	border-bottom: 2px solid #004080;
+    	padding-bottom: 10px;
+    	margin-top: 0;
+    }
+
+    .job-list {
+    	list-style-type: none;
+    	padding: 0;
+    }
+
+    .job-item {
+    	border: 1px solid #e0e0e0;
+    	border-radius: 8px;
+    	padding: 15px;
+    	margin-bottom: 15px;
+    	display: flex;
+    	justify-content: space-between;
+    	align-items: center;
+    }
+
+    .job-title {
+    	font-weight: bold;
+    	color: #333;
+    }
+
+    .job-details {
+    	font-size: 14px;
+    	color: #666;
+    }
+
+    .apply-btn {
+    	background-color: #004080;
+    	color: white;
+    	border: none;
+    	padding: 8px 15px;
+    	border-radius: 20px;
+    	cursor: pointer;
+    }
+
+    .contact-info {
+    	display: flex;
+    	justify-content: space-between;
+    }
+
+    .map-container {
+    	width: 100%;
+    	height: 200px;
+    	background-color: #e0e0e0;
+    	margin-top: 10px;
+    	border-radius: 8px;
+    }
+
+    .overlay {
+    	display: none;
+    	position: fixed;
+    	top: 0;
+    	left: 0;
+    	width: 100%;
+    	height: 100%;
+    	background-color: rgba(0, 0, 0, 0.5);
+    	z-index: 1000;
+    }
+
+    #jobPostForm {
+    	display: none;
+    	position: fixed;
+    	top: 50%;
+    	left: 50%;
+    	transform: translate(-50%, -50%);
+    	background-color: white;
+    	padding: 30px;
+    	border-radius: 10px;
+    	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    	z-index: 1001;
+    	max-width: 800px; /* Tăng kích thước để đủ chỗ cho 2 cột */
+    	width: 90%;
+    }
+	
+	#jobPostForm h3 {
+	    margin-top: 0;
+	    color: #00a86b;
+	    border-bottom: 2px solid #00a86b;
+	    padding-bottom: 10px;
+	    text-align: center; /* Căn giữa tiêu đề */
+	}
+	
+	#jobPostForm .form-group {
+	    margin-bottom: 20px;
+	}
+	
+	#jobPostForm .form-row {
+	    display: flex;
+	    gap: 20px; /* Khoảng cách giữa các cột */
+	}
+	
+	#jobPostForm label {
+	    display: block;
+	    margin-bottom: 5px;
+	    font-weight: bold;
+	}
+	
+	#jobPostForm input,
+	#jobPostForm select,
+	#jobPostForm textarea {
+	    width: 100%;
+	    padding: 5px;
+	    border: 1px solid #ddd;
+	    border-radius: 4px;
+	    box-sizing: border-box;
+	}
+	
+	#jobPostForm textarea {
+	    height: 100px;
+	    resize: none; /* Ngừng cho phép người dùng kéo để thay đổi kích thước */
+	}
+	
+	/* Căn giữa nút "Lưu" */
+	#jobPostForm button[type="submit"] {
+	    background-color: #00a86b;
+	    color: white;
+	    border: none;
+	    padding: 10px 20px;
+	    border-radius: 4px;
+	    cursor: pointer;
+	    font-size: 16px;
+	    display: block; /* Đặt nó dưới dạng block để dễ căn giữa */
+	    margin: 20px auto 0; /* Căn giữa và thêm khoảng cách phía trên */
+	}
+	
+	#jobPostForm button[type="submit"]:hover {
+	    background-color: #008c5a;
+	}
+	
+	#jobPostForm .form-row {
+	    display: flex;
+	    gap: 20px; /* Khoảng cách giữa các cột */
+	    flex-wrap: wrap; /* Cho phép các cột xuống dòng nếu không đủ không gian */
+	}
+	
+	#jobPostForm .form-group {
+	    flex: 1; /* Các cột sẽ có chiều rộng bằng nhau */
+	    min-width: 200px; /* Đảm bảo các cột không quá hẹp khi thu nhỏ màn hình */
+	}
+	
+	.form-divider {
+	    width: 1px;
+	    background-color: #ccc;
+	    height: auto;
+	}
+
+.apply-btn {
+    /* Thêm các style cần thiết để nút trông giống như mong muốn */
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #004080;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

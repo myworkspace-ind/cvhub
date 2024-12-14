@@ -103,7 +103,7 @@
 				</label>
 				<textarea id="jobDescription" name="jobDescription"
 					class="form-control border-primary shadow-sm" rows="4"
-					placeholder="Nhập chi tiết công việc" required></textarea>
+					placeholder="Nhập chi tiết công việc" maxlength="3000" required></textarea>
 			</div>
 			<div class="form-group mb-3 row">
 				<div class="col-md-6">
@@ -111,7 +111,7 @@
 						kinh nghiệm <em class="text-danger">*</em>
 					</label> <input type="number" class="form-control" id="experience"
 						name="experience" min="0" placeholder="Nhập số năm kinh nghiệm"
-						required> <small class="form-text text-muted">Nhập
+						required max="99"> <small class="form-text text-muted">Nhập
 						số năm kinh nghiệm.</small>
 				</div>
 				<div class="col-md-6">
@@ -132,7 +132,7 @@
 				</label>
 				<textarea id="requirementsCandidate" name="requirementsCandidate"
 					class="form-control border-primary shadow-sm" rows="4"
-					placeholder="Nhập yêu cầu ứng viên" required></textarea>
+					placeholder="Nhập yêu cầu ứng viên" maxlength="3000" required></textarea>
 			</div>
 
 			<div class="form-group mb-3">
@@ -141,7 +141,7 @@
 				</label>
 				<textarea id="benefitCandidate" name="benefitCandidate"
 					class="form-control border-primary shadow-sm" rows="4"
-					placeholder="Nhập quyền lợi ứng viên" required></textarea>
+					placeholder="Nhập quyền lợi ứng viên" maxlength="3000" required></textarea>
 			</div>
 
 			
@@ -199,5 +199,22 @@
 		document.getElementById("deadlineApplication").setAttribute("min",
 				today);
 	</script>
+	<script>
+    const experienceInput = document.getElementById('experience');
+    
+    experienceInput.addEventListener('input', function () {
+        // Chặn giá trị nhập vượt quá 2 chữ số
+        if (this.value.length > 2) {
+            this.value = this.value.slice(0, 2); // Chỉ giữ 2 ký tự đầu
+        }
+    });
+
+    experienceInput.addEventListener('keydown', function (e) {
+        // Chặn nhập thêm ký tự không hợp lệ (chỉ cho phép số từ 0 đến 9)
+        if (this.value.length >= 2 && e.key >= '0' && e.key <= '9') {
+            e.preventDefault(); // Ngăn người dùng nhập thêm
+        }
+    });
+</script>
 </body>
 </html>

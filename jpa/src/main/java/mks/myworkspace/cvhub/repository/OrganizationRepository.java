@@ -31,15 +31,16 @@ public interface OrganizationRepository extends JpaRepository<Organization,Long>
     Page<Organization> findAllCreatedDateStartFrom(@Param("startDate") Date startDate, @Param("pageRequest") Pageable pageable);	// #organizationReport
 	@Query("SELECT COUNT(jr) FROM JobRequest jr WHERE jr.organization.id = :organizationId")
 	Long countByOrganizationId(@Param("organizationId") Long organizationId);
-	@Query("SELECT o, COUNT(jr) AS jobCount FROM Organization o LEFT JOIN JobRequest jr ON o.id = jr.organization.id GROUP BY o.id ORDER BY o.createdDate ASC")
-	List<Organization> findAllByOrderByCreatedDateAsc();
-	@Query("SELECT o, COUNT(jr) AS jobCount FROM Organization o LEFT JOIN JobRequest jr ON o.id = jr.organization.id GROUP BY o.id ORDER BY o.createdDate DESC")
-	List<Organization> findAllByOrderByCreatedDateDesc();
-	@Query("SELECT o, COUNT(jr) AS jobCount FROM Organization o LEFT JOIN JobRequest jr ON o.id = jr.organization.id GROUP BY o.id ORDER BY jobCount ASC")
-	List<Organization> findAllByOrderByJobCountAsc();
-	@Query("SELECT o, COUNT(jr) AS jobCount FROM Organization o LEFT JOIN JobRequest jr ON o.id = jr.organization.id GROUP BY o.id ORDER BY jobCount DESC")
-	List<Organization> findAllByOrderByJobCountDesc();
+
 	
 	@Query("SELECT o FROM Organization o WHERE o.id = :organizationId")
 	Organization findOrganizationById(@Param("organizationId")Long organizationId);
+	
+	  // Tìm kiếm theo vị trí (location) chứa một chuỗi
+    @Query("SELECT o FROM Organization o WHERE LOWER(o.location) LIKE LOWER(CONCAT('%', :location, '%'))")
+    List<Organization> searchByLocation(@Param("location") String location);
+
+    // Tìm kiếm theo cả tiêu đề (title) và vị trí (location)
+    @Query("SELECT o FROM Organization o WHERE LOWER(o.title) LIKE LOWER(CONCAT('%', :title, '%')) AND LOWER(o.location) LIKE LOWER(CONCAT('%', :location, '%'))")
+    List<Organization> searchByTitleAndLocation(@Param("title") String title, @Param("location") String location);
 }

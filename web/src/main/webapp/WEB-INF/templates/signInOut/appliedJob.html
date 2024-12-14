@@ -20,14 +20,12 @@
 		<a th:href="@{'/jobrequests/' + ${appli.jobRequest.id}}"
 			class="job-link" th:each="appli : ${applications}"
 			style="text-decoration: none; color: inherit; width: 30%; max-width: 400px;">
-			<div
-				class="application-card card shadow-sm border-light rounded-3 p-4 bg-white"
-				style="transition: transform 1s, box-shadow 0.8s;">
-				<h2 class="job-title" th:text="${appli.jobRequest.title}">
-					Tiêu đề công việc</h2>
+			<div class="application-card card shadow-sm border  p-4 bg-white"
+				style="transition: transform 1s, box-shadow 0.8s; border: 3px solid black;">
+				<h2 class="job-title" th:text="${appli.jobRequest.title}">Tiêu
+					đề công việc</h2>
 				<p class="company-name"
-					th:text="${appli.jobRequest.organization.title}">
-					Tên công ty</p>
+					th:text="${appli.jobRequest.organization.title}">Tên công ty</p>
 				<div class="info-grid"
 					style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
 					<div class="info-item">
