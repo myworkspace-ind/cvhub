@@ -13,6 +13,12 @@
 
 <body>
 	<div th:replace="~{fragments/header :: header}"></div>
+		<!-- Hiển thị thông báo thành công -->
+<div class="alert alert-success" style="margin-top: 50px;" th:if="${successMessage}" th:text="${successMessage}"></div>
+
+<!-- Hiển thị thông báo lỗi -->
+<div class="alert alert-danger" style="margin-top: 50px;" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+	
 	<div class="container">
 		<div class="org-header">
 			<div class="org-logo">
@@ -37,7 +43,13 @@
 			<div th:if="${isOwner}">
 				<form th:action="@{/organization/update/{orgId}(orgId=${organization.id})}" method="get">
 					<button id="" class="follow-btn">Chỉnh sửa thông tin công ty</button>
-				</form>			</div>
+				</form>			
+			</div>
+			<div th:if="${!isOwner}">
+				<form th:action="@{/organization/followedorganization/{orgId}(orgId=${organization.id})}" method="post">
+					<button id="" class="follow-btn">Theo dõi công ty</button>
+				</form>			
+			</div>
 		</div>
 
 		<div class="content-section">
