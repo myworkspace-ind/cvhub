@@ -57,11 +57,21 @@
         function validateForm() {
             var fileInput = document.getElementById('file-upload');
             var errorMessage = document.getElementById('error-message');
-            
+
             // Kiểm tra xem người dùng đã chọn file chưa
-            if (fileInput.files.length === 0) {
+            if (!fileInput.files || fileInput.files.length === 0) {
                 errorMessage.style.display = 'block'; // Hiển thị thông báo lỗi
                 return false; // Ngừng submit form
+            }
+
+            // Kiểm tra dung lượng file (5MB = 5 * 1024 * 1024 bytes)
+            var fileSize = fileInput.files[0].size;
+            var maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
+
+            if (fileSize > maxFileSize) {
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = "Dung lượng tệp vượt quá 5MB. Vui lòng chọn tệp nhỏ hơn.";
+                return false;
             }
             
             // Nếu đã chọn file, ẩn thông báo lỗi
