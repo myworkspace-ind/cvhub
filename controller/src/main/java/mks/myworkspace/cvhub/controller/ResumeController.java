@@ -31,6 +31,9 @@ import mks.myworkspace.cvhub.controller.model.CvDTO;
 import mks.myworkspace.cvhub.entity.CV;
 import mks.myworkspace.cvhub.entity.JobApplication;
 import mks.myworkspace.cvhub.entity.JobRequest;
+import mks.myworkspace.cvhub.entity.JobSaved;
+import mks.myworkspace.cvhub.entity.FollowedOrganization;
+import mks.myworkspace.cvhub.entity.Organization;
 import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
 import mks.myworkspace.cvhub.entity.User;
@@ -38,6 +41,9 @@ import mks.myworkspace.cvhub.service.CvService;
 import mks.myworkspace.cvhub.service.JobApplicationService;
 import mks.myworkspace.cvhub.service.JobRequestService;
 import mks.myworkspace.cvhub.service.JobRoleService;
+import mks.myworkspace.cvhub.service.JobSavedService;
+import mks.myworkspace.cvhub.service.FollowedOrganizationService;
+import mks.myworkspace.cvhub.service.OrganizationService;
 import mks.myworkspace.cvhub.service.LocationService;
 import mks.myworkspace.cvhub.service.ParsingCVService;
 import mks.myworkspace.cvhub.service.UserService;
@@ -53,6 +59,12 @@ public class ResumeController  extends BaseController  {
 	JobRoleService jobRoleService;
 	@Autowired
 	JobApplicationService jobApplicationService;
+	@Autowired
+	JobSavedService jobSavedService;
+	@Autowired
+	FollowedOrganizationService followedOrganizationService;
+	@Autowired
+	OrganizationService organizationService;
 	@Autowired
 	LocationService locationService;
 	 @Autowired
@@ -298,6 +310,100 @@ public class ResumeController  extends BaseController  {
 	        redirectAttributes.addFlashAttribute("successMessage", "Đã xóa đơn ứng tuyển thành công.");
 	    } catch (Exception e) {
 	        redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi xóa đơn ứng tuyển: " + e.getMessage());
+	    }
+	    return mav;
+	}
+	@RequestMapping(value = { "/profile/savedjob" }, method = RequestMethod.GET)
+	public ModelAndView viewSavedJobs() {
+	    ModelAndView mav = new ModelAndView("signInOut/savedJob");
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    User currentUser = userService.findUserByEmail(auth.getName());
+
+	    // Lấy danh sách các JobApplication của người dùng
+	    List<JobSaved> savedJobs = jobSavedService.getJobSavedByUser(currentUser);
+	  
+	    // Thêm danh sách vào model
+	    mav.addObject("savedJobs", savedJobs);
+	    return mav;
+	}
+	@RequestMapping(value = { "/profile/followedorganization" }, method = RequestMethod.GET)
+	public ModelAndView viewFollowedOrganizations() {
+	    ModelAndView mav = new ModelAndView("signInOut/followedOrganization");
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    User currentUser = userService.findUserByEmail(auth.getName());
+
+	    // Lấy danh sách các JobApplication của người dùng
+	    List<FollowedOrganization> follow = followedOrganizationService.getFollowedOrganizationByUser(currentUser);
+	  
+	    // Thêm danh sách vào model
+	    mav.addObject("followedOrganization", follow);
+	    return mav;
+	}
+	@PostMapping("/saveJob/{jobRequestId}")
+	public ModelAndView savedJob(@PathVariable Long jobRequestId, RedirectAttributes redirectAttributes) {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    User currentUser = userService.findUserByEmail(auth.getName());
+	    ModelAndView mav = new ModelAndView("redirect:/jobrequests/" + jobRequestId);
+
+	    // Kiểm tra xem người dùng đã lưu công việc chưa
+	    boolean hasSaved = jobSavedService.hasJobSaved(currentUser, jobRequestId);
+	    if (hasSaved) {
+	        redirectAttributes.addFlashAttribute("errorMessage", "Bạn đã lưu công việc này.");
+	        return mav;
+	    }
+
+	    JobRequest jobRequest = jobRequestService.getRepo().findById(jobRequestId).orElse(null);
+	    if (jobRequest != null) {
+	        jobSavedService.AddJobSaved(currentUser, jobRequest);
+	        redirectAttributes.addFlashAttribute("successMessage", "Đã lưu công việc thành công.");
+	    } else {
+	        redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy công việc.");
+	    }
+
+	    return mav;
+	}
+	@PostMapping("/organization/followedorganization/{orgId}")
+	public ModelAndView followedOrganization(@PathVariable Long orgId, RedirectAttributes redirectAttributes) {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    User currentUser = userService.findUserByEmail(auth.getName());
+	    ModelAndView mav = new ModelAndView("redirect:/organization/" + orgId);
+
+	    // Kiểm tra xem người dùng đã lưu công việc chưa
+	    boolean hasSaved = followedOrganizationService.hasFollowedOrganization(currentUser, orgId);
+	    if (hasSaved) {
+	        redirectAttributes.addFlashAttribute("errorMessage", "Bạn đã theo dõi công ty này.");
+	        return mav;
+	    }
+
+	    Organization organization = organizationService.getRepo().findById(orgId).orElse(null);
+	    if (organization != null) {
+	    	followedOrganizationService.AddFollowedOrganization(currentUser, organization);
+	        redirectAttributes.addFlashAttribute("successMessage", "Đã theo dõi công ty thành công.");
+	    } else {
+	        redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy công ty này.");
+	    }
+
+	    return mav;
+	}
+	@PostMapping("/profile/savedjob/delete/{id}")
+	public ModelAndView deleteJobSaved(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+	    ModelAndView mav = new ModelAndView("redirect:/profile/savedjob");
+	    try {
+	    	jobSavedService.deleteJobSavedById(id);
+	        redirectAttributes.addFlashAttribute("successMessage", "Đã xóa công việc thành công.");
+	    } catch (Exception e) {
+	        redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi xóa công việc: " + e.getMessage());
+	    }
+	    return mav;
+	}
+	@PostMapping("/profile/followedorganization/delete/{id}")
+	public ModelAndView deleteFollowedOrganization(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+	    ModelAndView mav = new ModelAndView("redirect:/profile/followedorganization");
+	    try {
+	    	followedOrganizationService.deleteFollowedOrganizationById(id);
+	        redirectAttributes.addFlashAttribute("successMessage", "Đã bỏ theo dõi thành công.");
+	    } catch (Exception e) {
+	        redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi bỏ theo dõi: " + e.getMessage());
 	    }
 	    return mav;
 	}
