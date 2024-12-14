@@ -12,7 +12,7 @@
                 <!-- Tìm kiếm theo tên công ty -->
 		<form method="get" action="/cvhub-web/searchOrganization"
 			class="form-inline d-flex align-items-center">
-			<label for="companyName" class="mr-2 mb-0">Filter by Company Name:</label> <input type="text" id="companyName" name="companyName" style="width: 200px;" placeholder="Company Name" class="form-control"> 
+			<label for="companyName" class="mr-2 mb-0">Filter by Company Name:</label> <input type="text" id="companyName" maxlength="254" name="companyName" style="width: 200px;" placeholder="Company Name" class="form-control"> 
 			<label for="location" class="mr-2 ml-3 mb-0"> Location:</label>
 			 <select name="location" id="locationSelect" class="option-item-sort form-select" onchange="searchJobs(0)" style="width: 400px;">
 				<option value="0">Tất cả tỉnh/thành phố</option>

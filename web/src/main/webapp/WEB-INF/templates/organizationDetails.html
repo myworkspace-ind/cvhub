@@ -93,7 +93,7 @@
 				<div class="form-group">
 					<label for="namejob">Tên công việc cần tuyển dụng*</label> <input
 						type="text" class="form-control" id="namejob" name="title"
-						required>
+						required maxlength="254">
 				</div>
 				<div class="form-divider"></div>
 				<div class="form-group">
@@ -153,13 +153,13 @@
 				<div class="form-group">
 					<label for="requirementsCandidate">Yêu cầu ứng viên*</label>
 					<textarea id="requirementsCandidate" name="requirementsCandidate"
-						required
+						required maxlength="3000"
 						placeholder="Nhập yêu cầu ứng viên (mỗi dòng là một gạch đầu dòng)"></textarea>
 				</div>
 				<div class="form-divider"></div>
 				<div class="form-group">
 					<label for="benefitCandidate">Quyền lợi ứng viên*</label>
-					<textarea id="benefitCandidate" name="benefitCandidate" required
+					<textarea id="benefitCandidate" name="benefitCandidate" required maxlength="3000"
 						placeholder="Nhập quyền lợi ứng viên (mỗi dòng là một gạch đầu dòng)"></textarea>
 				</div>
 			</div>
@@ -168,7 +168,7 @@
 			<div class="form-row">
 				<div class="form-group">
 					<label for="jobDescription">Chi tiết công việc*</label>
-					<textarea id="jobDescription" name="jobDescription" required
+					<textarea id="jobDescription" name="jobDescription" required maxlength="3000"
 						placeholder="Nhập chi tiết công việc (mỗi dòng là một gạch đầu dòng)"></textarea>
 				</div>
 			</div>
@@ -183,7 +183,23 @@
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+	<script>
+    const experienceInput = document.getElementById('experience');
+    
+    experienceInput.addEventListener('input', function () {
+        // Chặn giá trị nhập vượt quá 2 chữ số
+        if (this.value.length > 2) {
+            this.value = this.value.slice(0, 2); // Chỉ giữ 2 ký tự đầu
+        }
+    });
 
+    experienceInput.addEventListener('keydown', function (e) {
+        // Chặn nhập thêm ký tự không hợp lệ (chỉ cho phép số từ 0 đến 9)
+        if (this.value.length >= 2 && e.key >= '0' && e.key <= '9') {
+            e.preventDefault(); // Ngăn người dùng nhập thêm
+        }
+    });
+</script>
 </body>
 
 </html>

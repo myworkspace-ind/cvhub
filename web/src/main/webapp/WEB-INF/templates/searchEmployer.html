@@ -20,7 +20,7 @@
     <nav class="navbar">
 	    <div class="search-container d-flex align-items-center">
 	        <form class="search-form" action="search-employer" method="GET">
-	            <input type="text" name="keyword" placeholder="Nhập tên công ty" th:value="${keyword}">
+	            <input type="text" name="keyword" placeholder="Nhập tên công ty" maxlength="254" th:value="${keyword}">
 	            <input type="hidden" name="limit" th:value="${limit}"> <!-- Truyền giá trị limit -->
 	            <button type="submit">Tìm kiếm</button>
 	        </form>
