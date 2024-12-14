@@ -19,13 +19,14 @@
         </div>
         <div class="content">
             <p>Bạn đã có sẵn CV của mình, chỉ cần tải CV lên, hệ thống sẽ tự động đề xuất CV của bạn tới những nhà tuyển dụng uy tín. Tiết kiệm thời gian, tìm việc thông minh, nắm bắt cơ hội và làm chủ đường đua nghề nghiệp của chính mình.</p>
-            <form id="cv-upload-form"th:action="@{/completeCV}" method="post" enctype="multipart/form-data">
+            <form id="cv-upload-form" th:action="@{/completeCV}" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
                 <div class="upload-area" onclick="document.getElementById('file-upload').click()">
                     <p>Tải lên CV từ máy tính, chọn hoặc kéo thả</p>
                     <p>Hỗ trợ định dạng .doc, .docx, pdf có kích thước dưới 5MB</p>
                     <input type="file" id="file-upload" name="file" accept=".doc,.docx,.pdf" onchange="updateFileName()">
                     <div id="file-name"></div>
                 </div>
+                <div id="error-message" style="color: red; display: none; margin: 10px;">Vui lòng chọn tệp trước khi tải lên.</div>
                 <button type="submit" class="upload-button">Tải CV lên</button>
             </form>
             <div class="features">
@@ -41,5 +42,32 @@
         </div>
     </div>
     <script type="text/javascript" th:src="@{/resources/uploadCV/uploadCV.js}" ></script> 
+
+    <script>
+        function updateFileName() {
+            var fileInput = document.getElementById('file-upload');
+            var fileNameDiv = document.getElementById('file-name');
+            if (fileInput.files.length > 0) {
+                fileNameDiv.textContent = fileInput.files[0].name;
+            } else {
+                fileNameDiv.textContent = '';
+            }
+        }
+    
+        function validateForm() {
+            var fileInput = document.getElementById('file-upload');
+            var errorMessage = document.getElementById('error-message');
+            
+            // Kiểm tra xem người dùng đã chọn file chưa
+            if (fileInput.files.length === 0) {
+                errorMessage.style.display = 'block'; // Hiển thị thông báo lỗi
+                return false; // Ngừng submit form
+            }
+            
+            // Nếu đã chọn file, ẩn thông báo lỗi
+            errorMessage.style.display = 'none';
+            return true; // Tiếp tục submit form
+        }
+    </script>
 </body>
 </html>
