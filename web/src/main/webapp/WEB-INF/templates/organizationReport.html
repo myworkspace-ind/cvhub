@@ -197,7 +197,7 @@
 		    fetch(`/cvhub-web/report/org/jobRequests?orgId=${orgId}`)
 		      .then(response => response.json())
 		      .then(data => {
-		        populateModal('Jobs', data, ['Job ID', 'Title', 'Location', 'Experience (years)', 'Salary']);
+		        populateModal('Jobs', data, ['Job ID', 'Title', 'Location', 'Experience (years)', 'Salary', 'Detail']);
 		      });
 		  });
 		});
@@ -235,6 +235,9 @@
 		            <td>${item.location}</td>
 		            <td>${item.experience || 'N/A'}</td>
 		            <td>${item.salary || 'N/A'}</td>
+		            <td><button class="btn btn-primary btn-sm text-nowrap p-2" 
+	                    onclick="window.location.href='/cvhub-web/jobrequests/${item.id}'">View</button>
+	                </td>
 		          </tr>`;
 		      } else if (title === 'Applicants') {
 		        // JobApplicationSummaryDTO
