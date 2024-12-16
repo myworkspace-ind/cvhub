@@ -53,15 +53,8 @@ public class JobRoleImpl implements JobRoleService {
 	}
 
 	@Override
-	public boolean checkExistTitle(String title) {
-		if (this.findByTitle(title) != null) {
-			return true;
-		}
-		return false;
+	public boolean existsByTitle(String title) {
+		return getRepo().existsByTitle(title);
 	}
 
-	@Override
-	public JobRole findByTitle(String title) {
-		return repo.findByTitle(title);
-	}
 }
