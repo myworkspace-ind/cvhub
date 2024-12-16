@@ -21,13 +21,13 @@ public class JobRoleImpl implements JobRoleService {
 
 	@Override
 	public JobRole createJobRole(String title, String description) {
-		
-		//kiem tra cac tham so dau vao
+
+		// kiem tra cac tham so dau vao
 		if (title == null) {
 			throw new IllegalArgumentException("Title must not be null or empty.");
 		}
 		JobRole jobRole = new JobRole(title, description);
-		
+
 		return jobRole;
 	}
 
@@ -35,13 +35,13 @@ public class JobRoleImpl implements JobRoleService {
 	public JobRole updateJobRole(JobRole job, String title, String description) {
 		job.setTitle(title);
 		job.setDescription(description);
-		
+
 		return getRepo().save(job);
 	}
 
 	@Override
 	public void deleteJobRole(JobRole job) {
-		if(job == null) {
+		if (job == null) {
 			throw new IllegalArgumentException("JobRole must not be null.");
 		}
 		getRepo().delete(job);
@@ -51,4 +51,10 @@ public class JobRoleImpl implements JobRoleService {
 	public Page<JobRole> getAllJobRole(Pageable pageable) {
 		return repo.findAll(pageable);
 	}
+
+	@Override
+	public boolean existsByTitle(String title) {
+		return getRepo().existsByTitle(title);
+	}
+
 }

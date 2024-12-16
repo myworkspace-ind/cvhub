@@ -17,4 +17,5 @@ public interface JobRoleService {
 	JobRole updateJobRole(JobRole job, String title, String description);
 	void deleteJobRole(JobRole job);
 	Page<JobRole> getAllJobRole(Pageable pageable);
+	boolean existsByTitle(String title);
 }

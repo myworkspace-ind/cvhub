@@ -13,6 +13,9 @@
 			<a th:href="@{/jobroles/add}" class="btn btn-primary">Add Job
 				Role</a>
 		</div>
+		<div th:if="${mess}" class="alert alert-warning" role="alert">
+				<span th:text="${mess}"></span>
+		</div>
 		<table class="table table-striped">
 			<thead>
 				<tr>
