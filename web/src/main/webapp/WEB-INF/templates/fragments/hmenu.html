@@ -56,6 +56,17 @@
 		<li><span title="About"> <a style="width: 80px;"
 				th:href="@{/jobPosting}">Job posting</a>
 		</span></li>
+		<li>
+	      <span title="listbusiness" th:class="${isSelectedConfiguration != null && isSelectedConfiguration ? 'current' : ''}">
+	        <a th:href="@{/organization/list}">Doanh Nghiệp</a>
+	      </span>
+	  </li>
+	  <li>
+    <span title="thongke" th:class="${isSelectedConfiguration != null && isSelectedConfiguration ? 'current' : ''}">
+	        <a th:href="@{/thongke}">Thống Kê</a>
+	    </span>
+	</li>
+	  
 		
 	</ul>
 	<!-- Right-aligned dropdown button -->
@@ -74,8 +85,8 @@
 	<div class="auth-buttons">
     <!-- Khi chưa đăng nhập -->
     <div th:unless="${#httpServletRequest.remoteUser}">
-        <a href="/login" class="btn btn-primary">Đăng nhập</a>
-        <a href="/register" class="btn btn-secondary">Đăng ký</a>
+        <a th:href="@{/login}" class="btn btn-primary">Đăng nhập</a>
+        <a th:href="@{/register}" class="btn btn-secondary">Đăng ký</a>
     </div>
 
     <!-- Khi đã đăng nhập -->
@@ -102,6 +113,17 @@
                 <li>
                     <a th:href="@{/profile/applications}" class="dropdown-item">
                         <i class="fas fa-briefcase me-2"></i>Việc làm đã ứng tuyển
+                    </a>
+                </li>
+                
+                <li>
+                    <a th:href="@{/profile/savedjob}" class="dropdown-item">
+                        <i class="fas fa-briefcase me-2"></i>Việc làm đã lưu
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/profile/followedorganization}" class="dropdown-item">
+                        <i class="fas fa-building me-2"></i>Công ty đã theo dõi
                     </a>
                 </li>
                 <li><hr class="dropdown-divider"></li>

@@ -1,7 +1,10 @@
 package mks.myworkspace.cvhub.service.impl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,4 +161,30 @@ public class UserImpl implements UserService {
         String[] parts = fullName.split(" ");
         return parts.length > 1 ? parts[parts.length - 1] : "";
     }
+
+	@Override
+	public void deleteUserById(Long id) {
+		repo.deleteById(id);
+	}
+	 @Override
+	    public Long getUserCountPerMonth(int month, int year) {
+	        // Đảm bảo rằng bạn gọi 'repo.getUserCountPerMonth()' thay vì 'userRepository.getUserCountPerMonth()'
+	        return repo.getUserCountPerMonth(month, year);
+	    }
+
+	    @Override
+	    public List<Long> getUserCountsPerYear(int year) {
+	        List<Object[]> result = repo.getUserCountPerYear(year);
+	        
+	        // Chuyển kết quả trả về thành dạng mảng Long cho dễ xử lý
+	        List<Long> userCounts = new ArrayList<>(Collections.nCopies(12, 0L));  // Mảng 12 tháng, mặc định là 0
+	        for (Object[] row : result) {
+	            Integer month = (Integer) row[0];  // Tháng
+	            Long count = (Long) row[1];        // Số lượng người dùng
+	            userCounts.set(month - 1, count);  // Cập nhật số lượng cho tháng tương ứng
+	        }
+	        return userCounts;
+	    }
+
+
 }

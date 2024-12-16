@@ -23,7 +23,7 @@
                        <form th:if="${reg != null}" id="employerForm" th:action="@{/registerOrganization}" method="post" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label for="company-name" class="form-label">Tên công ty*</label>
-                                <input type="text" class="form-control" id="company-name" name="title" required>
+                                <input type="text" class="form-control" id="company-name" maxlength="254" name="title" required>
                             </div>
 
                            <div class="mb-3">
@@ -45,17 +45,17 @@
 
                             <div class="mb-3">
                                 <label for="website" class="form-label">Website công ty</label>
-                                <input type="url" class="form-control" id="website" name="website" placeholder="https://example.com">
+                                <input type="url" class="form-control" id="website" maxlength="254" name="website" placeholder="https://example.com">
                             </div>
 
                             <div class="mb-3">
                                 <label for="summary" class="form-label">Tóm tắt công ty *</label>
-                                <textarea class="form-control" id="summary" name="summary" rows="3" required></textarea>
+                                <textarea class="form-control" id="summary" name="summary" maxlength="254" rows="3" required></textarea>
                             </div>
 
                             <div class="mb-3">
                                 <label for="detail" class="form-label">Chi tiết công ty</label>
-                                <textarea class="form-control" id="detail" name="detail" rows="5"></textarea>
+                                <textarea class="form-control" id="detail" name="detail" maxlength="254" rows="5"></textarea>
                             </div>
 
                             <button type="submit" class="btn btn-primary">Lưu và Tiếp tục →</button>
@@ -64,7 +64,7 @@
                         <form th:if="${update != null}" id="employerForm" th:action="@{'/organization/update/' + ${org.id}}" method="post" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label for="company-name" class="form-label">Tên công ty*</label>
-                                <input th:value="${org.title}" type="text" class="form-control" id="company-name" name="title" required>
+                                <input th:value="${org.title}" type="text" class="form-control" maxlength="254" id="company-name" name="title" required>
                             </div>
 
                            <div class="mb-3">
@@ -87,17 +87,17 @@
 
                             <div class="mb-3">
                                 <label for="website" class="form-label">Website công ty</label>
-                                <input th:value="${org.website}" type="url" class="form-control" id="website" name="website" placeholder="https://example.com">
+                                <input th:value="${org.website}" type="url" maxlength="254" class="form-control" id="website" name="website" placeholder="https://example.com">
                             </div>
 
                             <div class="mb-3">
                                 <label for="summary" class="form-label">Tóm tắt công ty *</label>
-                                <textarea th:text="${org.summary}" class="form-control" id="summary" name="summary" rows="3" required></textarea>
+                                <textarea th:text="${org.summary}" class="form-control" maxlength="254" id="summary" name="summary" rows="3" required></textarea>
                             </div>
 
                             <div class="mb-3">
                                 <label for="detail" class="form-label">Chi tiết công ty</label>
-                                <textarea th:text="${org.detail}"  class="form-control" id="detail" name="detail" rows="5"></textarea>
+                                <textarea th:text="${org.detail}"  class="form-control" maxlength="254" id="detail" name="detail" rows="5"></textarea>
                             </div>
 
                             <button type="submit" class="btn btn-primary">Lưu và Tiếp tục →</button>

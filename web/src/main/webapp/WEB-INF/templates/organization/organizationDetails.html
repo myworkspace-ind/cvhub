@@ -5,21 +5,17 @@
 <meta charset="UTF-8">
 <title>Organization Details</title>
 <link rel="stylesheet"
-	th:href="@{/resources/organizationDetails/style.css}" />
-<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
+	th:href="@{/resources/main/organizationDetails.css}" /> 
+ <link rel="stylesheet" th:href="@{/resources/home/style.css}" />
 <script type="text/javascript"
 	th:src="@{/resources/organizationDetails/organizationDetails.js}"></script>
 </head>
 
 <body>
-	<div th:replace="~{fragments/header :: header}"></div>
-		<!-- Hiển thị thông báo thành công -->
-<div class="alert alert-success" style="margin-top: 50px;" th:if="${successMessage}" th:text="${successMessage}"></div>
-
-<!-- Hiển thị thông báo lỗi -->
-<div class="alert alert-danger" style="margin-top: 50px;" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+	<th:block th:include="fragments/hmenu"></th:block>
 	
 	<div class="container">
+	<a href="/cvhub-web/main/report/organization" class="btn btn-primary">Quay lại</a>
 		<div class="org-header">
 			<div class="org-logo">
 				<img th:src="@{/images/{logoId}(logoId=${organization.logoID})}"
@@ -43,13 +39,7 @@
 			<div th:if="${isOwner}">
 				<form th:action="@{/organization/update/{orgId}(orgId=${organization.id})}" method="get">
 					<button id="" class="follow-btn">Chỉnh sửa thông tin công ty</button>
-				</form>			
-			</div>
-			<div th:if="${!isOwner}">
-				<form th:action="@{/organization/followedorganization/{orgId}(orgId=${organization.id})}" method="post">
-					<button id="" class="follow-btn">Theo dõi công ty</button>
-				</form>			
-			</div>
+				</form>			</div>
 		</div>
 
 		<div class="content-section">
@@ -105,7 +95,7 @@
 				<div class="form-group">
 					<label for="namejob">Tên công việc cần tuyển dụng*</label> <input
 						type="text" class="form-control" id="namejob" name="title"
-						required maxlength="254">
+						required>
 				</div>
 				<div class="form-divider"></div>
 				<div class="form-group">
@@ -165,13 +155,13 @@
 				<div class="form-group">
 					<label for="requirementsCandidate">Yêu cầu ứng viên*</label>
 					<textarea id="requirementsCandidate" name="requirementsCandidate"
-						required maxlength="3000"
+						required
 						placeholder="Nhập yêu cầu ứng viên (mỗi dòng là một gạch đầu dòng)"></textarea>
 				</div>
 				<div class="form-divider"></div>
 				<div class="form-group">
 					<label for="benefitCandidate">Quyền lợi ứng viên*</label>
-					<textarea id="benefitCandidate" name="benefitCandidate" required maxlength="3000"
+					<textarea id="benefitCandidate" name="benefitCandidate" required
 						placeholder="Nhập quyền lợi ứng viên (mỗi dòng là một gạch đầu dòng)"></textarea>
 				</div>
 			</div>
@@ -180,7 +170,7 @@
 			<div class="form-row">
 				<div class="form-group">
 					<label for="jobDescription">Chi tiết công việc*</label>
-					<textarea id="jobDescription" name="jobDescription" required maxlength="3000"
+					<textarea id="jobDescription" name="jobDescription" required
 						placeholder="Nhập chi tiết công việc (mỗi dòng là một gạch đầu dòng)"></textarea>
 				</div>
 			</div>
@@ -195,23 +185,7 @@
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-	<script>
-    const experienceInput = document.getElementById('experience');
-    
-    experienceInput.addEventListener('input', function () {
-        // Chặn giá trị nhập vượt quá 2 chữ số
-        if (this.value.length > 2) {
-            this.value = this.value.slice(0, 2); // Chỉ giữ 2 ký tự đầu
-        }
-    });
 
-    experienceInput.addEventListener('keydown', function (e) {
-        // Chặn nhập thêm ký tự không hợp lệ (chỉ cho phép số từ 0 đến 9)
-        if (this.value.length >= 2 && e.key >= '0' && e.key <= '9') {
-            e.preventDefault(); // Ngăn người dùng nhập thêm
-        }
-    });
-</script>
 </body>
 
 </html>

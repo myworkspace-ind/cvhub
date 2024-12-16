@@ -79,7 +79,7 @@
 			    <!-- filter condition -->
 			    <div>
 			        <label for="timePeriod">Hiển thị theo:</label>
-			        <select name="timePeriod" id="timePeriod" class="form-control mr-3" style="width: 150px;" onchange="">
+			        <select name="timePeriod" id="timePeriod" class="mr-3" style="width: 150px;" onchange="">
 			            <option value="today" th:selected="${period == 'today'}">Hôm nay</option>
 			            <option value="this_week" th:selected="${period == 'this_week'}">Tuần này</option>
 			            <option value="this_month" th:selected="${period == 'this_month'}">Tháng này</option>
@@ -93,7 +93,7 @@
 	   </div>
 
 		<!-- datatable -->
- 		<div>
+ 		<div class="mb-3">
             <table>
 				<thead style="background-color: #f8f9fa;">
 					<tr>
@@ -197,7 +197,7 @@
 		    fetch(`/cvhub-web/report/org/jobRequests?orgId=${orgId}`)
 		      .then(response => response.json())
 		      .then(data => {
-		        populateModal('Jobs', data, ['Job ID', 'Title', 'Location', 'Experience (years)', 'Salary']);
+		        populateModal('Jobs', data, ['Job ID', 'Title', 'Location', 'Experience (years)', 'Salary', 'Detail']);
 		      });
 		  });
 		});
@@ -235,6 +235,9 @@
 		            <td>${item.location}</td>
 		            <td>${item.experience || 'N/A'}</td>
 		            <td>${item.salary || 'N/A'}</td>
+		            <td><button class="btn btn-primary btn-sm text-nowrap p-2" 
+	                    onclick="window.location.href='/cvhub-web/jobrequests/${item.id}'">View</button>
+	                </td>
 		          </tr>`;
 		      } else if (title === 'Applicants') {
 		        // JobApplicationSummaryDTO

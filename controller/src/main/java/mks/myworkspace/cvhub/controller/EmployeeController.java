@@ -10,9 +10,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import mks.myworkspace.cvhub.entity.CV;
 import mks.myworkspace.cvhub.entity.JobApplication;
@@ -46,7 +48,8 @@ public class EmployeeController {
         ModelAndView mav = new ModelAndView("employee-list");
 
         Pageable pageable = PageRequest.of(page, size); // Tạo Pageable từ page và size
-        Page<User> cvPage = userRepository.findUsersWithCVs(pageable);
+        //Page<User> cvPage = userRepository.findUsersWithCVs(pageable);
+        Page<User> cvPage = userRepository.findAll(pageable);
 
         mav.addObject("employees", cvPage.getContent()); // Truyền danh sách CV vào
         mav.addObject("currentPage", page); // Trang hiện tại
@@ -92,5 +95,19 @@ public class EmployeeController {
         mav.addObject("totalPages", cvPage.getTotalPages()); // Tổng số trang
         mav.addObject("keyword", keyword);
         return mav;
+    }
+	
+	/**
+     * Xóa CV theo ID.
+     * @param id ID của CV cần xóa.
+     * @param redirectAttributes Dùng để thêm thông báo khi xóa.
+     * @return Redirect về trang chi tiết nhân viên hoặc danh sách nhân viên.
+     */
+    @GetMapping("/employee/detail/delete-cv/{id}")
+    public String deleteCV(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    	User employee = userRepository.findUserByCVId(id).orElse(null);
+        cvRepository.deleteById(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Xóa CV thành công!");
+        return "redirect:/employee/detail?id=" + employee.getId();
     }
 }

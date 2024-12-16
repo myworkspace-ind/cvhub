@@ -15,6 +15,9 @@
 	</div>
 	
 	<div class="cv-management-container">
+		<div th:if="${successMessage}" class="alert alert-success">
+   	 		<span th:text="${successMessage}"></span>
+		</div>
 
 		<div class="section" style="margin:0 100px">
 	    <div class="column noColor col" style="height: auto;width:auto; padding:0 30px">
@@ -109,8 +112,8 @@
 						<div th:if="${cv.isprimary}">
 							<button class="action-btn primary-cv" disabled>CV Chính</button>
 						</div>
-
 						<a th:href="@{'/renderCV/' + ${cv.id}}" class="action-btn">Xem và Tải xuống</a>
+						<a th:href="@{'/employee/detail/delete-cv/' + ${cv.id}}" class="action-btn" style="color: red;" onclick="return confirm('Bạn có chắc muốn xóa CV này?');">Xoá</a>
 					</div>
 				</div>
 			</div>
