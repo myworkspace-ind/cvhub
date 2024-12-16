@@ -103,15 +103,16 @@ public class JobRoleController {
 			String title = jobDTO.getTitle();
 
 			// neu trung title thi set thong bao
-			if (jobRoleService.existsByTitle(title)) {
-				re.addFlashAttribute("mess", "Title already exists");
-				
-			    return "redirect:/jobroles/edit/" + id;
-			} else {
+			if (jobRoleService.canEditByTitle(title)) {
 				JobRole updateJob = jobRoleService.updateJobRole(job, jobDTO.getTitle(), jobDTO.getDescription());
 				re.addFlashAttribute("mess", "Updater jobrole thành công");
-				
+
 				return "redirect:/jobroles";
+			} else {
+
+				re.addFlashAttribute("mess", "Title already exists or not exists, please try again");
+
+				return "redirect:/jobroles/edit/" + id;
 			}
 
 		}

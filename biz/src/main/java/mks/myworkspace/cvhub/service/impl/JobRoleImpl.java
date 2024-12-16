@@ -57,4 +57,10 @@ public class JobRoleImpl implements JobRoleService {
 		return getRepo().existsByTitle(title);
 	}
 
+	@Override
+	public boolean canEditByTitle(String title) {
+		return getRepo().existsExactlyOneByTitle(title);
+	}
+
+	
 }
