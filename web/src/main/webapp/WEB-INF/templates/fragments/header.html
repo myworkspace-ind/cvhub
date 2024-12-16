@@ -32,7 +32,7 @@
 				<div class="auth-buttons">
 					<!-- Khi chưa đăng nhập -->
 					<th:block th:unless="${#httpServletRequest.remoteUser}">
-						<a class="login btn" th:href="@{/login}">Đăng nhập</a>
+						<a class="login btn" th:href="'https://myworkspace.vn/cas/login?service=http://localhost:8080/cvhub-web/j_spring_cas_security_check'">Đăng nhập</a>
 						<a class="signup btn" th:href="@{/register}">Đăng ký</a>
 					</th:block>
 					<div class="profile-info" th:if="${#request.userPrincipal != null}">
