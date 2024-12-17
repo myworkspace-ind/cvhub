@@ -62,9 +62,35 @@
 		</div>
 
 		<div class="content-section">
-			<h2 class="section-title">Tuyển dụng</h2>
-			<ul class="job-list">
-				<li th:each="job : ${jobByOrganization}" class="job-item">
+		    <!-- Thêm một div chứa tiêu đề và form tìm kiếm/lọc -->
+		    <div style="display: flex; justify-content: space-between; align-items: center;">
+		        <h2 class="section-title">Tuyển dụng</h2>
+		
+		        <!-- Form tìm kiếm, lọc, sắp xếp -->
+		        <form th:action="@{/organization/{orgId}(orgId=${organization.id})}" method="get" style="display: flex; gap: 10px; align-items: center;">
+		            <input type="text" name="searchTerm" th:value="${searchTerm}" placeholder="Tìm kiếm công việc..." />
+		            
+		            <select name="locationCode">
+		                <option value="">Tất cả địa điểm</option>
+		                <option th:each="loc: ${locations}" 
+		                        th:value="${loc.code}" 
+		                        th:text="${loc.name}"
+		                        th:selected="${loc.code == selectedLocation}"></option>
+		            </select>
+		            
+		            <select name="sortBy">
+		                <option value="">Sắp xếp mặc định</option>
+		                <option value="date" th:selected="${selectedSortBy == 'date'}">Sắp xếp theo gày đăng</option>
+		                <option value="title" th:selected="${selectedSortBy == 'title'}">Sắp xếp theo tiêu đề</option>
+		            </select>
+		            
+		            <button type="submit" class="btn btn-success">Lọc/Tìm</button>
+		        </form>
+		    </div>
+		    
+		    <ul class="job-list">
+		        
+		        <li th:each="job : ${jobByOrganization}" class="job-item">
 					<div>
 						<div class="job-title" th:text="${job.title}"></div>
 						<div class="job-location" th:text="${job.location.name}"></div>
@@ -76,7 +102,26 @@
 					</form>
 
 				</li>
-			</ul>
+		    </ul>
+		
+		    <!-- Thêm thanh phân trang -->
+		    <div th:if="${totalPages > 1}" class="pagination-container">
+		        <ul class="pagination">
+		            <li th:if="${currentPage > 1}">
+		                <a th:href="@{/organization/{orgId}(orgId=${organization.id}, page=${currentPage - 1}, searchTerm=${searchTerm}, locationCode=${selectedLocation}, sortBy=${selectedSortBy})}">« Trước</a>
+		            </li>
+		
+		            <li th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+		                <a th:classappend="${pageNum == currentPage} ? 'active'" 
+		                   th:href="@{/organization/{orgId}(orgId=${organization.id}, page=${pageNum}, searchTerm=${searchTerm}, locationCode=${selectedLocation}, sortBy=${selectedSortBy})}"
+		                   th:text="${pageNum}"></a>
+		            </li>
+		
+		            <li th:if="${currentPage < totalPages}">
+		                <a th:href="@{/organization/{orgId}(orgId=${organization.id}, page=${currentPage + 1}, searchTerm=${searchTerm}, locationCode=${selectedLocation}, sortBy=${selectedSortBy})}">Sau »</a>
+		            </li>
+		        </ul>
+		    </div>
 		</div>
 
 		<div class="content-section">
