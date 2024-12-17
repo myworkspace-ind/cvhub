@@ -1,10 +1,12 @@
 package mks.myworkspace.cvhub.controller;
 
+import java.io.IOException;
 import java.net.http.HttpHeaders;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -162,5 +165,36 @@ public class UserController {
         mav.setViewName("/signInOut/editUser");
         return mav;
     }
+    
+ // API để upload ảnh
+ 	@PostMapping("/profile/upload_avatar")
+ 	public String uploadAvatar(@RequestParam("file") MultipartFile file) {
+ 		try {
+ 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+ 			User currentUser = userService.findUserByEmail(auth.getName());
+ 			currentUser.setImage(file.getBytes()); // Lưu ảnh dưới dạng byte[]
+ 			// Save updates
+ 			userService.getRepo().save(currentUser);
+ 			return "redirect:/profile/edit";
+ 		} catch (Exception e) {
+ 			return "redirect:/profile/edit";
+ 		}
+ 	}
+
+ 	@GetMapping(value = "/profile/avatar")
+ 	@ResponseBody
+ 	public ResponseEntity<byte[]> getImage() throws IOException {
+ 	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+ 	    User currentUser = userService.findUserByEmail(auth.getName());
+ 	    byte[] image = currentUser.getImage();
+
+ 	    if (image == null || image.length == 0) {
+ 	        // Load ảnh mặc định từ module "web"
+ 	        ClassPathResource defaultImage = new ClassPathResource("/image/defaultAv.png");
+ 	        image = defaultImage.getInputStream().readAllBytes();
+ 	    }
+
+ 	    return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(image);
+ 	}
 
 }

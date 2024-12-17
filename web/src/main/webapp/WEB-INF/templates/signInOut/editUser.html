@@ -7,6 +7,14 @@
 <link rel="stylesheet" th:href="@{/resources/signInOut/editUser.css}" />
 <link rel="stylesheet" th:href="@{/resources/home/style.css}" />
 
+<link rel="stylesheet"
+	th:href="@{/resources/edit_avatar_tuan_22110450/edit-avatar.css}" />
+<!-- Cropper.js CSS: Dùng để cắt ảnh -->
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"
+	rel="stylesheet">
+<th:block th:include="fragments/head"></th:block>
+
 </head>
 
 <body>
@@ -20,10 +28,30 @@
 			<h1>Cài đặt thông tin cá nhân</h1>
 
 			<div class="profile-section">
-				<div class="profile-avatar">
-					<img th:src="@{/resources/image/defaultAv.png}"
-						alt="Profile Picture" class="avatar-img">
+				<!-- 				<div class="profile-avatar"> -->
+				<!-- 					<img th:src="@{/resources/image/defaultAv.png}" -->
+				<!-- 						alt="Profile Picture" class="avatar-img"> -->
+				<!-- 				</div> -->
+
+				<!-- Vùng chứa ảnh đại diện và nút chỉnh sửa -->
+				<div class="profile-img-wrapper">
+					<!-- Ảnh đại diện -->
+					<!-- 					<img id="avatar" src="https://via.placeholder.com/200" -->
+					<!-- 						alt="Ảnh đại diện" class="profile-img"> -->
+
+					<img id="avatar" th:src="@{/profile/avatar}" alt="Ảnh đại diện"
+						class="profile-img">
+
+					<!-- Input file ẩn dùng để chọn ảnh -->
+					<input type="file" id="imageInput" style="display: none;"
+						accept="image/*">
+					<!-- Nút máy ảnh -->
+					<button class="camera-icon-btn" type="button" id="upload-btn">
+						<i class="bi bi-camera"></i>
+						<!-- Icon máy ảnh từ Bootstrap Icons -->
+					</button>
 				</div>
+
 				<div class="profile-info">
 					<h2 th:text="${user.fullName}"></h2>
 					<p th:text="${user.email}"></p>
@@ -68,8 +96,9 @@
 		<div class="popup-content">
 			<span class="close-btn" onclick="togglePopup()">✖</span>
 			<h2>Thay đổi mật khẩu</h2>
-					<form id="changePasswordForm" th:action="@{/profile/changepassword}" method="post">
-			
+			<form id="changePasswordForm" th:action="@{/profile/changepassword}"
+				method="post">
+
 				<div class="form-group">
 					<label>Mật khẩu cũ</label> <input type="password"
 						name="oldPassword" required>
@@ -84,6 +113,44 @@
 				</div>
 				<button type="submit" class="btn-save">Thay đổi</button>
 			</form>
+		</div>
+	</div>
+
+	<!-- Modal để chỉnh sửa ảnh với Cropper.js -->
+	<div class="modal fade" id="cropperModal" tabindex="-1"
+		aria-labelledby="cropperModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header" style="background-color: white;">
+					<h5 class="modal-title" id="cropperModalLabel"
+						style="color: black;">Chọn ảnh đại diện</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<!-- Hiển thị ảnh trong modal -->
+					<div class="text-center">
+						<img id="cropperImage" src="" alt="Chỉnh sửa ảnh">
+					</div>
+					<!-- Thanh điều chỉnh zoom -->
+					<div class="slider-container">
+						<label for="zoom-range">Phóng to/Thu nhỏ:</label> <input
+							type="range" id="zoom-range" min="0.1" max="3" step="0.1"
+							value="1">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<form th:action="@{/profile/upload_avatar}" method="post"
+						enctype="multipart/form-data">
+						<!-- Input ẩn để lưu ảnh dưới dạng file -->
+						<input type="file" name="file" id="fileInput"
+							style="display: none;">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Đóng</button>
+						<button type="button" class="btn btn-primary" id="save-btn">Lưu</button>
+					</form>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -116,6 +183,12 @@
 			}
 		}
 	</script>
+
+	<!-- Cropper.js JS: Thư viện để cắt ảnh -->
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+	<script type="text/javascript"
+		th:src="@{/resources/edit_avatar_tuan_22110450/edit-avatar.js}"></script>
 </body>
 
 </html>
