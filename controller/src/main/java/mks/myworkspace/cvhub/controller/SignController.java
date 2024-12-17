@@ -152,10 +152,11 @@ public class SignController extends BaseController {
                     mav.setViewName("/signInOut/signup");
                     return mav;
                 }
-
+                
+                String combinedPhone = "(" + userDTO.getDialCode() + ") " + userDTO.getPhone();
                 // Tạo người dùng mới
                 User user = userService.createUser(userDTO.getFullName(), userDTO.getEmail(), 
-                        passwordEncoder.encode(userDTO.getPassword()), userDTO.getPhone());
+                        passwordEncoder.encode(userDTO.getPassword()), combinedPhone);
                 
                 // Gửi email xác nhận
                 if (registerUserConfirm) {
