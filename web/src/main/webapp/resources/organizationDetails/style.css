@@ -231,3 +231,35 @@
     border-radius: 5px;
     cursor: pointer;
 }
+
+/* Css cho phân trang */
+.pagination-container {
+    display: flex;
+    justify-content: center; /* Căn giữa phân trang */
+    margin-top: 20px;
+}
+
+.pagination {
+    list-style: none; /* Xóa dấu chấm */
+    display: flex;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+}
+
+.pagination li a {
+    text-decoration: none;
+    padding: 8px 12px;
+    border: 1px solid #ccc; /* Viền nhẹ */
+    border-radius: 4px; /* Bo tròn góc */
+    color: #333; /* Màu chữ trung tính */
+    background-color: #f8f9fa; /* Màu nền nhẹ */
+    transition: all 0.3s ease;
+}
+
+.pagination li a:hover,
+.pagination li a.active {
+    background-color: #00b14f; /* Màu nền xanh lá */
+    color: #fff; /* Chữ trắng */
+    border-color: #00b14f;
+}
