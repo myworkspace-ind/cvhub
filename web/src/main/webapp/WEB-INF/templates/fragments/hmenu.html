@@ -5,7 +5,6 @@
 <style>
 .dropdown:hover .dropdown-menu {
 	display: block;
-	
 }
 </style>
 </head>
@@ -32,9 +31,11 @@
 				href="javascript:void(0);">Report</a>
 		</span>
 			<ul class="dropdown-menu">
-				<li><a th:href="@{/main/report/organization}">Organization List</a></li>
+				<li><a th:href="@{/main/report/organization}">Organization
+						List</a></li>
 				<li><a th:href="@{/report_duy}">Job Report</a></li>
-				<li><a th:href="@{/report/organization}">Organization Report</a></li>
+				<li><a th:href="@{/report/organization}">Organization
+						Report</a></li>
 				<li><a th:href="@{/report/user}">User Report</a></li>
 			</ul></li>
 		<li><span title="About"> <a id="about" href="#">About</a>
@@ -42,7 +43,7 @@
 		<li><span title="About"> <a id="about"
 				th:href="@{/main/folder-account}">Folder</a>
 		</span></li>
-		
+
 		<li><span title="About"> <a id="about"
 				th:href="@{/main/dev_phuhao}">Search</a>
 		</span></li>
@@ -50,24 +51,22 @@
 				style="width: 200px;" id="dev_tuan_22110450"
 				th:href="@{/search_tuan}">Search Job With DataTable</a>
 		</span></li>
-		<li><span title="Job roles"> <a style="width: 80px;" id="jobroles"
-				th:href="@{/jobroles}">Job roles</a>
+		<li><span title="Job roles"> <a style="width: 80px;"
+				id="jobroles" th:href="@{/jobroles}">Job roles</a>
 		</span></li>
 		<li><span title="About"> <a style="width: 80px;"
 				th:href="@{/jobPosting}">Job posting</a>
 		</span></li>
-		<li>
-	      <span title="listbusiness" th:class="${isSelectedConfiguration != null && isSelectedConfiguration ? 'current' : ''}">
-	        <a th:href="@{/organization/list}">Doanh Nghiệp</a>
-	      </span>
-	  </li>
-	  <li>
-    <span title="thongke" th:class="${isSelectedConfiguration != null && isSelectedConfiguration ? 'current' : ''}">
-	        <a th:href="@{/thongke}">Thống Kê</a>
-	    </span>
-	</li>
-	  
-		
+		<li><span title="listbusiness"
+			th:class="${isSelectedConfiguration != null && isSelectedConfiguration ? 'current' : ''}">
+				<a th:href="@{/organization/list}">Doanh Nghiệp</a>
+		</span></li>
+		<li><span title="thongke"
+			th:class="${isSelectedConfiguration != null && isSelectedConfiguration ? 'current' : ''}">
+				<a th:href="@{/thongke}">Thống Kê</a>
+		</span></li>
+
+
 	</ul>
 	<!-- Right-aligned dropdown button -->
 	<!-- <ul class="nav mt-2 me-3">
@@ -83,58 +82,53 @@
 		</li>
 	</ul> -->
 	<div class="auth-buttons">
-    <!-- Khi chưa đăng nhập -->
-    <div th:unless="${#httpServletRequest.remoteUser}">
-        <a th:href="@{/login}" class="btn btn-primary">Đăng nhập</a>
-        <a th:href="@{/register}" class="btn btn-secondary">Đăng ký</a>
-    </div>
+		<!-- Khi chưa đăng nhập -->
+		<div th:unless="${#httpServletRequest.remoteUser}">
+			<a th:href="@{/login}" class="btn btn-primary">Đăng nhập</a> <a
+				th:href="@{/register}" class="btn btn-secondary">Đăng ký</a>
+		</div>
 
-    <!-- Khi đã đăng nhập -->
-    <div class="profile-info" th:if="${#request.userPrincipal != null}">
-        <div class="dropdown">
-            <button class="btn btn-light d-flex align-items-center" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <div class="avatar bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-2" style="width: 40px; height: 40px;">
-                    <span th:text="${#strings.substring(#request.userPrincipal.name,0,1)}"></span>
-                </div>
-                <span class="username" th:text="${#request.userPrincipal.name}"></span>
-            </button>
+		<!-- Khi đã đăng nhập -->
+		<div class="profile-info" th:if="${#request.userPrincipal != null}">
+			<div class="dropdown">
+				<button class="btn btn-light d-flex align-items-center"
+					type="button" id="profileDropdown" data-bs-toggle="dropdown"
+					aria-expanded="false">
+					<!--                 <div class="avatar bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-2" style="width: 40px; height: 40px;"> -->
+					<!--                     <span th:text="${#strings.substring(#request.userPrincipal.name,0,1)}"></span> -->
+					<!--                 </div> -->
+					<img id="avatar" th:src="@{/profile/avatar}" alt="Ảnh đại diện"
+						class="rounded-circle me-2" style="width: 35px; height: 35px;"> <span
+						class="username" th:text="${#request.userPrincipal.name}"></span>
+				</button>
 
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                <li>
-                    <a th:href="@{/profile/edit}" class="dropdown-item">
-                        <i class="fas fa-user-edit me-2"></i>Chỉnh sửa thông tin cá nhân
-                    </a>
-                </li>
-                <li>
-                    <a th:href="@{/profile/cv/manage}" class="dropdown-item">
-                        <i class="fas fa-file-alt me-2"></i>Quản lý CV
-                    </a>
-                </li>
-                <li>
-                    <a th:href="@{/profile/applications}" class="dropdown-item">
-                        <i class="fas fa-briefcase me-2"></i>Việc làm đã ứng tuyển
-                    </a>
-                </li>
-                
-                <li>
-                    <a th:href="@{/profile/savedjob}" class="dropdown-item">
-                        <i class="fas fa-briefcase me-2"></i>Việc làm đã lưu
-                    </a>
-                </li>
-                <li>
-                    <a th:href="@{/profile/followedorganization}" class="dropdown-item">
-                        <i class="fas fa-building me-2"></i>Công ty đã theo dõi
-                    </a>
-                </li>
-                <li><hr class="dropdown-divider"></li>
-                <li>
-                    <a th:href="@{/logout}" class="dropdown-item text-danger">
-                        <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
+				<ul class="dropdown-menu dropdown-menu-end"
+					aria-labelledby="profileDropdown">
+					<li><a th:href="@{/profile/edit}" class="dropdown-item"> <i
+							class="fas fa-user-edit me-2"></i>Chỉnh sửa thông tin cá nhân
+					</a></li>
+					<li><a th:href="@{/profile/cv/manage}" class="dropdown-item">
+							<i class="fas fa-file-alt me-2"></i>Quản lý CV
+					</a></li>
+					<li><a th:href="@{/profile/applications}"
+						class="dropdown-item"> <i class="fas fa-briefcase me-2"></i>Việc
+							làm đã ứng tuyển
+					</a></li>
+
+					<li><a th:href="@{/profile/savedjob}" class="dropdown-item">
+							<i class="fas fa-briefcase me-2"></i>Việc làm đã lưu
+					</a></li>
+					<li><a th:href="@{/profile/followedorganization}"
+						class="dropdown-item"> <i class="fas fa-building me-2"></i>Công
+							ty đã theo dõi
+					</a></li>
+					<li><hr class="dropdown-divider"></li>
+					<li><a th:href="@{/logout}" class="dropdown-item text-danger">
+							<i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
+					</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
 </div>
 <script th:src="@{/resources/home/b.js}"></script>
