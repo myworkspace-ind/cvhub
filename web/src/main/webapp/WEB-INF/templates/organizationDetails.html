@@ -80,15 +80,14 @@
 		            
 		            <select name="sortBy">
 		                <option value="">Sắp xếp mặc định</option>
-		                <option value="date" th:selected="${selectedSortBy == 'date'}">Sắp xếp theo gày đăng</option>
+		                <option value="date" th:selected="${selectedSortBy == 'date'}">Sắp xếp theo ngày đăng</option>
 		                <option value="title" th:selected="${selectedSortBy == 'title'}">Sắp xếp theo tiêu đề</option>
 		            </select>
-		            
-		            <button type="submit" class="btn btn-success">Lọc/Tìm</button>
+		            <button type="submit" class="apply-btn" style="width: 90px; height: 24px; font-size: 16px; padding: 5px;">Lọc/Tìm</button>
 		        </form>
 		    </div>
 		    
-		    <ul class="job-list">
+		    <!-- <ul class="job-list">
 		        
 		        <li th:each="job : ${jobByOrganization}" class="job-item">
 					<div>
@@ -102,7 +101,36 @@
 					</form>
 
 				</li>
-		    </ul>
+		    </ul> -->
+		    
+		    <ul class="job-list">
+			    <li th:each="job : ${jobByOrganization}" class="job-item">
+			        <div class="job-info">
+			            <!-- Tiêu đề công việc -->
+			            <div class="job-title">
+			            	<strong>Tiêu đề công việc:</strong>
+			            	<span th:text="${job.title}"></span>
+			            </div>
+			            
+			            <!-- Địa điểm làm việc -->
+			            <div class="job-location">
+			                <strong>Địa điểm làm việc:</strong>
+			                <span th:text="${job.location.name}"></span>
+			            </div>
+			            
+			            <!-- Ngày giờ đăng -->
+			            <div class="job-date">
+			                <strong>Ngày đăng:</strong>
+			                <span th:text="${#strings.substringBefore(job.createdDate, '.')}"></span>
+			            </div>
+			        </div>
+			
+			        <!-- Nút Chi tiết -->
+			        <form th:action="@{/jobrequests/{id}(id=${job.id})}" method="get">
+			            <button type="submit" class="apply-btn">Chi Tiết</button>
+			        </form>
+			    </li>
+			</ul>
 		
 		    <!-- Thêm thanh phân trang -->
 		    <div th:if="${totalPages > 1}" class="pagination-container">
