@@ -5,14 +5,16 @@
     <title>The generated source code Web Application for Sakai</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" th:href="@{/resources/search_tuan_22110450/style.css}"/>
     <link rel="stylesheet" th:href="@{/resources/home/style.css}"/>
     <link rel="stylesheet" th:href="@{/resources/home/jobRequest.css}"/>
+    
+	<th:block th:include="fragments/head"></th:block>
+
 </head>
 <body>
 
 <!-- Header -->
-<div th:replace="~{fragments/header :: header}"></div>
+<th:block th:include="fragments/hmenu"></th:block>
 
 <div class="container">
     <div class="row">
@@ -39,8 +41,8 @@
     </form>
 
     <!-- Job Request Table -->
-    <div class="table-responsive">
-        <table id="jobDataTable" class="table table-hover table-bordered">
+    <div class="oR-header-container">
+        <table id="jobDataTable" class="oR-table">
             <thead class="table-light">
                 <tr>
                     <th>Logo</th>

@@ -42,17 +42,18 @@
 				</div>
 			</div>
 
-			<!-- Cột bên phải chứa input và button -->
-			<div class="col-md-4 d-flex flex-wrap justify-content-md-end">
+			<div class="col-md-4 d-flex justify-content-md-end">
 				<div class="input-group">
-					<input type="text" class="form-control" placeholder="Enter text"
-						id="searchKeyword"> <span class="input-group-btn">
-						<button id="searchButton" class="btn btn-primary" type="button"
-							onclick="searchJobs(0)">Search</button>
-					</span>
+					<!-- Ô nhập liệu -->
+					<input type="text" class="form-control" maxlength="254" placeholder="Enter text"
+						id="searchKeyword">
+					<!-- Nút Search -->
+					<button id="searchButton" class="btn btn-primary" type="button"
+						onclick="searchJobs(0)">Search</button>
 				</div>
-
 			</div>
+
+
 		</div>
 		<div class="card mb-4 rounded-4 p-7">
 			<div class="card-header bg-transparent px-0 pt-0 pb-7">
@@ -88,7 +89,8 @@
 						<div class="col-auto">
 							<select name="industry" id="jobRoleSelect"
 								class="option-item-sort form-select"
-								onchange="applyFilter(this.selectedOptions[0].textContent, this.value)">
+								onchange="applyFilter(this.selectedOptions[0].textContent, this.value); searchJobs(0);">
+
 								<option value="0">Tất cả ngành nghề</option>
 							</select>
 						</div>

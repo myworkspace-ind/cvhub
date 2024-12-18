@@ -24,6 +24,9 @@ public class User {
     @Column(nullable = false)
     private String fullName;
     
+    @Lob // Annotation dùng để lưu dữ liệu dạng BLOB
+    private byte[] image;
+    
     @Column(unique = true, nullable = false)
     private String email;
     
@@ -49,4 +52,7 @@ public class User {
     @UpdateTimestamp
     @Column(name = "modified_date")
     private Date modifiedDate;
+    
+    @Setter
+    private String status ; 
 }

@@ -49,7 +49,7 @@
 		</div>
 	</nav>
 
-	<div class="container mt-4" style="max-width: 500px;">
+	<div class="container mt-4" style="max-width: 850px;">
 		<form th:action="@{/registerJob1}" method="POST"
 			class="p-4 border rounded bg-light shadow-sm">
 			<h3 class="text-center mb-4">Thêm thông tin tuyển dụng</h3>
@@ -57,13 +57,14 @@
 			<input type="hidden" id="organizationId" name="organizationId"
 				th:value="${organization.id}" />
 
-			<div class="form-group mb-3">
+			<div class="form-group mb-3 row">
+			<div class="col-md-6">
 				<label for="jobRoleId" class="form-label fw-bold">Tên công
 					việc cần tuyển dụng <em class="text-danger">*</em>
 				</label> <input type="text" class="form-control" id="namejob" name="title"
 					required>
 			</div>
-			<div class="form-group mb-3">
+			<div class="col-md-6">
 				<label for="jobRoleId" class="form-label fw-bold">Mảng ngành
 					nghề <em class="text-danger">*</em>
 				</label> <select id="jobRoleId" name="jobRoleId" class="form-select"
@@ -75,7 +76,9 @@
 					</th:block>
 				</select>
 			</div>
-			<div class="form-group mb-3">
+			</div>
+			<div class="form-group mb-3 row">
+			<div class="col-md-6">
 				<label for="location" class="form-label fw-bold">Địa điểm
 					làm việc <em class="text-danger">*</em>
 				</label> <select id="location" name="locationCode" class="form-select"
@@ -86,13 +89,21 @@
 					</th:block>
 				</select>
 			</div>
+			<div class="col-md-6">
+				<label for="deadlineApplication" class="form-label fw-bold">Hạn
+					nộp hồ sơ <em class="text-danger">*</em>
+				</label> <input type="date" id="deadlineApplication"
+					name="deadlineApplication"
+					class="form-control border-primary shadow-sm" required>
+			</div>
+			</div>
 			<div class="form-group mb-3">
 				<label for="detailsJob" class="form-label fw-bold">Chi tiết
 					công việc <em class="text-danger">*</em>
 				</label>
 				<textarea id="jobDescription" name="jobDescription"
 					class="form-control border-primary shadow-sm" rows="4"
-					placeholder="Nhập chi tiết công việc" required></textarea>
+					placeholder="Nhập chi tiết công việc" maxlength="3000" required></textarea>
 			</div>
 			<div class="form-group mb-3 row">
 				<div class="col-md-6">
@@ -100,7 +111,7 @@
 						kinh nghiệm <em class="text-danger">*</em>
 					</label> <input type="number" class="form-control" id="experience"
 						name="experience" min="0" placeholder="Nhập số năm kinh nghiệm"
-						required> <small class="form-text text-muted">Nhập
+						required max="99"> <small class="form-text text-muted">Nhập
 						số năm kinh nghiệm.</small>
 				</div>
 				<div class="col-md-6">
@@ -121,7 +132,7 @@
 				</label>
 				<textarea id="requirementsCandidate" name="requirementsCandidate"
 					class="form-control border-primary shadow-sm" rows="4"
-					placeholder="Nhập yêu cầu ứng viên" required></textarea>
+					placeholder="Nhập yêu cầu ứng viên" maxlength="3000" required></textarea>
 			</div>
 
 			<div class="form-group mb-3">
@@ -130,16 +141,10 @@
 				</label>
 				<textarea id="benefitCandidate" name="benefitCandidate"
 					class="form-control border-primary shadow-sm" rows="4"
-					placeholder="Nhập quyền lợi ứng viên" required></textarea>
+					placeholder="Nhập quyền lợi ứng viên" maxlength="3000" required></textarea>
 			</div>
 
-			<div class="form-group mb-3">
-				<label for="deadlineApplication" class="form-label fw-bold">Hạn
-					nộp hồ sơ <em class="text-danger">*</em>
-				</label> <input type="date" id="deadlineApplication"
-					name="deadlineApplication"
-					class="form-control border-primary shadow-sm" required>
-			</div>
+			
 			<div class="d-flex justify-content-center">
 				<button type="submit" class="btn btn-primary">Lưu</button>
 			</div>
@@ -194,5 +199,22 @@
 		document.getElementById("deadlineApplication").setAttribute("min",
 				today);
 	</script>
+	<script>
+    const experienceInput = document.getElementById('experience');
+    
+    experienceInput.addEventListener('input', function () {
+        // Chặn giá trị nhập vượt quá 2 chữ số
+        if (this.value.length > 2) {
+            this.value = this.value.slice(0, 2); // Chỉ giữ 2 ký tự đầu
+        }
+    });
+
+    experienceInput.addEventListener('keydown', function (e) {
+        // Chặn nhập thêm ký tự không hợp lệ (chỉ cho phép số từ 0 đến 9)
+        if (this.value.length >= 2 && e.key >= '0' && e.key <= '9') {
+            e.preventDefault(); // Ngăn người dùng nhập thêm
+        }
+    });
+</script>
 </body>
 </html>

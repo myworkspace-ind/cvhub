@@ -1,0 +1,39 @@
+    .job-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+    }
+    .job-info div {
+     	text-align: center;
+    }
+    
+    .org-logo {
+	 	width: 80px;
+	 	height: 80px;
+	 	border-radius: 50%;
+	 	background-color: white;
+	 	display: flex;
+	 	align-items: center;
+	 	justify-content: center;
+	}
+
+	.org-logo img {
+	 	max-width: 60px;
+	 	max-height: 60px;
+	}
+	
+    #jobDescription #candidateRequirements #candidateBenefits li::before {
+        content: "•";
+        color: #0f4b70;
+        font-weight: bold;
+        display: inline-block; 
+        width: 1em;
+        margin-left: -1em;
+    }
+    .modal-backdrop {
+		background-color: rgba(255, 255, 255, 0.8) !important; /* Solid light gray color */
+}
+	

@@ -1,19 +1,31 @@
 package mks.myworkspace.cvhub.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.core.tools.picocli.CommandLine.Parameters;
+import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,6 +57,7 @@ import mks.myworkspace.cvhub.service.OrganizationReviewService;
 import mks.myworkspace.cvhub.service.OrganizationService;
 import mks.myworkspace.cvhub.service.UserService;
 
+
 @Controller
 @RequiredArgsConstructor
 public class OrganizationController extends BaseController {
@@ -70,27 +83,111 @@ public class OrganizationController extends BaseController {
 
 	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
 
-	@RequestMapping(value = { "/organization/{id}" }, method = RequestMethod.GET)
-	public ModelAndView displayHome(@PathVariable("id") Long id, HttpServletRequest request, HttpSession httpSession) {
-		ModelAndView mav = new ModelAndView("organizationDetails");
-		Organization organization = organizationService.getRepo().findById(id).orElse(null);
-		List<JobRequest> jobByOrganization = jobRequestRepository.findByOrganizationId(id);
-		List<JobRole> alLJobRole = jobRoleService.getRepo().findAll();
-		List<Location> locations = locationService.getRepo().findAll();
-		mav.addObject("locations", locations);
-		mav.addObject("alLJobRole", alLJobRole);
-		mav.addObject("organization", organization);
-		mav.addObject("jobByOrganization", jobByOrganization);
-		boolean isOwner = false;
-		if (request.getUserPrincipal() != null) {
-			isOwner = organizationService.isOwner(id, request.getUserPrincipal().getName());
-		}
-		mav.addObject("isOwner", isOwner);
+//	@RequestMapping(value = { "/organization/{id}" }, method = RequestMethod.GET)
+//	public ModelAndView displayHome(@PathVariable("id") Long id, HttpServletRequest request, HttpSession httpSession) {
+//		ModelAndView mav = new ModelAndView("organizationDetails");
+//		Organization organization = organizationService.getRepo().findById(id).orElse(null);
+//		List<JobRequest> jobByOrganization = jobRequestRepository.findByOrganizationId(id);
+//		List<JobRole> alLJobRole = jobRoleService.getRepo().findAll();
+//		List<Location> locations = locationService.getRepo().findAll();
+//		mav.addObject("locations", locations);
+//		mav.addObject("alLJobRole", alLJobRole);
+//		mav.addObject("organization", organization);
+//		mav.addObject("jobByOrganization", jobByOrganization);
+//		boolean isOwner = false;
+//		if (request.getUserPrincipal() != null) {
+//			isOwner = organizationService.isOwner(id, request.getUserPrincipal().getName());
+//		}
+//		mav.addObject("isOwner", isOwner);
+//
+//		return mav;
+//	}
 
-		return mav;
+	@RequestMapping(value = "/organization/{id}", method = RequestMethod.GET)
+	public ModelAndView displayHome(
+	    @PathVariable("id") Long id,
+	    @RequestParam(required = false) String searchTerm,
+	    @RequestParam(required = false) String locationCode, 
+	    @RequestParam(required = false) String sortBy,
+	    @RequestParam(defaultValue = "1") int page,
+	    HttpServletRequest request,
+	    HttpSession httpSession) {
+
+	    ModelAndView mav = new ModelAndView("organizationDetails");
+	    
+	    // Get organization
+	    Organization organization = organizationService.getRepo().findById(id).orElse(null);
+	    
+	    // Pagination settings
+	    int pageSize = 10;
+	    
+	    // Get all jobs first
+	    List<JobRequest> allJobs = jobRequestRepository.findByOrganizationId(id);
+	    List<JobRequest> filteredJobs = new ArrayList<>(allJobs);
+	    
+	    // Apply filters
+	    if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+	        filteredJobs = filteredJobs.stream()
+	            .filter(job -> job.getTitle().toLowerCase().contains(searchTerm.toLowerCase()))
+	            .collect(Collectors.toList());
+	    }
+	    
+	    if (locationCode != null && !locationCode.trim().isEmpty()) {
+	        try {
+	            int locationCodeInt = Integer.parseInt(locationCode);
+	            filteredJobs = filteredJobs.stream()
+	                .filter(job -> job.getLocation().getCode() == locationCodeInt)
+	                .collect(Collectors.toList());
+	        } catch (NumberFormatException e) {
+	            // Xử lý khi locationCode không phải là số
+	            filteredJobs = new ArrayList<>(); // hoặc giữ nguyên danh sách không lọc
+	        }
+	    }
+	    //Apply sorting
+	    if ("date".equals(sortBy)) {
+	        filteredJobs.sort((j1, j2) -> j2.getCreatedDate().compareTo(j1.getCreatedDate()));
+	    } else if ("title".equals(sortBy)) {
+	        filteredJobs.sort((j1, j2) -> j1.getTitle().compareTo(j2.getTitle()));
+	    }
+
+	    // Apply pagination
+	    int totalItems = filteredJobs.size();
+	    int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+	    int startItem = (page - 1) * pageSize;
+	    List<JobRequest> paginatedJobs;
+	    
+	    if (totalItems > startItem) {
+	        int endItem = Math.min(startItem + pageSize, totalItems);
+	        paginatedJobs = filteredJobs.subList(startItem, endItem);
+	    } else {
+	        paginatedJobs = new ArrayList<>();
+	    }
+	    
+	    // Add objects to model
+	    mav.addObject("organization", organization);
+	    mav.addObject("jobByOrganization", paginatedJobs);
+	    mav.addObject("currentPage", page);
+	    mav.addObject("totalPages", totalPages);
+	    mav.addObject("searchTerm", searchTerm);
+	    mav.addObject("selectedLocation", locationCode);
+	    mav.addObject("selectedSortBy", sortBy);
+	    
+	    // Add other necessary objects
+	    List<Location> locations = locationService.getRepo().findAll();
+	    List<JobRole> alLJobRole = jobRoleService.getRepo().findAll();
+	    mav.addObject("locations", locations);
+	    mav.addObject("alLJobRole", alLJobRole);
+	    
+	    // Check if user is owner
+	    boolean isOwner = false;
+	    if (request.getUserPrincipal() != null) {
+	        isOwner = organizationService.isOwner(id, request.getUserPrincipal().getName());
+	    }
+	    mav.addObject("isOwner", isOwner);
+	    
+	    return mav;
 	}
-
-
+	
 	@RequestMapping(value = { "/organizations/{id}/addReview" }, method = RequestMethod.POST)
 	public OrganizationReview addReview(@PathVariable("id") Long organizationId,
 			@RequestBody OrganizationReviewDTO reviewDTO, HttpServletRequest request, HttpSession httpSession) {
@@ -180,10 +277,12 @@ public class OrganizationController extends BaseController {
             ModelAndView mav = new ModelAndView("organization/register");
             List<JobRole> jobRoles = jobRoleService.getRepo().findAll();
             List<Location> locations = locationService.getRepo().findAll();
+            Boolean reg = true;
             
             mav.addObject("userName", currentUser.getFullName());
             mav.addObject("jobRoles", jobRoles);
             mav.addObject("locations", locations);
+            mav.addObject("reg", reg);
             return mav;
         }
 
@@ -280,4 +379,66 @@ public class OrganizationController extends BaseController {
 		mav.addObject("organizationId", organizationId);
 		return mav;
 	}
+	
+	@RequestMapping(value = { "/organization/update/{id}" }, method = RequestMethod.GET)
+	public ModelAndView updateOrganization(@PathVariable("id") Long id, HttpServletRequest request, HttpSession httpSession) {
+		ModelAndView mav = new ModelAndView("organization/register");
+		Organization organization = organizationService.getRepo().findById(id).orElse(null);
+		List<JobRequest> jobByOrganization = jobRequestRepository.findByOrganizationId(id);
+		List<JobRole> alLJobRole = jobRoleService.getRepo().findAll();
+		List<Location> locations = locationService.getRepo().findAll();
+		mav.addObject("locations", locations);
+		mav.addObject("alLJobRole", alLJobRole);
+		mav.addObject("org", organization);
+		mav.addObject("jobByOrganization", jobByOrganization);
+		mav.addObject("update", "update");
+		return mav;
+	}
+	
+	@RequestMapping(value = { "/organization/update/{id}" }, method = RequestMethod.POST)
+	public ModelAndView updateOrganization(@PathVariable("id") Long id,
+			@ModelAttribute OrganizationDTO organizationDTO, 
+            HttpServletRequest request,
+            HttpSession httpSession) {
+		Organization organization = organizationService.findByOrganizationId(id);
+		Organization organizationUpdated = organizationService.updateOrganization(organization, organizationDTO.getTitle(),
+				organizationDTO.getLogoFile(), organizationDTO.getWebsite(), organizationDTO.getSummary(),
+				organizationDTO.getDetail(), organizationDTO.getLocation());
+		
+		organizationService.getRepo().save(organizationUpdated);
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("redirect:/organization?id=" + organization.getId());
+		
+		return mav;
+	}
+	//hien thị danh sach doanh nghiep
+	@RequestMapping(value = "/organization/list", method = RequestMethod.GET)
+	public ModelAndView listOrganizations() {
+		ModelAndView mav = new ModelAndView("listbusiness");
+		try {
+		List<Organization> organizations = organizationService.getRepo().findAll(); 
+		mav.addObject("organizations", organizations);
+		} catch (Exception e) {
+		mav.addObject("error", "An error occurred while fetching the organization list: " + e.getMessage());
+		e.printStackTrace();
+		}
+		return mav;
+	}
+
+	@RequestMapping(value = "/organization/{organizationId}/jobs", method = RequestMethod.GET)
+	public ModelAndView getJobsByOrganization(@PathVariable Long organizationId) {
+		ModelAndView mav = new ModelAndView("organizationJobs");
+			try {
+			// Xử lý danh sách việc làm cho doanh nghiệp với ID = organizationId
+			List<JobRequest> jobRequests = jobRequestService.getRepo().findByOrganizationId(organizationId);
+			mav.addObject("jobRequests", jobRequests);
+			mav.addObject("organizationId", organizationId); // Đảm bảo thêm organizationId vào model
+			} catch (Exception e) {
+			mav.setViewName("error");
+			mav.addObject("errorMessage", "Có lỗi xảy ra khi lấy danh sách việc làm: " + e.getMessage());
+			e.printStackTrace();
+			}
+			return mav;
+		}
 }
+

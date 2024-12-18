@@ -1,92 +1,270 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Organization Report</title>
-    
-    <link rel="stylesheet" th:href="@{/resources/reportSubtabs/organizationReport.css}" />
+<meta charset="UTF-8">
+<title>Organization Report</title>
+<th:block th:include="fragments/head"></th:block>
 
-	<th:block th:include="fragments/head"></th:block>
-    
 </head>
 <body>
 
-<th:block th:include="fragments/hmenu"></th:block>
+	<th:block th:include="fragments/hmenu"></th:block>
+	
+<style>
+  #filterForm {
+    display: flex;
+    justify-content: flex-end; /* Align items to the right */
+    align-items: center;
+    gap: 15px; /* Add spacing between elements */
+  }
 
-<div class="oR-header-container">
-	<h2>Organizations Report</h2>
+  #filterForm > div, #filterForm > button {
+    display: inline-block;
+  }
 
-	<div class="oR-header-filter">
-		<form id="filterForm" th:action="@{/report/organization}">
-			<label for="timePeriod">Hiển thị theo:</label> <select
-				name="timePeriod" id="timePeriod">
-				<option value="today" th:selected="${period == 'today'}">Hôm
-					nay</option>
-				<option value="this_week" th:selected="${period == 'this_week'}">Tuần
-					này</option>
-				<option value="this_month" th:selected="${period == 'this_month'}">Tháng
-					này</option>
-				<option value="this_year" th:selected="${period == 'this_year'}">Năm
-					này</option>
-			</select>
+  /* Style the DataTable */
+  table {
+    width: 100%;
+    border-collapse: collapse; /* Remove space between borders */
+    margin-top: 20px;
+  }
 
-			<button type="submit" class="oR-button" id="filterButton">Lọc</button>
-		</form>
+  table thead {
+    background-color: #f8f9fa; /* Light grey for the header */
+  }
+
+  table thead th {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 2px solid #ddd; /* Add a border below the header */
+  }
+
+  table tbody tr {
+    border-bottom: 1px solid #ddd; /* Add a border between rows */
+  }
+
+  table tbody td {
+    padding: 10px;
+  }
+
+  table tbody tr:hover {
+    background-color: #f1f1f1; /* Highlight row on hover */
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  /* Style the pagination */
+  .pagination .page-item .page-link {
+    color: #007bff;
+  }
+
+  .pagination .page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+  }
+
+  .pagination .page-item.disabled .page-link {
+    color: #6c757d;
+  }
+</style>
+	
+	<div class="container mt-3">
+		<h3 class="fw-semibold">Organizations Report</h3>
+
+   		<div class="col-md-12 text-right mb-2">
+			<form id="filterForm" action="organization" class="form-inline">
+			    <!-- filter condition -->
+			    <div>
+			        <label for="timePeriod">Hiển thị theo:</label>
+			        <select name="timePeriod" id="timePeriod" class="mr-3" style="width: 150px;" onchange="">
+			            <option value="today" th:selected="${period == 'today'}">Hôm nay</option>
+			            <option value="this_week" th:selected="${period == 'this_week'}">Tuần này</option>
+			            <option value="this_month" th:selected="${period == 'this_month'}">Tháng này</option>
+			            <option value="this_year" th:selected="${period == 'this_year'}">Năm này</option>
+			            <option value="last_year" th:selected="${period == 'last_year'}">Năm ngoái</option>
+			        </select>
+			    </div>
+			
+			    <button type="submit" class="btn btn-primary ml-3" id="filterButton">Lọc</button>
+			</form>
+	   </div>
+
+		<!-- datatable -->
+ 		<div class="mb-3">
+            <table>
+				<thead style="background-color: #f8f9fa;">
+					<tr>
+						<th>Logo</th>
+						<th>Website</th>
+						<th>Organization Name</th>
+						<th>Detail</th>
+						<th>Location</th>
+						<th>Creation Date</th>
+						<th>Jobs Posted</th>
+						<th>Applicants</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="org : ${organizations}">
+						<td><img th:src="@{/images/{logoId}(logoId=${org.logoID})}" alt="Logo" style="height: 60px;"></td>
+						<td><a th:href="${org.website}" th:text="${org.website}" target="_blank"></a></td>
+						<td th:text="${org.title}"></td>
+						<td th:text="${org.detail}"></td>
+						<td th:text="${org.location}"></td>
+						<td	th:text="${#dates.format(org.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
+						<td><a href="#" class="job-count-link" th:data-org-id="${org.id}" th:text="${org.jobCount}"></a></td>
+						<td><a href="#" class="applicant-count-link" th:data-org-id="${org.id}" th:text="${org.applicantCount}"></a></td>
+					</tr>
+					<tr th:if="${organizations.size() == 0}">
+						<td colspan="8" class="text-center">No data found.</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- navigation -->
+		<nav aria-label="Page navigation" class="d-flex justify-content-center align-items-center"
+			th:if="${totalPages > 0}">
+			<ul class="pagination justify-content-center">
+				<!-- Previous button -->
+				<li class="page-item"
+					th:classappend="${currentPage == 0} ? 'disabled'"><a
+					class="page-link"
+					th:href="${currentPage > 0} ? @{/report/organization(timePeriod=${period}, page=${currentPage - 1})} : '#'"
+					aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+				</a></li>
+
+				<!-- Page numbers -->
+				<li class="page-item"
+					th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+					th:classappend="${pageNum == currentPage} ? 'active'"><a
+					class="page-link"
+					th:href="@{/report/organization(timePeriod=${period}, page=${pageNum})}"
+					th:text="${pageNum + 1}"></a></li>
+
+				<!-- Next button -->
+				<li class="page-item"
+					th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+					<a class="page-link"
+					th:href="${currentPage < totalPages - 1} ? @{/report/organization(timePeriod=${period}, page=${currentPage + 1})} : '#'"
+					aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+				</a>
+				</li>
+			</ul>
+		</nav>
 	</div>
-</div>
+	
+	<!-- modal -->
+	<div class="modal" id="detailsModal" tabindex="-1"	aria-labelledby="detailsModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="detailsModalLabel">Details</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<!-- datatable -->
+					<table class="table">
+						<thead>
+							<tr id="detailsTableHeader">
+								<!-- table headers/columns -->
+							</tr>
+						</thead>
+						<tbody id="detailsTableBody">
+							<!-- table rows -->
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
-<table class="oR-table">
-	<thead>
-		<tr>
-			<th>Logo</th>
-			<th>Website</th>
-			<th>Organization Name</th>
-			<th>Detail</th>
-			<th>Location</th>
-			<th>Created Date</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr th:each="org : ${organizations}">
-			<td><img th:src="@{/images/{logoId}(logoId=${org.logoID})}"
-				alt="Logo" class="img-responsive"></td>
-			<td><a th:href="${org.website}" th:text="${org.website}"
-				target="_blank"></a></td>
-			<td th:text="${org.title}"></td>
-			<td th:text="${org.detail}"></td>
-			<td th:text="${org.location}"></td>
-			<td th:text="${org.createdDate}"></td>
-		</tr>
-	</tbody>
-</table>
+	<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		document.querySelectorAll('.job-count-link').forEach(link => {
+		  link.addEventListener('click', function (e) {
+		    e.preventDefault();
+		    const orgId = this.dataset.orgId;
+		
+		    fetch(`/cvhub-web/report/org/jobRequests?orgId=${orgId}`)
+		      .then(response => response.json())
+		      .then(data => {
+		        populateModal('Jobs', data, ['Job ID', 'Title', 'Location', 'Experience (years)', 'Salary', 'Detail']);
+		      });
+		  });
+		});
+	
+		document.querySelectorAll('.applicant-count-link').forEach(link => {
+		  link.addEventListener('click', function (e) {
+		    e.preventDefault();
+		    const orgId = this.dataset.orgId;
+		
+		    fetch(`/cvhub-web/report/org/jobApplications?orgId=${orgId}`)
+		      .then(response => response.json())
+		      .then(data => {
+		        populateModal('Applicants', data, ['Job ID', 'Job Title', 'Full Name', 'Email', 'Phone']);
+		      });
+		  });
+		});
 
-<nav aria-label="Page navigation" class="mt-5" th:if="${totalPages > 0}">
-	<ul class="pagination justify-content-center">
-		<!-- Previous button -->
-		<li class="page-item"
-			th:classappend="${currentPage == 0} ? 'disabled'"><a
-			class="page-link"
-			th:href="${currentPage > 0} ? @{/report/organization(timePeriod=${period}, page=${currentPage - 1})} : '#'"
-			aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-		</a></li>
+		function populateModal(title, data, headers) {
+		  document.getElementById('detailsModalLabel').innerText = `${title} Details`;
+		
+		  // table headers/columns
+		  const headerRow = document.getElementById('detailsTableHeader');
+		  headerRow.innerHTML = headers.map(header => `<th>${header}</th>`).join('');
+		
+		  // table rows
+		  const body = document.getElementById('detailsTableBody');
+		  body.innerHTML = data
+		    .map(item => {
+		      if (title === 'Jobs') {
+		        // JobRequestSummaryDTO
+		        return `
+		          <tr>
+		            <td>${item.id}</td>
+		            <td>${item.title}</td>
+		            <td>${item.location}</td>
+		            <td>${item.experience || 'N/A'}</td>
+		            <td>${item.salary || 'N/A'}</td>
+		            <td><button class="btn btn-primary btn-sm text-nowrap p-2" 
+	                    onclick="window.location.href='/cvhub-web/jobrequests/${item.id}'">View</button>
+	                </td>
+		          </tr>`;
+		      } else if (title === 'Applicants') {
+		        // JobApplicationSummaryDTO
+		        return `
+		          <tr>
+		            <td>${item.jobId}</td>
+		            <td>${item.jobTitle}</td>
+		            <td>${item.fullName}</td>
+		            <td>${item.email}</td>
+		            <td>${item.phone || 'N/A'}</td>
+		          </tr>`;
+		      }
+		    })
+		    .join('');
+		
+		  new bootstrap.Modal(document.getElementById('detailsModal')).show();
+		  
+		  const modal = document.getElementById('detailsModal');
 
-		<!-- Page numbers -->
-		<li class="page-item"
-			th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
-			th:classappend="${pageNum == currentPage} ? 'active'"><a
-			class="page-link"
-			th:href="@{/report/organization(timePeriod=${period}, page=${pageNum})}"
-			th:text="${pageNum + 1}"></a></li>
-
-		<!-- Next button -->
-		<li class="page-item"
-			th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
-			<a class="page-link"
-			th:href="${currentPage < totalPages - 1} ? @{/report/organization(timePeriod=${period}, page=${currentPage + 1})} : '#'"
-			aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-		</a>
-		</li>
-	</ul>
-</nav>
+		  modal.addEventListener('hidden.bs.modal', () => {
+		      const triggerElement = document.querySelector('[data-bs-toggle="modal"]');
+		      if (triggerElement) {
+		          triggerElement.focus();
+		      }
+		  });
+		}
+	});
+	</script>
 </body>
 </html>

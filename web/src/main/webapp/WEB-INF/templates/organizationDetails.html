@@ -13,6 +13,12 @@
 
 <body>
 	<div th:replace="~{fragments/header :: header}"></div>
+		<!-- Hiển thị thông báo thành công -->
+<div class="alert alert-success" style="margin-top: 50px;" th:if="${successMessage}" th:text="${successMessage}"></div>
+
+<!-- Hiển thị thông báo lỗi -->
+<div class="alert alert-danger" style="margin-top: 50px;" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+	
 	<div class="container">
 		<div class="org-header">
 			<div class="org-logo">
@@ -34,6 +40,16 @@
 				<button id="toggleJobForm" class="follow-btn">Thêm thông
 					tin tuyển dụng</button>
 			</div>
+			<div th:if="${isOwner}">
+				<form th:action="@{/organization/update/{orgId}(orgId=${organization.id})}" method="get">
+					<button id="" class="follow-btn">Chỉnh sửa thông tin công ty</button>
+				</form>			
+			</div>
+			<div th:if="${!isOwner}">
+				<form th:action="@{/organization/followedorganization/{orgId}(orgId=${organization.id})}" method="post">
+					<button id="" class="follow-btn">Theo dõi công ty</button>
+				</form>			
+			</div>
 		</div>
 
 		<div class="content-section">
@@ -46,9 +62,34 @@
 		</div>
 
 		<div class="content-section">
-			<h2 class="section-title">Tuyển dụng</h2>
-			<ul class="job-list">
-				<li th:each="job : ${jobByOrganization}" class="job-item">
+		    <!-- Thêm một div chứa tiêu đề và form tìm kiếm/lọc -->
+		    <div style="display: flex; justify-content: space-between; align-items: center;">
+		        <h2 class="section-title">Tuyển dụng</h2>
+		
+		        <!-- Form tìm kiếm, lọc, sắp xếp -->
+		        <form th:action="@{/organization/{orgId}(orgId=${organization.id})}" method="get" style="display: flex; gap: 10px; align-items: center;">
+		            <input type="text" name="searchTerm" th:value="${searchTerm}" placeholder="Tìm kiếm công việc..." />
+		            
+		            <select name="locationCode">
+		                <option value="">Tất cả địa điểm</option>
+		                <option th:each="loc: ${locations}" 
+		                        th:value="${loc.code}" 
+		                        th:text="${loc.name}"
+		                        th:selected="${loc.code == selectedLocation}"></option>
+		            </select>
+		            
+		            <select name="sortBy">
+		                <option value="">Sắp xếp mặc định</option>
+		                <option value="date" th:selected="${selectedSortBy == 'date'}">Sắp xếp theo ngày đăng</option>
+		                <option value="title" th:selected="${selectedSortBy == 'title'}">Sắp xếp theo tiêu đề</option>
+		            </select>
+		            <button type="submit" class="apply-btn" style="width: 90px; height: 24px; font-size: 16px; padding: 5px;">Lọc/Tìm</button>
+		        </form>
+		    </div>
+		    
+		    <!-- <ul class="job-list">
+		        
+		        <li th:each="job : ${jobByOrganization}" class="job-item">
 					<div>
 						<div class="job-title" th:text="${job.title}"></div>
 						<div class="job-location" th:text="${job.location.name}"></div>
@@ -60,7 +101,55 @@
 					</form>
 
 				</li>
+		    </ul> -->
+		    
+		    <ul class="job-list">
+			    <li th:each="job : ${jobByOrganization}" class="job-item">
+			        <div class="job-info">
+			            <!-- Tiêu đề công việc -->
+			            <div class="job-title">
+			            	<strong>Tiêu đề công việc:</strong>
+			            	<span th:text="${job.title}"></span>
+			            </div>
+			            
+			            <!-- Địa điểm làm việc -->
+			            <div class="job-location">
+			                <strong>Địa điểm làm việc:</strong>
+			                <span th:text="${job.location.name}"></span>
+			            </div>
+			            
+			            <!-- Ngày giờ đăng -->
+			            <div class="job-date">
+			                <strong>Ngày đăng:</strong>
+			                <span th:text="${#strings.substringBefore(job.createdDate, '.')}"></span>
+			            </div>
+			        </div>
+			
+			        <!-- Nút Chi tiết -->
+			        <form th:action="@{/jobrequests/{id}(id=${job.id})}" method="get">
+			            <button type="submit" class="apply-btn">Chi Tiết</button>
+			        </form>
+			    </li>
 			</ul>
+		
+		    <!-- Thêm thanh phân trang -->
+		    <div th:if="${totalPages > 1}" class="pagination-container">
+		        <ul class="pagination">
+		            <li th:if="${currentPage > 1}">
+		                <a th:href="@{/organization/{orgId}(orgId=${organization.id}, page=${currentPage - 1}, searchTerm=${searchTerm}, locationCode=${selectedLocation}, sortBy=${selectedSortBy})}">« Trước</a>
+		            </li>
+		
+		            <li th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+		                <a th:classappend="${pageNum == currentPage} ? 'active'" 
+		                   th:href="@{/organization/{orgId}(orgId=${organization.id}, page=${pageNum}, searchTerm=${searchTerm}, locationCode=${selectedLocation}, sortBy=${selectedSortBy})}"
+		                   th:text="${pageNum}"></a>
+		            </li>
+		
+		            <li th:if="${currentPage < totalPages}">
+		                <a th:href="@{/organization/{orgId}(orgId=${organization.id}, page=${currentPage + 1}, searchTerm=${searchTerm}, locationCode=${selectedLocation}, sortBy=${selectedSortBy})}">Sau »</a>
+		            </li>
+		        </ul>
+		    </div>
 		</div>
 
 		<div class="content-section">
@@ -84,62 +173,36 @@
 			<input type="hidden" id="organizationId" name="organizationId"
 				th:value="${organization.id}">
 
-			<div class="form-group">
-				<label for="namejob">Tên công việc cần tuyển dụng*</label> <input
-					type="text" class="form-control" id="namejob" name="title" required>
+			<!-- Row 1 -->
+			<div class="form-row">
+				<div class="form-group">
+					<label for="namejob">Tên công việc cần tuyển dụng*</label> <input
+						type="text" class="form-control" id="namejob" name="title"
+						required maxlength="254">
+				</div>
+				<div class="form-divider"></div>
+				<div class="form-group">
+					<label for="industry">Mảng ngành nghề*</label> <select
+						class="form-control" id="jobRoleId" name="jobRoleId" required>
+						<option value="" selected disabled>Chọn Ngành Nghề Tuyển Dụng</option>
+						<option th:each="alLJobRole : ${alLJobRole}"
+							th:value="${alLJobRole.id}" th:text="${alLJobRole.title}"></option>
+					</select>
+				</div>
 			</div>
 
-			<div class="form-group">
-				<label for="industry">Mảng ngành nghề</label> <select
-					class="form-control" id="jobRoleId" name="jobRoleId" required>
-					<option selected disabled>Chọn Ngành Nghề Tuyển Dụng</option>
-					<option th:each="alLJobRole : ${alLJobRole}"
-						th:value="${alLJobRole.id}" th:text="${alLJobRole.title}"></option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label for="locationCode">Địa điểm làm việc*</label> <select
-					class="form-control" id="locationCode" name="locationCode" required>
-					<option selected disabled>Chọn địa điểm</option>
-					<option th:each="location : ${locations}"
-						th:value="${location.code}" th:text="${location.name}"></option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label for="experience">Yêu cầu kinh nghiệm*</label> <input
-					type="number" class="form-control" id="experience"
-					name="experience" min="0" required
-					placeholder="Nhập số năm kinh nghiệm"> <small
-					class="form-text text-muted">Nhập số năm kinh nghiệm (0
-					hoặc nhiều hơn).</small>
-			</div>
-
-			<div class="form-group">
-				<label for="salary">Lương Cơ bản ($) *</label> <select
-					class="form-control" id="salaryOption" name="salaryOption" required
-					onchange="toggleSalaryInput()">
-					<option value="0">Thỏa thuận</option>
-					<option value="1">Nhập lương</option>
-				</select> <input type="number" class="form-control mt-2" id="salary"
-					name="salary" required style="display: none;"
-					placeholder="Nhập lương" min="0">
-
+			<!-- Row 2 -->
+			<div class="form-row">
 				<div class="form-group">
-					<label for="detailsJob">Chi tiết công việc*</label>
-					<textarea id="jobDescription" name="jobDescription" required
-						placeholder="Nhập chi tiết công việc (mỗi dòng là một gạch đầu dòng)"></textarea>
+					<label for="locationCode">Địa điểm làm việc*</label> <select
+						class="form-control" id="locationCode" name="locationCode"
+						required>
+						<option value="" selected disabled>Chọn địa điểm</option>
+						<option th:each="location : ${locations}"
+							th:value="${location.code}" th:text="${location.name}"></option>
+					</select>
 				</div>
-				<div class="form-group">
-					<label for="requirementsCandidate">Yêu cầu ứng viên*</label>
-					<textarea id="requirementsCandidate" name="requirementsCandidate"
-						required
-						placeholder="Nhập yêu cầu ứng viên (mỗi dòng là một gạch đầu dòng)"></textarea>
-				</div>
-				<div class="form-group">
-					<label for="benefitCandidate">Quyền lợi ứng viên*</label>
-					<textarea id="benefitCandidate" name="benefitCandidate" required
-						placeholder="Nhập quyền lợi ứng viên (mỗi dòng là một gạch đầu dòng)"></textarea>
-				</div>
+				<div class="form-divider"></div>
 				<div class="form-group">
 					<label for="deadlineApplication">Hạn nộp hồ sơ*</label> <input
 						type="date" id="deadlineApplication" name="deadlineApplication"
@@ -147,14 +210,81 @@
 				</div>
 			</div>
 
+			<!-- Row 3 -->
+			<div class="form-row">
+				<div class="form-group">
+					<label for="experience">Yêu cầu kinh nghiệm*</label> <input
+						type="number" class="form-control" id="experience"
+						name="experience" min="0" required
+						placeholder="Nhập số năm kinh nghiệm"> <small
+						class="form-text text-muted">Nhập số năm kinh nghiệm (0
+						hoặc nhiều hơn).</small>
+				</div>
+				<div class="form-divider"></div>
+				<div class="form-group">
+					<label for="salaryOption">Lương Cơ bản ($) *</label> <select
+						class="form-control" id="salaryOption" name="salaryOption"
+						required onchange="toggleSalaryInput()">
+						<option value="0" selected>Thỏa thuận</option>
+						<option value="1">Nhập lương</option>
+					</select> <input type="number" class="form-control mt-2" id="salary"
+						name="salary" value="0" required style="display: none;"
+						placeholder="Nhập lương" min="0">
+				</div>
+			</div>
+
+			<!-- Row 4 -->
+			<div class="form-row">
+				<div class="form-group">
+					<label for="requirementsCandidate">Yêu cầu ứng viên*</label>
+					<textarea id="requirementsCandidate" name="requirementsCandidate"
+						required maxlength="3000"
+						placeholder="Nhập yêu cầu ứng viên (mỗi dòng là một gạch đầu dòng)"></textarea>
+				</div>
+				<div class="form-divider"></div>
+				<div class="form-group">
+					<label for="benefitCandidate">Quyền lợi ứng viên*</label>
+					<textarea id="benefitCandidate" name="benefitCandidate" required maxlength="3000"
+						placeholder="Nhập quyền lợi ứng viên (mỗi dòng là một gạch đầu dòng)"></textarea>
+				</div>
+			</div>
+
+			<!-- Row 5 -->
+			<div class="form-row">
+				<div class="form-group">
+					<label for="jobDescription">Chi tiết công việc*</label>
+					<textarea id="jobDescription" name="jobDescription" required maxlength="3000"
+						placeholder="Nhập chi tiết công việc (mỗi dòng là một gạch đầu dòng)"></textarea>
+				</div>
+			</div>
+
+
 			<button type="submit" class="btn btn-primary">Lưu</button>
 		</form>
 	</div>
 
+
+
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+	<script>
+    const experienceInput = document.getElementById('experience');
+    
+    experienceInput.addEventListener('input', function () {
+        // Chặn giá trị nhập vượt quá 2 chữ số
+        if (this.value.length > 2) {
+            this.value = this.value.slice(0, 2); // Chỉ giữ 2 ký tự đầu
+        }
+    });
 
+    experienceInput.addEventListener('keydown', function (e) {
+        // Chặn nhập thêm ký tự không hợp lệ (chỉ cho phép số từ 0 đến 9)
+        if (this.value.length >= 2 && e.key >= '0' && e.key <= '9') {
+            e.preventDefault(); // Ngăn người dùng nhập thêm
+        }
+    });
+</script>
 </body>
 
 </html>

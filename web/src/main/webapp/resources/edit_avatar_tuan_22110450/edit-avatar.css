@@ -1,0 +1,72 @@
+/* Vùng xem trước ảnh đại diện */
+        .avatar-preview {
+            width: 200px;
+            height: 200px;
+            overflow: hidden;
+            margin: 20px auto;
+        }
+
+        /* Ảnh đại diện hình tròn */
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%; /* Làm tròn ảnh */
+            object-fit: cover;  /* Đảm bảo ảnh không bị méo */
+            margin-bottom: 10px;
+        }
+
+        /* Nút máy ảnh đặt trên ảnh đại diện */
+        .camera-icon-btn {
+            position: absolute;
+            bottom: 5px;
+            right: 5px; /* Đặt ở góc dưới bên phải */
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 50%; /* Làm tròn nút */
+            width: 35px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+            cursor: pointer; /* Biến con trỏ thành dạng click */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Đổ bóng cho nút */
+        }
+
+        /* Hiệu ứng hover cho nút */
+        .camera-icon-btn:hover {
+            background-color: #777;
+        }
+
+        /* Vùng bọc ảnh đại diện và nút máy ảnh */
+        .profile-img-wrapper {
+            position: relative; /* Để đặt nút camera chồng lên ảnh */
+            display: inline-block;
+        }
+
+        /* Chỉnh ảnh trong modal khi dùng Cropper.js */
+        #cropperImage {
+            max-width: 100%;
+            max-height: 400px; /* Giới hạn chiều cao */
+            display: block;
+            margin: auto;
+        }
+
+        /* Bo tròn khung crop trong Cropper.js */
+        .cropper-view-box,
+        .cropper-face {
+            border-radius: 50%;
+        }
+
+        /* Thanh điều chỉnh zoom */
+        .slider-container {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .slider-container input {
+            flex: 1; /* Giãn thanh trượt để chiếm hết phần còn lại */
+            margin: 0 10px;
+        }

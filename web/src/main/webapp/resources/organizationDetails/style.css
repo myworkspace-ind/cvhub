@@ -78,6 +78,7 @@
     .job-list {
     	list-style-type: none;
     	padding: 0;
+    	margin: 0;
     }
 
     .job-item {
@@ -88,12 +89,34 @@
     	display: flex;
     	justify-content: space-between;
     	align-items: center;
+	    background-color: #fff;
+	    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	    transition: box-shadow 0.3s ease;
     }
+    
+    .job-item:hover {
+	    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	}
 
     .job-title {
     	font-weight: bold;
     	color: #333;
+    	
+    	font-size: 18px;
+    	margin-bottom: 5px;
     }
+    
+    .job-location, .job-date {
+	    font-size: 14px;
+	    color: #555;
+	    margin-bottom: 3px;
+	}
+	
+	.job-info {
+	    display: flex;
+	    flex-direction: column;
+	    gap: 5px;
+	}
 
     .job-details {
     	font-size: 14px;
@@ -107,7 +130,13 @@
     	padding: 8px 15px;
     	border-radius: 20px;
     	cursor: pointer;
+    	font-size: 16px; /* Kích thước chữ lớn hơn */
+	    transition: background-color 0.3s ease; /* Hiệu ứng mượt */
     }
+    
+    .apply-btn:hover {
+	    background-color: #008c5a; /* Màu khi hover */
+	}
 
     .contact-info {
     	display: flex;
@@ -144,71 +173,82 @@
     	border-radius: 10px;
     	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     	z-index: 1001;
-    	max-width: 500px;
+    	max-width: 800px; /* Tăng kích thước để đủ chỗ cho 2 cột */
     	width: 90%;
     }
+	
+	#jobPostForm h3 {
+	    margin-top: 0;
+	    color: #00a86b;
+	    border-bottom: 2px solid #00a86b;
+	    padding-bottom: 10px;
+	    text-align: center; /* Căn giữa tiêu đề */
+	}
+	
+	#jobPostForm .form-group {
+	    margin-bottom: 20px;
+	}
+	
+	#jobPostForm .form-row {
+	    display: flex;
+	    gap: 20px; /* Khoảng cách giữa các cột */
+	}
+	
+	#jobPostForm label {
+	    display: block;
+	    margin-bottom: 5px;
+	    font-weight: bold;
+	}
+	
+	#jobPostForm input,
+	#jobPostForm select,
+	#jobPostForm textarea {
+	    width: 100%;
+	    padding: 5px;
+	    border: 1px solid #ddd;
+	    border-radius: 4px;
+	    box-sizing: border-box;
+	}
+	
+	#jobPostForm textarea {
+	    height: 100px;
+	    resize: none; /* Ngừng cho phép người dùng kéo để thay đổi kích thước */
+	}
+	
+	/* Căn giữa nút "Lưu" */
+	#jobPostForm button[type="submit"] {
+	    background-color: #00a86b;
+	    color: white;
+	    border: none;
+	    padding: 10px 20px;
+	    border-radius: 4px;
+	    cursor: pointer;
+	    font-size: 16px;
+	    display: block; /* Đặt nó dưới dạng block để dễ căn giữa */
+	    margin: 20px auto 0; /* Căn giữa và thêm khoảng cách phía trên */
+	}
+	
+	#jobPostForm button[type="submit"]:hover {
+	    background-color: #008c5a;
+	}
+	
+	#jobPostForm .form-row {
+	    display: flex;
+	    gap: 20px; /* Khoảng cách giữa các cột */
+	    flex-wrap: wrap; /* Cho phép các cột xuống dòng nếu không đủ không gian */
+	}
+	
+	#jobPostForm .form-group {
+	    flex: 1; /* Các cột sẽ có chiều rộng bằng nhau */
+	    min-width: 200px; /* Đảm bảo các cột không quá hẹp khi thu nhỏ màn hình */
+	}
+	
+	.form-divider {
+	    width: 1px;
+	    background-color: #ccc;
+	    height: auto;
+	}
 
-    #jobPostForm h3 {
-    	margin-top: 0;
-    	color: #00a86b;
-    	border-bottom: 2px solid #00a86b;
-    	padding-bottom: 10px;
-    }
-
-    #jobPostForm .form-group {
-    	margin-bottom: 20px;
-    }
-
-    #jobPostForm label {
-    	display: block;
-    	margin-bottom: 5px;
-    	font-weight: bold;
-    }
-
-    #jobPostForm input,
-    #jobPostForm select {
-    	width: 100%;
-    	padding: 8px;
-    	border: 1px solid #ddd;
-    	border-radius: 4px;
-    }
-
-    #jobPostForm button[type="submit"] {
-    	background-color: #00a86b;
-    	color: white;
-    	border: none;
-    	padding: 10px 20px;
-    	border-radius: 4px;
-    	cursor: pointer;
-    	font-size: 16px;
-    }
-
-    #jobPostForm button[type="submit"]:hover {
-    	background-color: #008c5a;
-    }
-
-    .fixed-textarea {
-    	width: 100%;
-    	/* Chiều rộng 100% */
-    	height: 150px;
-    	/* Chiều cao cố định */
-    	resize: none;
-    	/* Ngăn người dùng thay đổi kích thước */
-    }
-    input[type="date"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        textarea {
-    width: 100%; /* Chiều rộng cố định */
-    max-width: 500px; /* Chiều rộng tối đa */
-    height: 150px; /* Chiều cao cố định */
-    max-height: 300px; /* Chiều cao tối đa */
-    resize: none; /* Ngăn người dùng thay đổi kích thước */
-    overflow-y: auto; /* Cho phép cuộn dọc nếu nội dung vượt quá chiều cao */
-}
 .apply-btn {
     /* Thêm các style cần thiết để nút trông giống như mong muốn */
     display: inline-block;
@@ -219,4 +259,36 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+/* Css cho phân trang */
+.pagination-container {
+    display: flex;
+    justify-content: center; /* Căn giữa phân trang */
+    margin-top: 20px;
+}
+
+.pagination {
+    list-style: none; /* Xóa dấu chấm */
+    display: flex;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+}
+
+.pagination li a {
+    text-decoration: none;
+    padding: 8px 12px;
+    border: 1px solid #ccc; /* Viền nhẹ */
+    border-radius: 4px; /* Bo tròn góc */
+    color: #333; /* Màu chữ trung tính */
+    background-color: #f8f9fa; /* Màu nền nhẹ */
+    transition: all 0.3s ease;
+}
+
+.pagination li a:hover,
+.pagination li a.active {
+    background-color: #00b14f; /* Màu nền xanh lá */
+    color: #fff; /* Chữ trắng */
+    border-color: #00b14f;
 }

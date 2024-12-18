@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Applied job</title>
+<th:block th:include="fragments/head"></th:block>
+</head>
+<body>
+	<th:block th:include="fragments/hmenu"></th:block>
+	<div class="page-header"
+		style="display: flex; justify-content: center; align-items: center; height: 15vh;">
+		<h1 class="company-card">Quản lý đơn ứng tuyển</h1>
+	</div>
+	<div th:if="${errorMessage}" class="alert alert-danger"
+		th:text="${errorMessage}"></div>
+	<div class="column noColor col"
+		th:if="${not #lists.isEmpty(applications)}"
+		style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; width: 100%; max-width: 100%;">
+		<!-- Wrap card trong một link -->
+		<a th:href="@{'/jobrequests/' + ${appli.jobRequest.id}}"
+			class="job-link" th:each="appli : ${applications}"
+			style="text-decoration: none; color: inherit; width: 30%; max-width: 400px;">
+			<div class="application-card card shadow-sm border  p-4 bg-white"
+				style="transition: transform 1s, box-shadow 0.8s; border: 3px solid black;">
+				<h2 class="job-title" th:text="${appli.jobRequest.title}">Tiêu
+					đề công việc</h2>
+				<p class="company-name"
+					th:text="${appli.jobRequest.organization.title}">Tên công ty</p>
+				<div class="info-grid"
+					style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
+					<div class="info-item">
+						<span class="info-label" style="font-weight: bold;">Địa
+							điểm:</span> <span th:text="${appli.jobRequest.location.name}">Địa
+							điểm</span>
+					</div>
+					<div class="info-item">
+						<span class="info-label" style="font-weight: bold;">Vị trí:</span>
+						<span th:text="${appli.jobRequest.jobRole.title}">Vị trí
+							công việc</span>
+					</div>
+					<div class="info-item">
+						<span class="info-label" style="font-weight: bold;">Mức
+							lương:</span> <span
+							th:text="${appli.jobRequest.salary != null ? appli.jobRequest.salary + ' $' : 'Thỏa thuận'}"></span>
+					</div>
+
+					<div class="info-item">
+						<span class="info-label" style="font-weight: bold;">Kinh
+							nghiệm:</span> <span th:text="${appli.jobRequest.experience + ' năm'}">Kinh
+							nghiệm</span>
+					</div>
+				</div>
+				<div>
+					<span class="status-badge"
+						th:classappend="${appli.status == 'PENDING' ? 'status-pending' :
+                                      appli.status == 'APPROVED' ? 'status-approved' :
+                                      appli.status == 'DENY' ? 'status-rejected' : 'status-rejected'}"
+						th:text="${appli.status == 'PENDING' ? 'Đang chờ' :
+                               appli.status == 'APPROVED' ? 'Đã duyệt' :
+                               appli.status == 'DENY' ? 'Từ chối' : 'Từ chối'}"
+						style="font-size: 14px; font-weight: bold; padding: 4px 8px; border-radius: 4px; background: #eee; display: inline-block;">
+					</span>
+				</div>
+				<p class="application-date"
+					style="font-size: 14px; color: #555; margin-top: 15px;">
+					Ngày ứng tuyển: <span
+						th:text="${#dates.format(appli.createdDate, 'dd/MM/yyyy')}">Ngày</span>
+				</p>
+				<form
+					th:action="@{/profile/application/delete/{id}(id=${appli.id})}"
+					method="post" style="margin-top: 10px;">
+					<div class="act">
+						<button type="submit" class="active">Xóa</button>
+					</div>
+				</form>
+			</div>
+		</a>
+	</div>
+
+
+	<div class="no-applications" th:if="${#lists.isEmpty(applications)}"
+		style="text-align: center; padding: 20px; font-size: 16px; color: #777;">
+		<p>Bạn chưa ứng tuyển vào vị trí nào.</p>
+	</div>
+
+
+</body>
+</html>

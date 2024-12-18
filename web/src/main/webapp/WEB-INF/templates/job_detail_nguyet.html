@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Job Details</title>
+<th:block th:include="fragments/head"></th:block>
+<link rel="stylesheet" th:href="@{/resources/jobDetail/jobDetail_nguyet.css}" />
+</head>
+<body>
+	<th:block th:include="fragments/hmenu"></th:block>
+		<!-- Hiển thị thông báo thành công -->
+<div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+
+<!-- Hiển thị thông báo lỗi -->
+<div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+	
+	<div class="portal-main-container container-fluid">
+	<div class="portletBody">
+		<div class="page-header">
+			<a th:href="@{/searchJob}"> < Back </a>
+			<h1>Job details</h1>
+		</div>
+		<div class="Mrphs-container Mrphs-sakai-lessonbuildertool">
+		<div sakaimajor="23" class="portletBody" sakaiversion="23.2">
+	    <div class="section" style="margin:0 100px">
+	        <div class="column noColor col" style="height: auto;width:60%; padding:0 30px">
+		        <main>
+					<h1 class="job-title" th:text="${jobRequest.title}">Tiêu đề Công việc</h1>
+					<div class="job-info">
+						<div class="org-logo">
+							<img
+								th:src="@{/images/{logoId}(logoId=${jobRequest.organization.logoID})}"
+								alt="Company logo">
+						</div>
+						<div>
+							<p>Wage</p>
+							<strong th:text="${jobRequest.salary}">Thỏa thuận</strong>
+						</div>
+						<div>
+							<p>Location</p>
+							<strong th:text="${jobRequest.location.name}">Hồ Chí Minh</strong>
+						</div>
+						<div>
+							<p>Experience</p>
+							<strong th:text="${jobRequest.experience}">Không yêu cầu</strong>
+							<strong>year(s)</strong>
+						</div>
+					</div>
+					<form th:action="@{'/applyJob/' + ${jobRequest.id}}" method="post"
+						style="display: inline;">
+						<div class="act">
+							<input type="submit" class="active" accesskey="g" name="eventSubmit_doOpaqueUrlGenerate" value="Apply now">	
+							<!-- input type="submit" class="active" accesskey="g" name="eventSubmit_doOpaqueUrlGenerate" value="Save news"-->							
+						</div>
+
+					</form>
+					<form th:action="@{'/saveJob/' + ${jobRequest.id}}" method="post" style="display: inline;">
+    					<div class="act">
+        					<input type="submit" class="active" accesskey="g" name="eventSubmit_doOpaqueUrlGenerate" value="Save news">
+    					</div>
+					</form>
+					
+					<h2>Job Descriptions</h2>
+					<ul id="jobDescription">
+						<li
+							th:each="task : ${#strings.arraySplit(jobRequest.detailsJob, '\\|')}"
+							th:if="${#strings.length(task) > 0}" th:text="${task}"
+							class="sentence-split"></li>
+					</ul>
+				
+		
+					<h2>Requirements</h2>
+					<ul id="candidateRequirements">
+						<li
+							th:each="req : ${#strings.arraySplit(jobRequest.requirementsCandidate, '\\|')}"
+							th:if="${#strings.length(req) > 0}" th:text="${req}"
+							class="sentence-split"></li>
+					</ul>
+		
+					<h2>Benefits</h2>
+					<ul id="candidateBenefits">
+						<li
+							th:each="benefit : ${#strings.arraySplit(jobRequest.benefitCandidate, '\\|')}"
+							th:if="${#strings.length(benefit) > 0}" th:text="${benefit}"
+							class="sentence-split"></li>
+					</ul>
+					<h2>Working Address</h2>
+					<p th:text="${jobRequest.location.name}">Hồ Chí Minh</p>
+		
+					<h2>How To Apply</h2>
+					<p>Candidates apply online by clicking Apply Now above.</p>
+					<p class="deadline">
+						<strong>Deadline: </strong><strong style="color:red" th:text="${jobRequest.deadlineApplication}">31/12/2024</strong>
+					</p>
+				</main>
+	       
+	        </div>
+	        <div class="column noColor col" style="height: 300px;width:30%;padding:0px 30px">
+		        <div class="company-card">
+					<h1>
+					    <a th:href="@{/organization/{id}(id=${jobRequest.organization.id})}" th:text="${jobRequest.organization.title}"></a>
+					</h1>
+					<p>
+						<strong>Field:</strong> <span
+							th:text="${jobRequest.jobRole.title}"></span>
+					</p>
+					<p>
+						<strong>Location:</strong> <span
+							th:text="${jobRequest.organization.location}"></span>
+					</p>
+					<div class="act">
+						<a  th:href="${jobRequest.organization.website}"><input type="submit" class="active" value="View Company Page"></a>
+					</div>
+					<div class="act">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#jobPostModal"> Edit Recruiting Information</button>
+						<form id="requirementsForm2"
+							th:action="@{/jobrequests/deleteJob/{id}(id=${jobRequest.id})}"
+							method="post" style="display: inline-block;">
+							<input type="hidden" id="jobRequestId" name="jobRequestId"
+								th:value="${jobRequest.id}">
+							<input type="submit" class="acctive" value="Remove">
+	
+						</form>
+					</div>
+				</div>
+	        </div>
+
+			<!-- Modal Structure -->
+			<div class="modal fade" id="jobPostModal" tabindex="-1" aria-labelledby="jobPostModalLabel" aria-hidden="true">
+			  <div class="modal-dialog  modal-lg">
+			    <div class="modal-content">
+			      <div class="modal-header custom-modal-header">
+			        <h5 class="modal-title" id="jobPostModalLabel"> Edit Recruiting Information</h5>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+			        <!-- The form inside the modal -->
+			        <form id="requirementsForm" th:action="@{/jobrequests/updateJob/{id}(id=${jobRequest.id})}" method="post">
+			            <input type="hidden" id="organizationId" name="organizationId" th:value="${jobRequest.organization.id}">
+			            <div class="form-group">
+			                <label for="namejob"><strong>Job Name*</strong></label>
+			                <input type="text" class="form-control" id="namejob" name="title" required th:value="${jobRequest.title}">
+			            </div>
+						<div class ="row">
+				            <div class="form-group col-md-6">
+				                <label for="industry"><strong>Industry</strong></label>
+				                <select class="form-control" id="jobRoleId" name="jobRoleId" required>
+				                    <option disabled><strong>Job Role</strong></option>
+				                    <option th:each="alLJobRole : ${alLJobRole}" th:value="${alLJobRole.id}" th:text="${alLJobRole.title}" th:selected="${alLJobRole.id == jobRequest.jobRole.id}"></option>
+				                </select>
+				            </div>
+				
+				            <div class="form-group col-md-6">
+				                <label for="locationCode"><strong>Location*</strong></label>
+				                <select class="form-control" id="locationCode" name="locationCode" required>
+				                    <option disabled><strong>Choose Location</strong></option>
+				                    <option th:each="location : ${locations}" th:value="${location.code}" th:text="${location.name}" th:selected="${location.code == jobRequest.location.code}"></option>
+				                </select>
+				            </div>
+			            </div>
+						
+						<div class ="row">
+				            <div class="form-group col-md-6">
+				                <label for="experience"><strong>Experience Requirement*</strong></label>
+				                <input type="number" class="form-control" id="experience" name="experience" min="0" required placeholder="Nhập số năm kinh nghiệm" th:value="${jobRequest.experience}">
+				                <small class="form-text text-muted">Enter experience year(s).</small>
+				            </div>
+				
+				            <div class="form-group col-md-6">
+				                <label for="salary"><strong>Salary ($) *</strong></label>
+				                <select class="form-control" id="salaryOption" name="salaryOption" required onchange="toggleSalaryInput()" th:with="salaryOption=${jobRequest.salary != null ? '1' : '0'}">
+				                    <option value="0" th:selected="${salaryOption == '0'}">Deal</option>
+				                    <option value="1" th:selected="${salaryOption == '1'}">Enter Salary</option>
+				                </select>
+				                <input type="number" class="form-control mt-2" id="salary" name="salary" th:style="${salaryOption == '1' ? 'display: block;' : 'display: none;'}" placeholder="Nhập lương" min="0" th:value="${jobRequest.salary}">
+				            </div>
+			            </div>
+			
+			            <div class="form-group">
+			                <label for="detailsJob"><strong>Job Detail*</strong></label>
+			                <textarea class="form-control" rows="6" id="jobDescription" name="jobDescription" required placeholder="Nhập chi tiết công việc (mỗi dòng là một gạch đầu dòng)" th:text="${jobRequest.detailsJob}"></textarea>
+			            </div>
+			
+			            <div class="form-group">
+			                <label for="requirementsCandidate"><strong>Requirements*</strong></label>
+			                <textarea class="form-control" rows="6" id="requirementsCandidate" name="requirementsCandidate" required placeholder="Nhập yêu cầu ứng viên (mỗi dòng là một gạch đầu dòng)" th:text="${jobRequest.requirementsCandidate}"></textarea>
+			            </div>
+			
+			            <div class="form-group">
+			                <label for="benefitCandidate"><strong>Benefits*</strong></label>
+			                <textarea class="form-control" rows="6" id="benefitCandidate" name="benefitCandidate" required placeholder="Nhập quyền lợi ứng viên (mỗi dòng là một gạch đầu dòng)" th:text="${jobRequest.benefitCandidate}"></textarea>
+			            </div>
+			
+			            <div class="form-group">
+			                <label for="deadlineApplication"><strong> Apply Deadline*</strong></label>
+			                <input type="date" id="deadlineApplication" name="deadlineApplication" required th:value="${jobRequest.deadlineApplication}">
+			            </div>
+			
+			            <button type="submit" class="btn btn-primary">Save change</button>
+			        </form>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+        </div>
+        </div>
+		</div>	
+		</div>
+	</div>
+
+<script type="text/javascript"
+	th:src="@{/resources/jobDetail/jobDetail_nguyet.js}"></script>
+</body>
+
+</html>

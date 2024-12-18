@@ -20,9 +20,13 @@
 package mks.myworkspace.cvhub.controller;
 
 import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -37,6 +41,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -134,6 +140,13 @@ public class HomeController extends BaseController {
 		mav.addObject("userDisplayName", getCurrentUserDisplayName());
 		List<Location> locations = locationService.getRepo().findAll();
 		mav.addObject("locations", locations);
+		
+		
+		String defaultLocation = "Thành phố Hà Nội";
+	    if (defaultLocation == null || defaultLocation.trim().isEmpty()) {
+	        defaultLocation = "Tất cả tỉnh/thành phố";  
+	    }
+	    mav.addObject("defaultLocation", defaultLocation);
 		return mav;
 	}
 
@@ -144,10 +157,17 @@ public class HomeController extends BaseController {
 		return jobRoleService.getRepo().findAll();
 	}
 
-	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	@RequestMapping(value = {"/search","/searchUI"}, method = RequestMethod.GET)
 	public ModelAndView searchJobs(@ModelAttribute JobSearchDTO jobSearchDTO, HttpServletRequest request,
 								   HttpSession httpSession) {
-		ModelAndView mav = new ModelAndView("searchResult");
+		ModelAndView mav;
+		String viewName = "searchResult";
+		String requestURL = request.getRequestURI();
+		if (requestURL.contains("/searchUI"))
+			viewName = "searchResultUI";
+		
+		mav = new ModelAndView(viewName);
+		
 		List<JobRequest> searchResults = searchjobService.searchJobRequest(jobSearchDTO.getKeyword(),
 				jobSearchDTO.getLocation(), jobSearchDTO.getIndustry());
 		mav.addObject("searchResults", searchResults);
@@ -156,16 +176,32 @@ public class HomeController extends BaseController {
 
 	@GetMapping(value = "/images/{logoId}")
 	@ResponseBody
-	public ResponseEntity<byte[]> getImage(@PathVariable("logoId") UUID logoId) {
-		byte[] image = organizationService.getRepo().getImageByLogoId(logoId);
+	public ResponseEntity<byte[]> getImage(@PathVariable("logoId") UUID logoId, HttpServletRequest request) {
+	    byte[] image = organizationService.getRepo().getImageByLogoId(logoId);
 
-		if (image == null || image.length == 0) {
-			logger.warn("Image not found or empty for logoId: " + logoId);
-			return ResponseEntity.notFound().build();
-		}
+	    if (image == null || image.length == 0) {
+	        logger.warn("Image not found or empty for logoId: " + logoId);
+	        return ResponseEntity.notFound().build();
+	    }
 
-		return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
+	    // Tạo ETag (có thể dựa trên hash của ảnh hoặc version ID)
+	    String eTag = Integer.toHexString(Arrays.hashCode(image));
+	    
+	    // Kiểm tra header "If-None-Match" từ client
+	    String ifNoneMatch = request.getHeader("If-None-Match");
+	    if (ifNoneMatch != null && ifNoneMatch.equals(eTag)) {
+	        // Trả về 304 nếu ETag khớp
+	        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+	    }
+
+	    // Nếu không khớp, trả về ảnh
+	    return ResponseEntity.ok()
+	            .contentType(MediaType.IMAGE_JPEG)
+	            .eTag(eTag) // Thêm ETag vào header phản hồi
+	            .cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS)) // Lưu cache 60 giây
+	            .body(image);
 	}
+
 
 
 	@GetMapping("/details")

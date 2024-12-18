@@ -18,5 +18,6 @@ public class UserDTO {
     private String confirmPassword;
     
     private String phone;
+    private String dialCode;
     
 }

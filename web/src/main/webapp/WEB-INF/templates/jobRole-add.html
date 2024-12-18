@@ -13,6 +13,10 @@
 			th:action="@{${jobrole == null} ? '/jobroles/add':'/jobroles/edit/' + ${jobrole.id}}"
 			method="post">
 
+			<div th:if="${mess}" class="alert alert-warning" role="alert">
+				<span th:text="${mess}"></span>
+			</div>
+
 			<input type="hidden" name="jobid" th:if="${jobrole != null}"
 				th:value="${jobrole != null} ? ${jobrole.id} : ''" />
 
@@ -26,14 +30,16 @@
 			<!-- Description -->
 			<div class="mb-3">
 				<label for="description" class="form-label">Description</label> <input
-					type="text" id="description" name="description"
+					type="text" id="description" name="description" maxlength="254"
 					class="form-control"
 					th:value="${jobrole != null} ? ${jobrole.description} : ''">
 			</div>
 
 			<div>
+				<a th:href="@{/jobroles}"> < Back </a>
 				<button type="submit" class="btn btn-primary"
-					th:text="${jobrole == null} ? 'Add Job Role' : 'Save Job Role'"></button>
+					th:text="${jobrole == null} ? 'Add Job Role' : 'Save Job Role'">
+				</button>
 			</div>
 		</form>
 	</div>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>The generated source code Web Application for Sakai</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<th:block th:include="fragments/head"></th:block>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+	<link rel="stylesheet" th:href="@{/resources/searchCondition/style1.css}" />
+	<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
+	<link rel="stylesheet" th:href="@{/resources/home/jobRequest1.css}" />
+    
+</head>
+
+<body>
+
+	<div class="custom-navbar">
+	<th:block th:include="fragments/hmenu"></th:block>
+	</div>
+	<div class="container">
+		<div th:include ="~{fragments/searchCondition1.html}"></div>
+		<script type="text/javascript"
+			th:src="@{/resources/searchCondition/searchProvince.js}"></script>
+		<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+			<div class="col" th:each="job : ${searchResults}">
+				<div class="card h-100 job-card">
+					<div class="card-header" th:text="${job.title}">Job Title</div>
+					<div class="card-body">
+						<p class="card-text">
+							<i class="fas fa-building"></i> <span
+								th:text="${job.organization.title}">Company Name</span><br>
+							<i class="fas fa-map-marker-alt"></i> <span
+								th:text="${job.location.name}">Location</span><br> <i
+								class="fas fa-briefcase"></i> <span
+								th:text="${job.jobRole.title}">Job Role</span><br> <i
+								class="fas fa-clock"></i> Experience: <span
+								th:text="${job.experience}">Years</span> years<br> <i
+								class="fas fa-dollar-sign"></i> Salary: $<span
+								th:text="${job.salary}">Salary</span>
+						</p>
+					</div>
+					<div class="card-footer text-muted">
+						<small>Posted: <span
+							th:text="${#dates.format(job.createdDate, 'dd MMM yyyy')}">Date</span></small>
+						<a th:href="@{/jobrequests/{id}(id=${job.id})}" class="btn btn-outline-success btn-sm float-end">View Details</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</body>
+<th:block th:include="fragments/javascript"></th:block>
+</html>
