@@ -28,14 +28,25 @@
 				<div class="form-group">
 					<label>Email</label> <input type="email" placeholder="Nhập email"
 						name="email" maxlength="254" required>
-
 				</div>
+				
 				<div class="form-group">
-					<label>Phone</label> <input type="text"
-						placeholder="Nhập số điện thoại" name="phone" required
-						pattern="\d{10,11}"
-						title="Vui lòng nhập số điện thoại hợp lệ (10-11 chữ số)" maxlength="15" >
+				    <label for="countrySelect">Chọn mã vùng</label>
+				    <div class="select-wrapper">
+				        <select id="countrySelect" name="dialCode" required>
+				            <option value="" disabled selected>-- Chọn mã vùng --</option>
+				        </select>
+				    </div>
 				</div>
+				
+				<div class="form-group">
+				    <label for="phone">Phone</label>
+				    <input type="text" id="phone" placeholder="Nhập số điện thoại" name="phone" 
+				           required pattern="\d{10,11}" 
+				           title="Vui lòng nhập số điện thoại hợp lệ (10-11 chữ số)" 
+				           maxlength="15">
+				</div>
+				
 				<div class="form-group">
 					<label>Mật khẩu</label>
 					<div class="password-input">
@@ -85,6 +96,32 @@
 		</div>
 	</div>
 	<script>
+	document.addEventListener('DOMContentLoaded', function () {
+        const countrySelect = document.getElementById('countrySelect');
+
+        // Hàm fetch dữ liệu từ file JSON
+        async function fetchCountries() {
+            try {
+                // Đọc dữ liệu từ file JSON (đường dẫn file JSON của bạn)
+                const response = await fetch('resources/master-data/countries.json');
+                const countries = await response.json();
+
+                // Duyệt qua danh sách và thêm option vào combobox
+                countries.forEach(country => {
+                    const option = new Option(
+                        `${country.name} (${country.dial_code})`, // Nội dung hiển thị
+                        country.dial_code // Giá trị option
+                    );
+                    countrySelect.add(option); // Thêm option vào combobox
+                });
+            } catch (error) {
+                console.error('Lỗi khi lấy dữ liệu quốc gia:', error);
+            }
+        }
+
+        // Gọi hàm fetchCountries khi DOM được load
+        fetchCountries();
+    });
     // Lấy tất cả các biểu tượng mắt
     const eyeIcons = document.querySelectorAll('.eye-icon');
     

@@ -48,6 +48,8 @@ public class SignController extends BaseController {
    
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     Pbkdf2PasswordEncoder passwordEncoder1 = new Pbkdf2PasswordEncoder();
+   
+   /*
     // Login page
     @GetMapping("/login")
     public ModelAndView showLoginPage(
@@ -68,15 +70,43 @@ public class SignController extends BaseController {
         return model;
     }
 
+*/
+    
+    @GetMapping("/login")
+    public String showLoginPage(
+            @RequestParam(value = "error", required = false) String error,
+            @RequestParam(value = "logout", required = false) String logout,
+            RedirectAttributes redirectAttributes,
+            Model model) {
+
+        if (error != null) {
+            redirectAttributes.addFlashAttribute("error", "Email hoặc mật khẩu không chính xác!");
+        }
+
+        if (logout != null) {
+            redirectAttributes.addFlashAttribute("message", "Bạn đã đăng xuất thành công!");
+        }
+
+        return "redirect:/login-view";
+    }
+
+    @GetMapping("/login-view")
+    public String showLoginView(Model model) {
+        return "/signInOut/signin";
+    }
+
+    
     // Logout
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
+    public String logout(HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
+            redirectAttributes.addFlashAttribute("message", "Bạn đã đăng xuất thành công!");
         }
-        return "redirect:/home";
+        return "redirect:/login";
     }
+
 
     // Show register form
     @GetMapping("/register")
@@ -122,10 +152,11 @@ public class SignController extends BaseController {
                     mav.setViewName("/signInOut/signup");
                     return mav;
                 }
-
+                
+                String combinedPhone = "(" + userDTO.getDialCode() + ") " + userDTO.getPhone();
                 // Tạo người dùng mới
                 User user = userService.createUser(userDTO.getFullName(), userDTO.getEmail(), 
-                        passwordEncoder.encode(userDTO.getPassword()), userDTO.getPhone());
+                        passwordEncoder.encode(userDTO.getPassword()), combinedPhone);
                 
                 // Gửi email xác nhận
                 if (registerUserConfirm) {

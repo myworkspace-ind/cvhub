@@ -34,9 +34,11 @@ public class PhoneNumberFormatService {
     // Hàm định dạng số điện thoại không có mã vùng
     private String formatPhoneNumberWithoutAreaCode(String phoneNumber) {
     	
-    	String areaCode = phoneNumber.substring(0, 7);
+    	 int endIndex = phoneNumber.indexOf(")");
+    	
+    	String areaCode = phoneNumber.substring(0, endIndex + 2);
 
-    	String numberAfterAreaCode = phoneNumber.substring(7);
+    	String numberAfterAreaCode = phoneNumber.substring(endIndex + 2);
     	// Định dạng số điện thoại theo kiểu (084) 0123-4567-89
     	Pattern pattern = Pattern.compile("(\\d{4})(\\d{4})(\\d{2})");
     	Matcher matcher = pattern.matcher(numberAfterAreaCode);

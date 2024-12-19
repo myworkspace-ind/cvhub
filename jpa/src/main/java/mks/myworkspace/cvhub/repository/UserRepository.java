@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import mks.myworkspace.cvhub.entity.CV;
 import mks.myworkspace.cvhub.entity.User;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
@@ -28,6 +29,9 @@ public interface UserRepository extends JpaRepository<User,Long> {
 	
 	@Query("SELECT DISTINCT u FROM User u JOIN u.cvList c WHERE c IS NOT NULL")
     Page<User> findUsersWithCVs(Pageable pageable);
+	
+	@Query("SELECT u FROM User u JOIN u.cvList c WHERE c.id = :cvId")
+	Optional<User> findUserByCVId(@Param("cvId") Long cvId);
 	
 	// Tim kiem va phan trang theo ten, email, sdt 
     @Query("SELECT c FROM User c WHERE " +

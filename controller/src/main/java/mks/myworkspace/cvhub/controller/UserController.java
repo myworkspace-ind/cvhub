@@ -1,10 +1,22 @@
 package mks.myworkspace.cvhub.controller;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.http.HttpHeaders;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +32,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -162,5 +175,84 @@ public class UserController {
         mav.setViewName("/signInOut/editUser");
         return mav;
     }
+    
+ // API để upload ảnh
+ 	@PostMapping("/profile/upload_avatar")
+ 	public String uploadAvatar(@RequestParam("file") MultipartFile file) {
+ 		try {
+ 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+ 			User currentUser = userService.findUserByEmail(auth.getName());
+ 			currentUser.setImage(file.getBytes()); // Lưu ảnh dưới dạng byte[]
+ 			// Save updates
+ 			userService.getRepo().save(currentUser);
+ 			return "redirect:/profile/edit";
+ 		} catch (Exception e) {
+ 			return "redirect:/profile/edit";
+ 		}
+ 	}
+
+ 	@GetMapping(value = "/profile/avatar")
+ 	@ResponseBody
+ 	public ResponseEntity<byte[]> getImage() throws IOException {
+ 	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+ 	    User currentUser = userService.findUserByEmail(auth.getName());
+ 	    byte[] image = currentUser.getImage();
+
+ 	    if (image == null || image.length == 0) {
+ 	    // Đường dẫn tuyệt đối tới resource trong module cvhub-web
+ 	    	
+ 	    	 // Tạo ảnh mặc định từ chữ cái đầu email
+ 	        String email = currentUser.getEmail();
+ 	        image = createDefaultAvatar(email);
+ 	    }
+
+ 	    return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(image);
+ 	}
+ 	
+ 	
+ 	private byte[] createDefaultAvatar(String email) throws IOException {
+ 	    // Tính toán hash của email (chuyển email thành chuỗi băm)
+ 	    int hash = email.hashCode(); // Tính hash của email
+
+ 	    // Chuyển đổi hash thành chuỗi màu thập lục phân (#RRGGBB)
+ 	    String hexColor = String.format("#%06X", (0xFFFFFF & hash));  // Lấy 24 bit cuối của hash và chuyển thành mã màu hex
+
+ 	    // Chuyển mã màu hex thành đối tượng Color
+ 	    Color backgroundColor = Color.decode(hexColor); // Chuyển mã hex thành đối tượng Color
+
+ 	    // Tạo ảnh rỗng
+ 	    int width = 200; // Chiều rộng ảnh
+ 	    int height = 200; // Chiều cao ảnh
+ 	    BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+ 	    Graphics2D g2d = bufferedImage.createGraphics();
+
+ 	    // Vẽ nền
+ 	    g2d.setColor(backgroundColor); // Màu nền
+ 	    g2d.fillRect(0, 0, width, height);
+
+ 	    // Lấy chữ cái đầu (in hoa) để vẽ lên avatar
+ 	    char initial = email.toUpperCase().charAt(0); // Lấy chữ cái đầu (in hoa)
+ 	    g2d.setColor(Color.WHITE); // Màu chữ
+ 	    g2d.setFont(new Font("Arial", Font.BOLD, 100)); // Font chữ
+ 	    FontMetrics fm = g2d.getFontMetrics();
+ 	    int textWidth = fm.stringWidth(String.valueOf(initial));
+ 	    int textHeight = fm.getAscent();
+
+ 	    // Căn giữa chữ
+ 	    int x = (width - textWidth) / 2;
+ 	    int y = (height - 10 + textHeight) / 2;
+
+ 	    g2d.drawString(String.valueOf(initial), x, y);
+
+ 	    g2d.dispose(); // Đóng Graphics2D
+
+ 	    // Chuyển BufferedImage thành mảng byte
+ 	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+ 	    ImageIO.write(bufferedImage, "png", baos);
+ 	    return baos.toByteArray();
+ 	}
+
+
+
 
 }
