@@ -133,7 +133,7 @@ public class MainController extends BaseController {
 		    // Nếu không có tham số tìm kiếm -> lấy tất cả
 		    searchResults = organizationService.getRepo().findAll();
 		}
-
+	 
 	 Page<Organization> organizationPage = new PageImpl<>(searchResults,PageRequest.of(page, size), searchResults.size()); // Them ket qua vao
 	  Map<Long, Long> totalJobRequestsMap = new HashMap<>();
 	    for (Organization organization : organizationPage.getContent()) {
@@ -141,6 +141,8 @@ public class MainController extends BaseController {
 	        System.out.println("Organization ID: " + organization.getId() + ", Total Job Requests: " + totalRequests);
 	        totalJobRequestsMap.put(organization.getId(), totalRequests);
 	 }
+	 mav.addObject("location", location);
+	 mav.addObject("name", companyName);
 	 mav.addObject("organizations", organizationPage.getContent());
 	 mav.addObject("currentPage", page); // Trang hien tai
 	 mav.addObject("totalPages", organizationPage.getTotalPages()); // Tong so trang
