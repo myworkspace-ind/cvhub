@@ -1,11 +1,15 @@
 package mks.myworkspace.cvhub.service.impl;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import mks.myworkspace.cvhub.entity.Comment;
 import mks.myworkspace.cvhub.entity.Question;
@@ -46,8 +50,9 @@ public class ChatBoxServiceImpl implements ChatBoxService {
         question.setAuthor(author);
         question.setCreatedAt(LocalDateTime.now());
         
-        // Ghi log
-        System.out.println("Thêm câu hỏi mới: " + question.getTitle());
+		/*
+		 * // Ghi log System.out.println("Thêm câu hỏi mới: " + question.getTitle());
+		 */
         
         return questionRepository.save(question);
     }
@@ -72,8 +77,28 @@ public class ChatBoxServiceImpl implements ChatBoxService {
     }
 
 	@Override
+	@Transactional
 	public Optional<Question> getQuestionById(Long id) {
 	    return questionRepository.findById(id);
+	}
+
+	public void deleteComment(Long commentId, User currentUser) throws AccessDeniedException {
+	    Comment comment = commentRepository.findById(commentId)
+	        .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy bình luận với ID: " + commentId));
+	    if (!comment.getAuthor().getId().equals(currentUser.getId())) {
+	        throw new AccessDeniedException("Không có quyền xóa bình luận này");
+	    }
+	    commentRepository.delete(comment);
+	}
+
+	public void editComment(Long commentId, String content, User currentUser) throws AccessDeniedException {
+	    Comment comment = commentRepository.findById(commentId)
+	        .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy bình luận với ID: " + commentId));
+	    if (!comment.getAuthor().getId().equals(currentUser.getId())) {
+	        throw new AccessDeniedException("Không có quyền chỉnh sửa bình luận này");
+	    }
+	    comment.setContent(content);
+	    commentRepository.save(comment);
 	}
 
 }

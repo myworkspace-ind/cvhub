@@ -3,11 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" th:href="@{/resources/chatBox/chatBox.css}" />
+    <link rel="stylesheet" th:href="@{/resources/chatBox/comment.css}" />
     <link rel="stylesheet" th:href="@{/resources/home/style.css}"/>
-    <title>Chat Box</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Chi Tiết Câu Hỏi</title>
 </head>
 <body>
     <div th:replace="~{fragments/header :: header}"></div>
+    
+    <main class="detail-container">
+        <div class="question-detail">
+            <div class="question-header">
+                <h1 th:text="${question.title}" class="question-title"></h1>
+                <p th:text="${question.content}" class="question-content"></p>
+            </div>
+
+            <div class="comment-form-section">
+                <h3><i class="fas fa-comment-dots"></i> Thêm bình luận</h3>
+                <form th:action="@{/chatBox/detail/{id}/postComment(id=${question.id})}" 
+                      method="post" 
+                      class="comment-form">
+                    <textarea name="content" 
+                             placeholder="Viết bình luận của bạn..." 
+                             required 
+                             class="comment-textarea"></textarea>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Bình luận
+                    </button>
+                </form>
+            </div>
+
+            <div class="comments-section">
+                <h2><i class="fas fa-comments"></i> Danh sách bình luận</h2>
+                <ul class="comments-list">
+                    <li th:each="comment : ${comments}" class="comment-item">
+                        <div class="comment-content">
+                            <div class="comment-header">
+                                <div class="author-info">
+                                    <i class="fas fa-user"></i>
+                                    <span th:text="${comment.author.fullName}"></span>
+                                </div>
+                            </div>
+                            <p th:text="${comment.content}" class="comment-text"></p>
+                            
+                            <div class="comment-actions">
+                                <form th:action="@{/chatBox/detail/{questionId}/deleteComment/{commentId}(questionId=${question.id}, commentId=${comment.id})}" 
+                                      method="post" 
+                                      class="delete-form">
+                                    <button type="submit" class="delete-btn">
+                                        <i class="fas fa-trash"></i> Xóa
+                                    </button>
+                                </form>
+                                
+                                <form th:action="@{/chatBox/detail/{questionId}/editComment/{commentId}(questionId=${question.id}, commentId=${comment.id})}" 
+                                      method="post" 
+                                      class="edit-form">
+                                    <div class="edit-content">
+                                        <textarea name="content" 
+                                                 th:placeholder="${comment.content}" 
+                                                 required 
+                                                 class="edit-textarea"></textarea>
+                                        <button type="submit" class="edit-btn">
+                                            <i class="fas fa-edit"></i> Chỉnh sửa
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <!-- Phân trang -->
+                <div class="pagination" 
+                     th:if="${totalPages > 1}">
+                    <a th:href="@{/chatBox/detail/{id}(id=${question.id}, page=0)}" 
+                       class="page-link first-page" 
+                       th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                    
+                    <a th:href="@{/chatBox/detail/{id}(id=${question.id}, page=${currentPage - 1})}" 
+                       class="page-link" 
+                       th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                    
+                    <span class="page-info" 
+                          th:text="|Trang ${currentPage + 1} / ${totalPages}|">
+                    </span>
+                    
+                    <a th:href="@{/chatBox/detail/{id}(id=${question.id}, page=${currentPage + 1})}" 
+                       class="page-link" 
+                       th:classappend="${currentPage >= totalPages - 1 ? 'disabled' : ''}">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                    
+                    <a th:href="@{/chatBox/detail/{id}(id=${question.id}, page=${totalPages - 1})}" 
+                       class="page-link last-page" 
+                       th:classappend="${currentPage >= totalPages - 1 ? 'disabled' : ''}">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
 </body>
 </html>

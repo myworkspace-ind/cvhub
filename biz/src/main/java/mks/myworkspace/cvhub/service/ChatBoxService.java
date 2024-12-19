@@ -1,5 +1,6 @@
 package mks.myworkspace.cvhub.service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,5 +20,9 @@ public interface ChatBoxService {
 	List<Question> getAllQuestions_SortTimeDesc();
 
 	Optional<Question> getQuestionById(Long id);
+
+	void deleteComment(Long commentId, User currentUser) throws AccessDeniedException;
+
+	void editComment(Long commentId, String content, User currentUser) throws AccessDeniedException;
 
 }

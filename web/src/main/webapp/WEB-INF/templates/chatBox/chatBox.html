@@ -5,31 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/resources/chatBox/chatBox.css}" />
     <link rel="stylesheet" th:href="@{/resources/home/style.css}"/>
-    <title>Chat Box</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Diễn đàn</title>
 </head>
 <body>
     <div th:replace="~{fragments/header :: header}"></div>
-    <div class="container">
-        <div class="content">
-            <h1>Diễn đàn</h1>
-            <form th:action="@{/chatBox/postQuestion}" method="post">
-                <input type="text" name="title" placeholder="Tiêu đề câu hỏi" required />
-                <textarea name="content" placeholder="Nội dung câu hỏi" required></textarea>
-                <button type="submit">Đăng câu hỏi</button>
-            </form>          
-        </div>
-        
-        <ul class="questions">
-            <li th:each="question : ${questions}" class="question">
-                <div>
-                    <h3 th:text="${question.title}"></h3>
-                    <p th:text="${question.content}"></p>
-                </div>
-                <form th:action="@{/chatBox/detail/{id}(id=${question.id})}" method="get" style="display: inline;">
-                    <button type="submit" class="apply-btn">Bình luận</button>
+    
+    <main class="forum-container">
+        <div class="forum-content">
+            <div class="forum-header">
+                <h1><i class="fas fa-comments"></i> Diễn đàn</h1>
+            </div>
+
+            <div class="question-form-container">
+                <form th:action="@{/chatBox/postQuestion}" method="post" class="question-form">
+                    <div class="form-group">
+                        <input type="text" 
+                               name="title" 
+                               placeholder="Tiêu đề câu hỏi" 
+                               required 
+                               class="form-input" />
+                    </div>
+                    <div class="form-group">
+                        <textarea name="content" 
+                                 placeholder="Nội dung câu hỏi" 
+                                 required 
+                                 class="form-textarea"></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Đăng câu hỏi
+                    </button>
                 </form>
-            </li>
-        </ul>
-    </div>
+            </div>
+
+            <div class="questions-container">
+                <ul class="questions-list">
+                    <li th:each="question : ${questions}" class="question-card">
+                        <div class="question-content">
+                            <div class="question-header">
+                                <h3 th:text="${question.title}" class="question-title"></h3>
+                                <span class="author-info">
+                                    <i class="fas fa-user"></i>
+                                    <span th:text="${question.author.fullName}"></span>
+                                </span>
+                            </div>
+                            <p th:text="${question.content}" class="question-text"></p>
+                            <div class="question-actions">
+                                <form th:action="@{/chatBox/detail/{id}(id=${question.id})}" 
+                                      method="get">
+                                    <button type="submit" class="comment-btn">
+                                        <i class="fas fa-comment"></i> Bình luận
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
 </body>
 </html>
