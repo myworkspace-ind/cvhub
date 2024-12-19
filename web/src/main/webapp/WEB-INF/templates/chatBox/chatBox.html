@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/resources/chatBox/chatBox.css}" />
+    <link rel="stylesheet" th:href="@{/resources/home/style.css}"/>
+    <title>Chat Box</title>
+</head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+    <div class="container">
+        <div class="content">
+            <h1>Diễn đàn</h1>
+            <form th:action="@{/chatBox/postQuestion}" method="post">
+                <input type="text" name="title" placeholder="Tiêu đề câu hỏi" required />
+                <textarea name="content" placeholder="Nội dung câu hỏi" required></textarea>
+                <button type="submit">Đăng câu hỏi</button>
+            </form>          
+        </div>
+        
+        <ul class="questions">
+            <li th:each="question : ${questions}" class="question">
+                <div>
+                    <h3 th:text="${question.title}"></h3>
+                    <p th:text="${question.content}"></p>
+                </div>
+                <form th:action="@{/chatBox/detail/{id}(id=${question.id})}" method="get" style="display: inline;">
+                    <button type="submit" class="apply-btn">Bình luận</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

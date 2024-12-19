@@ -33,6 +33,7 @@
         <intercept-url pattern="/register" access="permitAll" />
         <intercept-url pattern="/" access="permitAll" />
         <intercept-url pattern="/uploadCV/**" access="isAuthenticated()" />
+        <intercept-url pattern="/chatBox/**" access="isAuthenticated()" />
         <intercept-url pattern="/**" access="permitAll" />
         
         <form-login 
