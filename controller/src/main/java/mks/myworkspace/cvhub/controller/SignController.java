@@ -77,6 +77,33 @@ public class SignController extends BaseController {
         }
         return "redirect:/home";
     }
+    
+    @Value("${caslogout.url}")
+    private String casLogoutUrl;
+
+    @GetMapping("/logout-handler")
+    public String handleLogout(HttpServletRequest request, Model model) {
+        // Kiểm tra nếu có session attribute CAS (giả sử CAS login)
+        boolean isCasLogin = request.getUserPrincipal() != null;
+
+        if (isCasLogin) {
+        	 // Xóa session của ứng dụng
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
+            SecurityContextHolder.clearContext();
+            // Nếu đăng nhập qua CAS, chuyển hướng đến CAS Logout
+            return "redirect:" + casLogoutUrl;
+        } else {
+            // Nếu không, thực hiện logout nội bộ
+            SecurityContextHolder.clearContext();
+            request.getSession().invalidate();
+            return "redirect:/logout"; // Chuyển đến logout nội bộ
+        }
+    }
+
+
 
     // Show register form
     @GetMapping("/register")
