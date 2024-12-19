@@ -30,7 +30,7 @@
                     </div>
                     <div class="contact-item">
                         <span>📍</span>
-                        <span>TP HCM</span>
+                        <span th:text="${location}">TP HCM</span>
                     </div>
                 </div>
                 <div class="name" th:text="${cv.fullName}">Le Dinh Minh</div>
@@ -40,7 +40,13 @@
                      alt="Profile Picture" />
             </div>
         </div>
-
+		<div class="section">
+		            <div class="section-title">Job Role</div>
+		            <div class="section-content" th:if="${jobrole}">
+		                <div class="content-block" th:text="${jobrole}"></div>
+		            </div>
+		            <div class="section-content" th:unless="${jobrole}">-</div>
+		 </div>
         <div class="section">
             <div class="section-title">WORK EXPERIENCE</div>
             <div class="section-content" th:if="${cv.experience}">

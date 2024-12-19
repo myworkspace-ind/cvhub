@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Template</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+     <link rel="stylesheet" th:href="@{/resources/uploadCV/completeCV.css}"/>
+     <script type="text/javascript"
+	th:src="@{/resources/uploadCV/editCV.js}"></script>
+	<link rel="stylesheet" th:href="@{/resources/home/style.css}" />
+</head>
+<body>
+	<div th:replace="~{fragments/header :: header}"></div>
+    <div class="container">
+
+        <form id="cv-form" th:action="@{/editCV}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" th:value="${cv.id}">
+            <div class="cv-header">
+				<input type="file" id="profile-picture-input" name="logoFile"
+					style="display: none;" accept="image/*">
+				<div class="profile-picture-container">
+					<!-- Hiển thị ảnh logo hoặc ảnh mặc định -->
+					<img src="#" alt="Profile Picture" id="profile-picture"
+						th:src="${logoBase64}">
+					<div class="profile-picture-overlay">
+						<span>Nhấn để tải ảnh lên</span>
+					</div>
+				</div>
+				<h1><input type="text" id="fullName" name="fullName" th:value="${cv.fullName}" placeholder="Họ và Tên"></h1>
+                <select class="form-select" id="jobRoleId" name="jobRoleId" required>
+                    <option value="" disabled selected>Vị trí ứng tuyển</option>
+                    <option th:each="jobRole : ${jobRoles}" th:value="${jobRole.id}" th:text="${jobRole.title}"   th:selected="${jobRole.id == cv.jobRole.id}"></option>
+                </select>
+            </div>
+    
+            
+            <div class="cv-container">
+                <div class="left-column">
+                    <div class="section">
+                        <h2><i class="fa fa-user-circle-o" aria-hidden="true"></i> THÔNG TIN CÁ NHÂN</h2>
+                        <div class="info-item">
+                            <i class="fa fa-envelope" aria-hidden="true"></i>
+                            <input type="email" id="email" name="email" th:value="${cv.email}" placeholder="Email">
+                        </div>
+                        <div class="info-item">
+                            <i class="fa fa-phone" aria-hidden="true"></i>
+                            <input type="tel" id="phone" name="phone" th:value="${cv.phone}" placeholder="Số điện thoại">
+                        </div>
+                        <div class="info-item">
+                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                            <select id="locationCode" name="locationCode" required>
+                                <option value="" disabled selected>Chọn tỉnh/thành phố</option>
+                                <option th:each="location : ${locations}" th:value="${location.code}" th:text="${location.name}" th:selected="${location.code == cv.location.code}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="right-column">
+                    <div class="section">
+                        <h2><i class="fa fa-briefcase" aria-hidden="true"></i> KINH NGHIỆM LÀM VIỆC</h2>
+                        <div>
+                            <textarea id="experience" name="experience" rows="6" th:text="${cv.experience}" placeholder="Mô tả kinh nghiệm làm việc của bạn"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="cv-container">
+                <div class="left-column">
+                    <div class="section">
+                        <h2><i class="fa fa-graduation-cap" aria-hidden="true"></i> HỌC VẤN</h2>
+                        <textarea id="education" name="education" rows="6" th:text="${cv.education}" placeholder="Nhập thông tin học vấn"></textarea>
+                    </div>
+                </div>
+    
+                <div class="right-column">
+                    <div class="section">
+                        <h2><i class="fa fa-github" aria-hidden="true"></i> DỰ ÁN</h2>
+                        <div>
+                            <textarea id="projects" name="projects" rows="6" th:text="${cv.projects}" placeholder="Liệt kê các dự án bạn đã tham gia"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+    
+            <div class="cv-container">
+                <div class="left-column">
+    
+                    <div class="section">
+                        <h2><i class="fa fa-cubes" aria-hidden="true"></i> CÁC KỸ NĂNG</h2>
+                        <textarea id="skills" name="skills" rows="6" th:text="${cv.skills}" placeholder="Liệt kê các kỹ năng của bạn"></textarea>
+                    </div>
+    
+                </div>
+    
+                <div class="right-column">
+                    <div class="section">
+                        <h2><i class="fa fa-certificate" aria-hidden="true"></i> CHỨNG CHỈ</h2>
+                        <textarea id="certifications" name="certifications" rows="6" th:text="${cv.certifications}" placeholder="Liệt kê các chứng chỉ của bạn"></textarea>
+                    </div>
+                </div>
+            </div>
+             <div class="right-column">
+                    <div class="section">
+                        <h2><i class="fa fa-certificate" aria-hidden="true"></i> HOẠT ĐỘNG</h2>
+                        <textarea id="activities" name="activities" rows="6" th:text="${cv.activities}" placeholder="Liệt kê các hoạt động của bạn"></textarea>
+                    </div>
+             </div>
+    
+    
+            <button type="submit">Lưu lại CV</button>
+        </form>
+        <form th:action="@{/cv/{id}/delete(id=${cv.id})}" method="post" onsubmit="return confirmDelete();">
+		        <button type="submit" style="margin-top: 15px;">Xóa</button>
+		</form>
+		<script>
+		    function confirmDelete() {
+		        return confirm("Bạn có chắc chắn muốn xóa CV này?");
+		    }
+		</script>
+    </div>
+</body>
+</html>

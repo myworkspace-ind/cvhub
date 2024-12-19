@@ -18,4 +18,5 @@ public class CvDTO {
     private String certifications;
     private String activities;
     private MultipartFile logoFile;
+    private Long id;
 }

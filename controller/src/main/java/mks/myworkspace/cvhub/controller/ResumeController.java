@@ -1,7 +1,9 @@
 package mks.myworkspace.cvhub.controller;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -215,6 +217,8 @@ public class ResumeController  extends BaseController  {
         
         User currentUser = userService.findUserByEmail(auth.getName());
         CV cv = cvService.getRepo().findById(id).orElse(null);
+        String location = cv.getLocation().getName();
+        String job = cv.getJobRole().getTitle();
         
         if (cv == null || !cv.getUser().getId().equals(currentUser.getId())) {
             mav.setViewName("error");
@@ -223,6 +227,8 @@ public class ResumeController  extends BaseController  {
         }
         
         mav.addObject("cv", cv);
+        mav.addObject("location", location);
+        mav.addObject("jobrole", job);
         return mav;
     }
 	@GetMapping("/renderCVPrimary/{id}")
@@ -407,4 +413,127 @@ public class ResumeController  extends BaseController  {
 	    }
 	    return mav;
 	}
+	
+	
+	@GetMapping("/profile/cv/edit/{id}")
+    public ModelAndView manageCV(@PathVariable Long id) {
+        ModelAndView mav = new ModelAndView("uploadCV/editCV");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        
+        if (auth == null || !auth.isAuthenticated()) {
+            return new ModelAndView("redirect:/login");
+        }
+        User currentUser = userService.findUserByEmail(auth.getName());
+        CV cv = cvService.getRepo().findById(id).orElse(null);
+        
+        if (cv == null || !cv.getUser().getId().equals(currentUser.getId())) {
+            mav.setViewName("error");
+            mav.addObject("errorMessage", "CV không tồn tại hoặc bạn không có quyền truy cập");
+            return mav;
+        }
+        List<JobRole> jobRoles = jobRoleService.getRepo().findAll();
+	    mav.addObject("jobRoles", jobRoles);
+		List<Location> locations = locationService.getRepo().findAll();
+		mav.addObject("locations", locations);
+		if (cv.getLogo() != null) {
+		        String logoBase64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(cv.getLogo());
+		        mav.addObject("logoBase64", logoBase64);
+		    } else {
+		        mav.addObject("logoBase64", "https://static.topcv.vn/cv-builder/assets/default-avatar.fc9c40ba.png");  // Hình mặc định nếu không có logo
+		    }
+        mav.addObject("cv", cv);
+        return mav;
+    }
+	
+	@RequestMapping(value = { "/editCV" }, method = RequestMethod.POST)
+	public ModelAndView editCV(@ModelAttribute CvDTO cvDTO) {
+	    ModelAndView mav = new ModelAndView("uploadCV/renderCV");
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    
+	    // Kiểm tra nếu người dùng chưa đăng nhập
+	    if (auth == null || !auth.isAuthenticated()) {
+	        return new ModelAndView("redirect:/login");
+	    }
+	    
+	    // Tìm kiếm người dùng hiện tại dựa trên email
+	    User currentUser = userService.findUserByEmail(auth.getName());
+	    if (currentUser == null) {
+	        mav.setViewName("error");
+	        mav.addObject("errorMessage", "User not found");
+	        return mav;
+	    }
+	    
+	    // Tìm kiếm CV hiện tại từ cơ sở dữ liệu
+	    CV existingCV = cvService.getRepo().findById(cvDTO.getId()).orElse(null);
+	    if (existingCV == null || !existingCV.getUser().getId().equals(currentUser.getId())) {
+	        mav.setViewName("error");
+	        mav.addObject("errorMessage", "CV not found or user does not have permission to edit this CV");
+	        return mav;
+	    }
+
+	    // Cập nhật thông tin CV từ DTO
+	    existingCV.setFullName(cvDTO.getFullName());
+	    
+	    Location location = locationService.getRepo().findById(cvDTO.getLocationCode())
+				.orElseThrow(() -> new IllegalArgumentException("Invalid location code"));
+		JobRole jobRole = jobRoleService.getRepo().findById(cvDTO.getJobRoleId()).orElse(null); 
+	    // Cập nhật các trường thông tin khác
+		existingCV.setLocation(location);
+		existingCV.setJobRole(jobRole);
+	    existingCV.setEmail(cvDTO.getEmail());
+	    existingCV.setPhone(cvDTO.getPhone());
+	    existingCV.setEducation(cvDTO.getEducation());
+	    existingCV.setSkills(cvDTO.getSkills());
+	    existingCV.setExperience(cvDTO.getExperience());
+	    existingCV.setProjects(cvDTO.getProjects());
+	    existingCV.setCertifications(cvDTO.getCertifications());
+	    existingCV.setActivities(cvDTO.getActivities());
+	    try {
+            // Lấy mảng byte từ logoFile
+            byte[] logoBytes = cvDTO.getLogoFile().getBytes();
+            existingCV.setLogo(logoBytes);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mav.addObject("errorMessage", "Có lỗi khi tải tệp logo.");
+            return mav;
+        }
+	    // Lưu lại CV đã cập nhật
+	    CV updatedCV = cvService.getRepo().save(existingCV);
+
+	    // Trả lại đối tượng CV đã cập nhật vào view
+	    mav.addObject("cv", updatedCV);
+	    mav.addObject("location", location.getName());
+        mav.addObject("jobrole", jobRole.getTitle());
+	    return mav;
+	}
+	
+	@RequestMapping(value = "/cv/{id}/delete", method = RequestMethod.POST)
+	public ModelAndView deleteCV(@PathVariable("id") Long cvId) {
+	    ModelAndView mav = new ModelAndView("redirect:/profile/cv/manage");
+
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    if (auth == null || !auth.isAuthenticated()) {
+	        return new ModelAndView("redirect:/login");
+	    }
+	    User currentUser = userService.findUserByEmail(auth.getName());
+	    if (currentUser == null) {
+	        mav.setViewName("error");
+	        mav.addObject("errorMessage", "User not found");
+	        return mav;
+	    }
+
+	    CV cvToDelete = cvService.getRepo().findById(cvId).orElse(null);
+	    if (cvToDelete == null || !cvToDelete.getUser().getId().equals(currentUser.getId())) {
+	        mav.setViewName("error");
+	        mav.addObject("errorMessage", "CV not found or user does not have permission to delete this CV");
+	        return mav;
+	    }
+
+	    cvService.getRepo().delete(cvToDelete);
+	    mav.addObject("successMessage", "CV đã được xóa thành công.");
+	    return mav;
+	}
+
+
 }
