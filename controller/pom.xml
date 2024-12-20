@@ -130,6 +130,11 @@
 			<artifactId>spring-context</artifactId>
 			<version>5.3.20</version> <!-- Kiểm tra phiên bản phù hợp -->
 		</dependency>
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.12.0</version> <!-- Hoặc phiên bản mới hơn nếu cần -->
+		</dependency>
 
 		<!-- Spring Mail -->
 
