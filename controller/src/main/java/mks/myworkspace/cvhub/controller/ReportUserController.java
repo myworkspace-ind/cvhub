@@ -74,7 +74,7 @@ public class ReportUserController {
         return "redirect:/report/user"; // Redirect back to the user report page
     }
     @GetMapping("/thongke")
-    public ModelAndView getUserReport(@RequestParam(value = "year", defaultValue = "2024") int year) {
+    public ModelAndView getUserReport(@RequestParam(value = "year") int year) {
         List<Long> userCounts = userService.getUserCountsPerYear(year);  // Lấy danh sách số lượng người dùng theo từng tháng trong năm
         
         ModelAndView mav = new ModelAndView("thongke");
