@@ -28,5 +28,14 @@ public interface JobRequestRepository extends JpaRepository<JobRequest, Long> {
 	Page<JobRequest> findByOrganizationId(Long organizationId, Pageable pageable);
 	
 	@Query("SELECT COALESCE(COUNT(jr.id), 0) FROM JobRequest jr WHERE jr.organization.id = :organizationId")
-	Long getJobCountByOrgId(@Param("organizationId") Long organizationId);		// #organizationReport
+	Long getJobCountByOrgId(@Param("organizationId") Long organizationId);	// #organizationReport
+	
+	// Tìm kiếm theo keyword
+    @Query("SELECT j FROM JobRequest j WHERE " +
+           "LOWER(j.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+           "LOWER(j.organization.title) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    Page<JobRequest> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
+    
+    // Lọc theo location
+    Page<JobRequest> findByLocationName(String location, Pageable pageable);
 }

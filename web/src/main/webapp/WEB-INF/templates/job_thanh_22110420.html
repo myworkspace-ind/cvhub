@@ -24,6 +24,7 @@
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 	
     <!-- CSS tùy chỉnh cho phân trang -->
     <style>
@@ -347,6 +348,7 @@
 	    transform: translateY(-2px);
 	    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 	}
+	
 	        
     </style>
 </head>
@@ -358,7 +360,7 @@
     <!-- Search Bar -->
     <div class="row mb-4">
         <div class="col-md-6">
-            <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm...">
+            <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm theo tên công ty hoặc tên công việc">
         </div>
         <div class="col-md-3">
             <select class="form-select" id="locationFilter">
@@ -368,6 +370,9 @@
                         th:text="${location.name}"></option>
             </select>
         </div>
+        <div class="col-md-3">
+        <a th:href="@{/job}" class="btn btn-primary w-100">Tất cả công việc</a>
+    </div>
     </div>
 
     <!-- Table -->
@@ -402,7 +407,7 @@
 					  <button type="button" 
 				        class="btn btn-applicant" 
 				       th:onclick="'showApplicants(\'' + @{/job/applicants/} + ${job.id} + '\')'"
-				        data-bs-toggle="modal" 
+				        data-bs-toggle="modal"
 				        data-bs-target="#applicantsModal">
 				    <i class="fas fa-users"></i>
 				    <span class="applicant-count" th:text="${applicationCounts.get(job.id)}"></span>
@@ -411,31 +416,44 @@
 
 					</td>
 			        <td>
-			            <button class="btn btn-success btn-sm">Chi tiết</button>
-			        </td>
+				    <a th:href="@{/jobrequests/{id}(id=${job.id})}" class="btn btn-success btn-sm">Chi tiết</a>
+				</td>
 			    </tr>
 			</tbody>
         </table>
     </div>
 
-    <!-- Pagination -->
-    <nav aria-label="Page navigation" class="mt-4">
-        <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled' : ''">
-                <a class="page-link" th:href="@{/job(page=${currentPage - 1})}" tabindex="-1">Trước</a>
-            </li>
-            
-            <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
-                th:classappend="${pageNumber == currentPage} ? 'active' : ''">
-                <a class="page-link" th:href="@{/job(page=${pageNumber})}" 
-                   th:text="${pageNumber + 1}"></a>
-            </li>
-            
-            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled' : ''">
-                <a class="page-link" th:href="@{/job(page=${currentPage + 1})}">Sau</a>
-            </li>
-        </ul>
-    </nav>
+   <nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        <!-- Nút Previous -->
+        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled' : ''">
+            <a class="page-link" 
+               th:href="@{/job(page=${currentPage - 1}, 
+                          keyword=${keyword}, 
+                          location=${selectedLocation})}" 
+               tabindex="-1">Trước</a>
+        </li>
+        
+        <!-- Các nút số trang -->
+        <li class="page-item" 
+            th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
+            th:classappend="${pageNumber == currentPage} ? 'active' : ''">
+            <a class="page-link" 
+               th:href="@{/job(page=${pageNumber}, 
+                          keyword=${keyword}, 
+                          location=${selectedLocation})}"
+               th:text="${pageNumber + 1}"></a>
+        </li>
+        
+        <!-- Nút Next -->
+        <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled' : ''">
+            <a class="page-link" 
+               th:href="@{/job(page=${currentPage + 1}, 
+                          keyword=${keyword}, 
+                          location=${selectedLocation})}">Sau</a>
+        </li>
+    </ul>
+</nav>
 
     <!-- Export Button -->
     <div class="text-center mt-3">
@@ -473,51 +491,48 @@
 <!-- Add JavaScript for search and export -->
 <script>
 $(document).ready(function() {
-    // Search functionality
+    // Xử lý tìm kiếm
+    let searchTimeout;
     $("#searchInput").on("keyup", function() {
-        var value = $(this).val().toLowerCase();
-        $("#jobTableBody tr").filter(function() {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-        });
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            let keyword = $(this).val().trim();
+            let url = new URL(window.location.href);
+            let params = new URLSearchParams(url.search);
+            
+            // Reset các tham số khác
+            params.delete('location');
+            $("#locationFilter").val(''); // Reset combobox location
+            
+            if (keyword) {
+                params.set('keyword', keyword);
+            } else {
+                params.delete('keyword');
+            }
+            params.set('page', '0');
+            
+            window.location.href = `${url.pathname}?${params}`;
+        }, 500);
     });
 
-    // Location filter
+    // Xử lý lọc theo location
     $("#locationFilter").on("change", function() {
-        var value = $(this).val().toLowerCase();
-        if (value) {
-            $("#jobTableBody tr").filter(function() {
-                var locationCell = $(this).find("td:eq(3)").text().toLowerCase();
-                $(this).toggle(locationCell === value);
-            });
+        let location = $(this).val();
+        let url = new URL(window.location.href);
+        let params = new URLSearchParams(url.search);
+        
+        // Reset các tham số khác
+        params.delete('keyword');
+        $("#searchInput").val(''); // Reset ô tìm kiếm
+        
+        if (location) {
+            params.set('location', location);
         } else {
-            $("#jobTableBody tr").show();
+            params.delete('location');
         }
-    });
-
-    // Export to Excel
-    $("#exportExcel").click(function() {
-        let csv = 'Job Title,Company Name,Location,Job Role,Experience,Salary,Applicants\n';
-
-        $("#jobTableBody tr:visible").each(function() {
-            let row = [];
-            $(this).find('td').each(function(index) {
-                if (index !== 0 && index !== 8) {
-                    row.push($(this).text().trim());
-                }
-            });
-            csv += row.join(',') + '\n';
-        });
-
-        let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        let link = document.createElement("a");
-        if (link.download !== undefined) {
-            let url = URL.createObjectURL(blob);
-            link.setAttribute("href", url);
-            link.setAttribute("download", "job_list.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+        params.set('page', '0');
+        
+        window.location.href = `${url.pathname}?${params}`;
     });
 });
 function showApplicants(apiUrl) {
@@ -545,6 +560,103 @@ function showApplicants(apiUrl) {
             modalBody.append(row);
         });
     });
+}
+
+function s2ab(s) {
+    const buf = new ArrayBuffer(s.length);
+    const view = new Uint8Array(buf);
+    for (let i = 0; i < s.length; i++) {
+        view[i] = s.charCodeAt(i) & 0xFF;
+    }
+    return buf;
+}
+
+// Hàm xuất Excel
+$("#exportExcel").click(function() {
+    // Tạo workbook mới
+    const wb = XLSX.utils.book_new();
+    
+    // Chuẩn bị dữ liệu
+    const data = [
+        ['Logo', 'Job Title', 'Company Name', 'Location', 'Job Role', 'Experience', 'Salary', 'Applicants'] // headers
+    ];
+    
+    // Lấy dữ liệu từ bảng
+    $("#jobTableBody tr:visible").each(function() {
+        const rowData = [];
+        $(this).find('td').each(function(index) {
+            if (index !== 8) { // Bỏ qua cột Action
+                let cellData = $(this).text().trim();
+                // Xử lý cho cột logo
+                if (index === 0) {
+                    cellData = ''; // Bỏ qua logo
+                }
+                rowData.push(cellData);
+            }
+        });
+        data.push(rowData);
+    });
+    
+    // Tạo worksheet
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    
+    // Thiết lập chiều rộng cột
+    const colWidths = [
+        {wch: 10}, // Logo
+        {wch: 30}, // Job Title
+        {wch: 30}, // Company Name
+        {wch: 20}, // Location
+        {wch: 20}, // Job Role
+        {wch: 15}, // Experience
+        {wch: 15}, // Salary
+        {wch: 15}  // Applicants
+    ];
+    ws['!cols'] = colWidths;
+    
+    // Thêm worksheet vào workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Job List");
+    
+    // Tạo file Excel với encoding UTF-8
+    const wbout = XLSX.write(wb, {
+        bookType: 'xlsx',
+        type: 'binary',
+        bookSST: false
+    });
+    
+    // Tạo Blob với UTF-8 BOM
+    const blob = new Blob([s2ab(wbout)], {
+        type: 'application/octet-stream'
+    });
+    
+    // Tạo URL và link tải
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'job_list_' + new Date().toISOString().slice(0,10) + '.xlsx';
+    
+    // Trigger download
+    document.body.appendChild(link);
+    link.click();
+    
+    // Cleanup
+    setTimeout(function() {
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+    }, 0);
+});
+//Thêm style cho header
+const headerStyle = {
+    font: { bold: true },
+    alignment: { horizontal: 'center' },
+    fill: { fgColor: { rgb: "4F81BD" } }
+};
+
+// Áp dụng style cho header
+const range = XLSX.utils.decode_range(ws['!ref']);
+for(let C = range.s.c; C <= range.e.c; ++C) {
+    const cell = XLSX.utils.encode_cell({r:0, c:C});
+    if(!ws[cell]) continue;
+    ws[cell].s = headerStyle;
 }
 
 </script>
