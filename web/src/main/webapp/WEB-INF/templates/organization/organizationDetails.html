@@ -12,9 +12,55 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <script type="text/javascript"
 	th:src="@{/resources/organizationDetails/organizationDetails.js}"></script>
+
+<script
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyQTyy-yRNd_slMdJFhfxKoqcgJXj4SzA&callback=initMap"
+	async defer></script>
 </head>
 
 <body>
+	<!-- Tạo input ẩn chứa giá trị ${organization.location} -->
+	<input type="hidden" id="locationInput"
+		th:value="${organization.location}">
+	<script>
+		let map;
+
+		function initMap() {
+			const geocoder = new google.maps.Geocoder(); // Khởi tạo Geocoder
+
+			// Lấy giá trị địa chỉ từ input ẩn
+			const address = document.getElementById('locationInput').value; // Truy xuất giá trị từ input ẩn
+
+			// Dịch địa chỉ thành tọa độ
+			geocoder
+					.geocode(
+							{
+								'address' : address
+							},
+							function(results, status) {
+								if (status === google.maps.GeocoderStatus.OK) {
+									const location = results[0].geometry.location; // Lấy tọa độ từ kết quả
+
+									map = new google.maps.Map(document
+											.getElementById("map"), {
+										center : location,
+										zoom : 12,
+									});
+
+									// Tạo marker tại vị trí location
+									const marker = new google.maps.Marker({
+										position : location,
+										map : map,
+										title : "Company Location",
+									});
+								} else {
+									console
+											.error("Geocode was not successful for the following reason: "
+													+ status);
+								}
+							});
+		}
+	</script>
 	<th:block th:include="fragments/hmenu"></th:block>
 
 	<div class="container">
@@ -96,8 +142,13 @@
 					<p>
 						<strong>Địa chỉ công ty:</strong>
 					</p>
-					<p th:text="${organization.location}"></p>
+					<a
+						th:href="'https://www.google.com/maps/search/' + ${organization.location}"
+						target="_blank">
+						<p th:text="${organization.location}"></p>
+					</a>
 				</div>
+				<div id="map" style="height: 400px; width: 100%;"></div>
 			</div>
 		</div>
 	</div>
@@ -303,38 +354,52 @@
 </body>
 
 <script>
-	$(document).ready(function() {
-		// Khi người dùng nhấn submit, ngừng hành động mặc định của form
-		$("#reviewForm").on("submit", function(e) {
-			const modalElement = document.getElementById('customerReviewModal'); // Lấy phần tử modal
-		    const modal = bootstrap.Modal.getInstance(modalElement); // Lấy instance modal
-			e.preventDefault(); // Ngừng gửi form mặc định
+	$(document)
+			.ready(
+					function() {
+						// Khi người dùng nhấn submit, ngừng hành động mặc định của form
+						$("#reviewForm")
+								.on(
+										"submit",
+										function(e) {
+											const modalElement = document
+													.getElementById('customerReviewModal'); // Lấy phần tử modal
+											const modal = bootstrap.Modal
+													.getInstance(modalElement); // Lấy instance modal
+											e.preventDefault(); // Ngừng gửi form mặc định
 
-			// Thu thập dữ liệu từ form
-			var formData = {
-				rating : $("input[name='rating']:checked").val(),
-				comment : $("#reviewMessage").val(),
-				organizationId : $("#organizationId").val()
-			};
+											// Thu thập dữ liệu từ form
+											var formData = {
+												rating : $(
+														"input[name='rating']:checked")
+														.val(),
+												comment : $("#reviewMessage")
+														.val(),
+												organizationId : $(
+														"#organizationId")
+														.val()
+											};
 
-			// Gửi dữ liệu bằng AJAX
-			$.ajax({
-				url : '/cvhub-web/organizations/createReview', // URL controller xử lý
-				type : 'POST',
-				data : formData,
-				success : function(response) {
-					// Hiển thị thông báo thành công nếu gửi thành công
-					alert(response.message);
-					modal.hide(); // Ẩn modal
-				},
-				error : function() {
-					// Hiển thị thông báo lỗi nếu có sự cố
-					alert("An error occurred while submitting your review.");
-					modal.hide(); // Ẩn modal
-				}
-			});
-		});
-	});
+											// Gửi dữ liệu bằng AJAX
+											$
+													.ajax({
+														url : '/cvhub-web/organizations/createReview', // URL controller xử lý
+														type : 'POST',
+														data : formData,
+														success : function(
+																response) {
+															// Hiển thị thông báo thành công nếu gửi thành công
+															alert(response.message);
+															modal.hide(); // Ẩn modal
+														},
+														error : function() {
+															// Hiển thị thông báo lỗi nếu có sự cố
+															alert("An error occurred while submitting your review.");
+															modal.hide(); // Ẩn modal
+														}
+													});
+										});
+					});
 </script>
 
 </html>
