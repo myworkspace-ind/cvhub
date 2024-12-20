@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,44 +85,52 @@ public class ResumeController  extends BaseController  {
 	 @Value("${file.storage.pathCV}") 
 	 private String storagePath;
 	 
-	@RequestMapping(value = { "uploadCV" }, method = RequestMethod.GET)
-	public ModelAndView returnUploadCV() {
-		ModelAndView mav = new ModelAndView("uploadCV/uploadCV");
-		return mav;
-	}
+	 @RequestMapping(value = { "uploadCV" }, method = RequestMethod.GET)
+	 public ModelAndView returnUploadCV(HttpSession session) {
+	     ModelAndView mav = new ModelAndView("uploadCV/uploadCV");	   
+	     return mav;
+	 }
+
 
 	@RequestMapping(value = { "completeCV" }, method = RequestMethod.POST)
-	public ModelAndView  handleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
-		ModelAndView modelAndView = new ModelAndView("uploadCV/completeCV");
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = userService.findUserByEmail(auth.getName());
+	public ModelAndView handleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
+	    ModelAndView modelAndView = new ModelAndView("uploadCV/completeCV");
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    User currentUser = userService.findUserByEmail(auth.getName());
 
-        String userId = currentUser.getId().toString();
-        Path targetLocation = Paths.get(storagePath + userId + "/" + file.getOriginalFilename());
-        File targetDir = targetLocation.getParent().toFile();
+	    String userId = currentUser.getId().toString();
+	    Path targetLocation = Paths.get(storagePath + userId + "/" + file.getOriginalFilename());
+	    File targetDir = targetLocation.getParent().toFile();
 
-        if (!targetDir.exists()) {
-            targetDir.mkdirs();
-        }
+	    // Kiểm tra và tạo thư mục nếu không tồn tại
+	    if (!targetDir.exists()) {
+	        targetDir.mkdirs();
+	    }
 
 	    try {
+	        // Thực hiện phân tích nội dung của file nếu có thể
 	        String content = parsingCVService.extractTextFromPdfOrWord(file);
 	        Map<String, String> parsedInfo = parsingCVService.parseContent(content, currentUser);
-
 	        modelAndView.addObject("cvData", parsedInfo);
+
+	        // Sao chép file đến vị trí mục tiêu
+	        File targetFile = targetLocation.toFile();
+	        file.transferTo(targetFile);
+
 	    } catch (IOException e) {
 	        modelAndView.addObject("error", "Không thể xử lý file: " + e.getMessage());
 	    }
 
-	    file.transferTo(targetLocation.toFile());
-
+	    // Thêm dữ liệu công việc và vị trí
 	    List<JobRole> jobRoles = jobRoleService.getRepo().findAll();
 	    modelAndView.addObject("jobRoles", jobRoles);
-		List<Location> locations = locationService.getRepo().findAll();
-		modelAndView.addObject("locations", locations);
+	    List<Location> locations = locationService.getRepo().findAll();
+	    modelAndView.addObject("locations", locations);
 
 	    return modelAndView;
 	}
+
+
 	@RequestMapping(value = { "saveCV" }, method = RequestMethod.POST)
 	public ModelAndView saveCV(@ModelAttribute CvDTO cvDTO) {
 		ModelAndView mav = new ModelAndView("uploadCV/renderCV");
