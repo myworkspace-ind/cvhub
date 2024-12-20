@@ -51,5 +51,11 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
 	@Query("SELECT ja FROM JobApplication ja " +
 		       "JOIN ja.jobRequest jr " +
 		       "WHERE jr.organization.id = :organizationId")
-	List<JobApplication> findApplicantByOrgId(@Param("organizationId") Long organizationId);	// #organizationReport
+	List<JobApplication> findApplicantByOrgId(@Param("organizationId") Long organizationId);// #organizationReport
+	
+	@Query("SELECT COUNT(ja) FROM JobApplication ja WHERE ja.jobRequest.id = :jobRequestId")
+    Long countByJobRequestId(@Param("jobRequestId") Long jobRequestId);
+	
+	@Query("SELECT ja FROM JobApplication ja WHERE ja.jobRequest.id = :jobRequestId")
+	List<JobApplication> findByJobRequestId(@Param("jobRequestId") Long jobRequestId);
 }
