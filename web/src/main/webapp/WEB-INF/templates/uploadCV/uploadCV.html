@@ -89,6 +89,19 @@
             errorMessage.style.display = 'none';
             return true; // Tiếp tục submit form
         }
+     // Đặt đoạn script này vào cuối trang HTML
+        window.onload = function () {
+            var fileInput = document.getElementById('file-upload');
+            if (fileInput) {
+                fileInput.value = ""; // Reset input file
+            }
+
+            var fileNameDiv = document.getElementById('file-name');
+            if (fileNameDiv) {
+                fileNameDiv.textContent = ""; // Xóa tên file hiển thị (nếu có)
+            }
+        };
+
     </script>
 </body>
 </html>

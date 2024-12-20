@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,12 +84,11 @@ public class ResumeController  extends BaseController  {
 	 @Value("${file.storage.pathCV}") 
 	 private String storagePath;
 	 
-	 @RequestMapping(value = { "uploadCV" }, method = RequestMethod.GET)
-	 public ModelAndView returnUploadCV(HttpSession session) {
-	     ModelAndView mav = new ModelAndView("uploadCV/uploadCV");	   
-	     return mav;
-	 }
-
+	@RequestMapping(value = { "uploadCV" }, method = RequestMethod.GET)
+	public ModelAndView returnUploadCV() {
+		ModelAndView mav = new ModelAndView("uploadCV/uploadCV");
+		return mav;
+	}
 
 	@RequestMapping(value = { "completeCV" }, method = RequestMethod.POST)
 	public ModelAndView handleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
@@ -129,8 +127,6 @@ public class ResumeController  extends BaseController  {
 
 	    return modelAndView;
 	}
-
-
 	@RequestMapping(value = { "saveCV" }, method = RequestMethod.POST)
 	public ModelAndView saveCV(@ModelAttribute CvDTO cvDTO) {
 		ModelAndView mav = new ModelAndView("uploadCV/renderCV");
