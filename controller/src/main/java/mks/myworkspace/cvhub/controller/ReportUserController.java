@@ -68,7 +68,7 @@ public class ReportUserController {
      * @param id User ID to delete.
      * @return Redirect to the user report page.
      */
-    @PostMapping("/report/user/delete/{id}")
+    //@PostMapping("/report/user/delete/{id}")
     public String deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
         return "redirect:/report/user"; // Redirect back to the user report page
@@ -81,5 +81,12 @@ public class ReportUserController {
         mav.addObject("userCounts", userCounts);  // Truyền số lượng người dùng
         mav.addObject("year", year);  // Truyền năm để hiển thị trong view
         return mav;
+    }
+    
+    //Dùng JDBC
+    @PostMapping("/report/user/delete/{id}")
+    public String deleteUserJdbc(@PathVariable Long id) {
+        userService.deleteUserByIdJdbc(id);
+        return "redirect:/report/user"; // Redirect back to the user report page
     }
 }

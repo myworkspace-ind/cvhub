@@ -11,10 +11,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import lombok.Getter;
+import mks.myworkspace.cvhub.dao.JobRequestDao;
 import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
 import mks.myworkspace.cvhub.entity.Organization;
+import mks.myworkspace.cvhub.model.JobRequestJDBC;
 import mks.myworkspace.cvhub.repository.JobRequestRepository;
 import mks.myworkspace.cvhub.service.JobRequestService;
 import mks.myworkspace.cvhub.service.JobRoleService;
@@ -33,6 +35,8 @@ public class JobRequestImpl implements JobRequestService {
 	JobRoleService jobRoleService;
 	@Autowired
 	OrganizationService organizationService;
+	@Autowired
+    private JobRequestDao jobRequestDao;
 	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
 
 	@Override
@@ -71,6 +75,40 @@ public class JobRequestImpl implements JobRequestService {
 		// Trả về đối tượng JobRequest đã tạo
 		return jobRequest;
 	}
+	
+	@Override
+	public JobRequestJDBC createJobRequestJdbc(String title, int locationCode, Long jobRoleId, Integer experience,
+	        Integer salary, Long organizationId, String jobDescription, String requirementsCandidate,
+	        String benefitCandidate, LocalDate deadlineApplication) {
+	    
+	    // Kiểm tra tính hợp lệ của các tham số đầu vào
+	    if (title == null || title.isEmpty() || organizationId == null) {
+	        throw new IllegalArgumentException("Title và Organization ID không được để trống.");
+	    }
+
+	    // Kiểm tra sự tồn tại của location
+	    Location location = locationService.getRepo().findById(locationCode)
+				.orElseThrow(() -> new IllegalArgumentException("Invalid location code"));
+
+	    // Kiểm tra sự tồn tại của organization
+	    Organization organization = organizationService.getRepo().findById(organizationId)
+				.orElseThrow(() -> new IllegalArgumentException("Invalid organization ID"));
+
+	    JobRequestJDBC jobRequest = new JobRequestJDBC();
+	    jobRequest.setTitle(title);
+	    jobRequest.setLocationId((long) locationCode);
+	    jobRequest.setJobRoleId(jobRoleId);
+	    jobRequest.setExperience(experience);
+	    jobRequest.setSalary(salary);
+	    jobRequest.setOrganizationId(organizationId);
+	    jobRequest.setDetailsJob(jobDescription);
+	    jobRequest.setRequirementsCandidate(requirementsCandidate);
+	    jobRequest.setBenefitCandidate(benefitCandidate);
+	    jobRequest.setDeadlineApplication(deadlineApplication);
+	    
+	    // Lưu vào database thông qua DAO
+	    return jobRequestDao.save(jobRequest);
+	}
 
 	@Override
 	public JobRequest updateJobRequest( JobRequest jobRequest, String title, int locationCode, Long jobRoleId,
@@ -103,6 +141,36 @@ public class JobRequestImpl implements JobRequestService {
 // Save and return the updated JobRequest
 		return getRepo().save(jobRequest);
 	}
+	
+	@Override
+	public JobRequestJDBC updateJobRequestJdbc(JobRequestJDBC jobRequest, String title, int locationCode, Long jobRoleId,
+	        Integer experience, Integer salary, String jobDescription, String requirementsCandidate,
+	        String benefitCandidate, LocalDate deadlineApplication) {
+
+	    if (title == null || title.isEmpty()) {
+	        throw new IllegalArgumentException("Title không được để trống.");
+	    }
+
+	    // Kiểm tra location có tồn tại
+	    Location location = locationService.getRepo().findById(locationCode)
+				.orElseThrow(() -> new IllegalArgumentException("Invalid location code"));
+
+		JobRole jobRole = jobRoleService.getRepo().findById(jobRoleId).orElse(null);
+
+	    jobRequest.setTitle(title);
+	    jobRequest.setLocationId((long) locationCode);
+	    jobRequest.setJobRoleId(jobRoleId);
+	    jobRequest.setExperience(experience);
+	    jobRequest.setSalary(salary);
+	    jobRequest.setDetailsJob(jobDescription);
+	    jobRequest.setRequirementsCandidate(requirementsCandidate);
+	    jobRequest.setBenefitCandidate(benefitCandidate);
+	    jobRequest.setDeadlineApplication(deadlineApplication);
+	    
+	    jobRequestDao.update(jobRequest);
+	    
+	    return jobRequest;
+	}
 
 	@Override
 	public void deleteJobRequest(JobRequest jobRequest) {
@@ -113,6 +181,15 @@ public class JobRequestImpl implements JobRequestService {
 		
 	}
 
+	@Override
+	public void deleteJobRequestJdbc(JobRequestJDBC jobRequest) {
+	    if (jobRequest == null) {
+	        throw new IllegalArgumentException("JobRequest không được để trống.");
+	    }
+	    
+	    jobRequestDao.delete(jobRequest.getId());
+	}
+	
 	@Override
 	public List<JobRequest> findAllByOrganizationId(Long id) {
 		// TODO Auto-generated method stub

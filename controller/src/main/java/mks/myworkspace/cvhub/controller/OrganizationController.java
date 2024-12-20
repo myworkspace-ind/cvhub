@@ -33,12 +33,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
 import mks.myworkspace.cvhub.entity.User;
+import mks.myworkspace.cvhub.model.OrganizationJDBC;
+import mks.myworkspace.cvhub.model.OrganizationReviewJDBC;
 import mks.myworkspace.cvhub.controller.model.CvDTO;
 import mks.myworkspace.cvhub.controller.model.OrganizationDTO;
 import mks.myworkspace.cvhub.controller.model.OrganizationReviewDTO;
+import mks.myworkspace.cvhub.dao.OrganizationDao;
+import mks.myworkspace.cvhub.dao.OrganizationReviewDao;
 import mks.myworkspace.cvhub.entity.JobApplication;
 import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.JobRole;
@@ -77,6 +82,10 @@ public class OrganizationController extends BaseController {
 	private JobApplicationService jobApplicationService;
 	@Autowired
 	private JobApplicationRepository jobApplicationRepository;
+	@Autowired
+	private OrganizationDao organizationDao;
+	@Autowired
+    private OrganizationReviewDao reviewDao;
 	
 	private final OrganizationReviewService reviewService;
 	private final OrganizationRepository organizationRepo;
@@ -188,27 +197,146 @@ public class OrganizationController extends BaseController {
 	    return mav;
 	}
 	
-	@RequestMapping(value = { "/organizations/{id}/addReview" }, method = RequestMethod.POST)
-	public OrganizationReview addReview(@PathVariable("id") Long organizationId,
-			@RequestBody OrganizationReviewDTO reviewDTO, HttpServletRequest request, HttpSession httpSession) {
-//		ModelAndView mav = new ModelAndView("candidate/organizationList"); 
-		OrganizationReview newReview = new OrganizationReview();
-		newReview.setOrganization(organizationRepo.findById(organizationId).get());
-		newReview.setRating(reviewDTO.getRating());
-		newReview.setReviewText(reviewDTO.getReviewText());
-		reviewService.createReview(newReview);
-		return newReview;
-//		mav.addObject("organizations", organizations);
-//		return mav;
-	}
+	/*
+	 * @RequestMapping(value = { "/organizations/{id}/addReview" }, method =
+	 * RequestMethod.POST) public OrganizationReview addReview(@PathVariable("id")
+	 * Long organizationId,
+	 * 
+	 * @RequestBody OrganizationReviewDTO reviewDTO, HttpServletRequest request,
+	 * HttpSession httpSession) { // ModelAndView mav = new
+	 * ModelAndView("candidate/organizationList"); OrganizationReview newReview =
+	 * new OrganizationReview();
+	 * newReview.setOrganization(organizationRepo.findById(organizationId).get());
+	 * newReview.setRating(reviewDTO.getRating());
+	 * newReview.setReviewText(reviewDTO.getReviewText());
+	 * reviewService.createReview(newReview); return newReview; //
+	 * mav.addObject("organizations", organizations); // return mav; }
+	 */
+	
+	private User getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return userService.findUserByEmail(auth.getName());
+    }
 
-	@RequestMapping(value = { "/organizations/{id}/getReviews" }, method = RequestMethod.POST)
-	public List<OrganizationReview> getReviews(HttpServletRequest request, HttpSession httpSession) {
-//		ModelAndView mav = new ModelAndView("candidate/organizationList"); 
-		return reviewService.getReviews();
-//		mav.addObject("organizations", organizations);
-//		return mav;
+	@RequestMapping(value = "/organizations/{id}/reviews", method = RequestMethod.GET)
+	public ModelAndView showReviewForm(@PathVariable("id") Long id) {
+	    ModelAndView mav = new ModelAndView("reviewForm");
+	    
+	    // Lấy danh sách tất cả các đánh giá của tổ chức
+	    List<OrganizationReviewJDBC> reviews = reviewDao.findByOrganizationId(id);
+	    mav.addObject("reviews", reviews);
+	    for (OrganizationReviewJDBC review : reviews) {
+	        // Assuming you have a method to get username by user ID
+	        String username = userService.getFullNameById(review.getUserId());
+	        review.setUserName(username);
+	    }
+	    // Lấy user hiện tại
+	    User currentUser = getCurrentUser();
+	    mav.addObject("currentUser", currentUser);
+	    
+	    // Kiểm tra xem user hiện tại đã đánh giá chưa
+	    OrganizationReviewJDBC userReview = reviewDao.findByUserAndOrganization(currentUser.getId(), id);
+	    mav.addObject("userReview", userReview);
+	    
+	    mav.addObject("organizationId", id);
+	    return mav;
 	}
+    
+    @RequestMapping(value = "/organizations/{orgId}/reviews", method = RequestMethod.POST)
+    public String createReview(
+            @PathVariable("orgId") Long organizationId,
+            @RequestParam("rating") Integer rating,
+            @RequestParam("reviewText") String reviewText,
+            RedirectAttributes redirectAttributes) {
+        
+        try {
+            User currentUser = getCurrentUser();
+            
+            // Kiểm tra xem user đã review chưa
+            OrganizationReviewJDBC existingReview = reviewDao.findByUserAndOrganization(currentUser.getId(), organizationId);
+            if (existingReview != null) {
+                redirectAttributes.addFlashAttribute("error", "Bạn đã đánh giá tổ chức này rồi!");
+                return "redirect:/organization/" + organizationId;
+            }
+            
+            OrganizationReviewJDBC review = new OrganizationReviewJDBC(organizationId, currentUser.getId(), rating, reviewText);
+            reviewDao.create(review);
+            
+            redirectAttributes.addFlashAttribute("message", "Đã gửi đánh giá thành công!");
+            
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi khi gửi đánh giá: " + e.getMessage());
+        }
+        
+        return "redirect:/organization/" + organizationId;
+    }
+    
+    @RequestMapping(value = "/organizations/{orgId}/reviews/{reviewId}", method = RequestMethod.POST)
+    public String updateReview(
+            @PathVariable("orgId") Long organizationId,
+            @PathVariable("reviewId") Long reviewId,
+            @RequestParam("rating") Integer rating,
+            @RequestParam("reviewText") String reviewText,
+            RedirectAttributes redirectAttributes) {
+            
+        try {
+            User currentUser = getCurrentUser();
+            OrganizationReviewJDBC review = reviewDao.findById(reviewId);
+            
+            // Kiểm tra quyền chỉnh sửa
+            if (review == null || !review.getUserId().equals(currentUser.getId())) {
+                redirectAttributes.addFlashAttribute("error", "Không có quyền chỉnh sửa đánh giá này!");
+                return "redirect:/organization/" + organizationId;
+            }
+            
+            review.setRating(rating);
+            review.setReviewText(reviewText);
+            reviewDao.update(review);
+            
+            redirectAttributes.addFlashAttribute("message", "Đã cập nhật đánh giá thành công!");
+            
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi khi cập nhật đánh giá: " + e.getMessage());
+        }
+        
+        return "redirect:/organization/" + organizationId;
+    }
+
+    // Thêm method xóa review
+    @RequestMapping(value = "/organizations/{orgId}/reviews/{reviewId}/delete", method = RequestMethod.POST)
+    public String deleteReview(
+            @PathVariable("orgId") Long organizationId,
+            @PathVariable("reviewId") Long reviewId,
+            RedirectAttributes redirectAttributes) {
+            
+        try {
+            User currentUser = getCurrentUser();
+            OrganizationReviewJDBC review = reviewDao.findById(reviewId);
+            
+            // Kiểm tra quyền xóa
+            if (review == null || !review.getUserId().equals(currentUser.getId())) {
+                redirectAttributes.addFlashAttribute("error", "Không có quyền xóa đánh giá này!");
+                return "redirect:/organization/" + organizationId;
+            }
+            
+            reviewDao.delete(reviewId, currentUser.getId());
+            redirectAttributes.addFlashAttribute("message", "Đã xóa đánh giá thành công!");
+            
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi khi xóa đánh giá: " + e.getMessage());
+        }
+        
+        return "redirect:/organization/" + organizationId;
+    }
+	
+		/*
+		 * @RequestMapping(value = { "/organizations/{id}/getReviews" }, method =
+		 * RequestMethod.POST) public List<OrganizationReview>
+		 * getReviews(HttpServletRequest request, HttpSession httpSession) { //
+		 * ModelAndView mav = new ModelAndView("candidate/organizationList"); return
+		 * reviewService.getReviews(); // mav.addObject("organizations", organizations);
+		 * // return mav; }
+		 */
 	@PreAuthorize("hasRole('ROLE_ADMIN') and @organizationService.isOwner(#id, principal.username)")
 	@RequestMapping(value = { "/organization" }, method = RequestMethod.GET)
 	public ModelAndView displayHomeForOrganization(HttpServletRequest request) {
@@ -222,7 +350,7 @@ public class OrganizationController extends BaseController {
 		    return new ModelAndView("redirect:/showRegister");
 	}
 
-	@RequestMapping(value = { "/registerOrganization" }, method = RequestMethod.POST)
+	//@RequestMapping(value = { "/registerOrganization" }, method = RequestMethod.POST)
     public ModelAndView registerOrganization(@ModelAttribute OrganizationDTO organizationDTO, 
                                            HttpServletRequest request,
                                            HttpSession httpSession) 
@@ -257,6 +385,48 @@ public class OrganizationController extends BaseController {
 			return mav;
 		}
 	}
+	
+    @RequestMapping(value = { "/registerOrganization" }, method = RequestMethod.POST)
+    public ModelAndView registerOrganizationJdbc(@ModelAttribute OrganizationDTO organizationDTO,
+            HttpServletRequest request,
+            HttpSession httpSession) {
+        try {
+            // Vẫn dùng JPA cho User
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            User currentUser = userService.findUserByEmail(auth.getName());
+            if (currentUser == null) {
+                throw new IllegalStateException("Không tìm thấy thông tin người dùng");
+            }
+
+            // Dùng JDBC cho Organization
+            OrganizationJDBC organization = organizationService.createOrganizationJdbc(
+                organizationDTO.getTitle(),
+                organizationDTO.getLogoFile(), 
+                organizationDTO.getWebsite(), 
+                organizationDTO.getSummary(),
+                organizationDTO.getDetail(), 
+                organizationDTO.getLocation()
+            );
+
+            // Liên kết organization với user
+            organization.setUserId(currentUser.getId());
+            organizationDao.updateuser(organization);
+
+            // Vẫn dùng JPA cho User
+            currentUser.setRole("ROLE_ADMIN");
+            userService.getRepo().save(currentUser);
+
+            ModelAndView mav = new ModelAndView();
+            mav.setViewName("redirect:/organization?id=" + organization.getId());
+            return mav;
+
+        } catch (Exception e) {
+            e.printStackTrace(); // In ra log để debug
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMessage", "Có lỗi xảy ra khi đăng ký tổ chức: " + e.getMessage());
+            return mav;
+        }
+    }
         @RequestMapping(value = { "showRegister" }, method = RequestMethod.GET)
         public ModelAndView registerOrganization(HttpServletRequest request) {
             // Kiểm tra user đã đăng nhập
@@ -395,7 +565,7 @@ public class OrganizationController extends BaseController {
 		return mav;
 	}
 	
-	@RequestMapping(value = { "/organization/update/{id}" }, method = RequestMethod.POST)
+	//@RequestMapping(value = { "/organization/update/{id}" }, method = RequestMethod.POST)
 	public ModelAndView updateOrganization(@PathVariable("id") Long id,
 			@ModelAttribute OrganizationDTO organizationDTO, 
             HttpServletRequest request,
@@ -411,6 +581,34 @@ public class OrganizationController extends BaseController {
 		
 		return mav;
 	}
+	
+	//Dùng JDBC
+	@RequestMapping(value = { "/organization/update/{id}" }, method = RequestMethod.POST)
+	public ModelAndView updateOrganizationJdbc(@PathVariable("id") Long id,
+	       @ModelAttribute OrganizationDTO organizationDTO,
+	       HttpServletRequest request,
+	       HttpSession httpSession) {
+	   
+	   // Tìm organization bằng JDBC
+	   OrganizationJDBC organization = organizationDao.findById(id);
+	   
+	   // Cập nhật thông tin bằng JDBC
+	   OrganizationJDBC organizationUpdated = organizationService.updateOrganizationJdbc(
+	       organization,
+	       organizationDTO.getTitle(),
+	       organizationDTO.getLogoFile(), 
+	       organizationDTO.getWebsite(), 
+	       organizationDTO.getSummary(),
+	       organizationDTO.getDetail(), 
+	       organizationDTO.getLocation()
+	   );
+	   
+	   ModelAndView mav = new ModelAndView();
+	   mav.setViewName("redirect:/organization?id=" + organizationUpdated.getId());
+	   
+	   return mav;
+	}
+	
 	//hien thị danh sach doanh nghiep
 	@RequestMapping(value = "/organization/list", method = RequestMethod.GET)
 	public ModelAndView listOrganizations() {

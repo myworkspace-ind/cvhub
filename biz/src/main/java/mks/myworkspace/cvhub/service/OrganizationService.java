@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import mks.myworkspace.cvhub.entity.Organization;
 import mks.myworkspace.cvhub.repository.OrganizationRepository;
+import mks.myworkspace.cvhub.model.OrganizationJDBC;
 
 @Service
 public interface OrganizationService {
@@ -25,4 +26,10 @@ public interface OrganizationService {
     Long getTotalJobRequestsByOrganizationId(Long organizationId);
     List<Organization> searchByLocation(String location);
     List<Organization> searchByTitleAndLocation(String companyName, String location);
+
+	OrganizationJDBC createOrganizationJdbc(String title, MultipartFile logoFile, String website, String summary,
+			String detail, String location);
+
+	OrganizationJDBC updateOrganizationJdbc(OrganizationJDBC organization, String title, MultipartFile logoFile,
+			String website, String summary, String detail, String location);
 }

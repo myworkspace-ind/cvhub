@@ -23,7 +23,19 @@ public class JobRoleImpl implements JobRoleService {
 	JobRoleRepository repo;
 	@Autowired
     private JobRoleDao jobRoleDao;
+	
+	@Override
+	public JobRole createJobRole(String title, String description) {
 
+		// kiem tra cac tham so dau vao
+		if (title == null) {
+			throw new IllegalArgumentException("Title must not be null or empty.");
+		}
+		JobRole jobRole = new JobRole(title, description);
+
+		return jobRole;
+	}
+	
 	@Override
 	public JobRoleJDBC createJobRoleJdbc(JobRoleJDBC jobRoleJDBC) {
 	    // Kiểm tra các tham số đầu vào
@@ -42,16 +54,8 @@ public class JobRoleImpl implements JobRoleService {
 	        jobRoleJDBC.setModifiedDate(new Date());
 	    }
 	    
-	    // Lưu jobRoleJDBC vào cơ sở dữ liệu thông qua JobRoleDao
 	    return jobRoleDao.save(jobRoleJDBC);
-	}	@Override
-    public JobRoleJDBC createJobRoleJdbc(String title, String description) {
-        if (title == null) {
-            throw new IllegalArgumentException("Title must not be null or empty.");
-        }
-        JobRoleJDBC jobRole = new JobRoleJDBC(title, description);
-        return jobRoleDao.save(jobRole);
-    }
+	}
 
 	@Override
 	public JobRole updateJobRole(JobRole job, String title, String description) {
@@ -62,12 +66,16 @@ public class JobRoleImpl implements JobRoleService {
 	}
 	
 	@Override
-    public JobRoleJDBC updateJobRoleJdbc(JobRoleJDBC jobRole, String title, String description) {
-
-        jobRole.setTitle(title);
-        jobRole.setDescription(description);
-        return jobRoleDao.save(jobRole);
-    }
+	public void updateJobRoleJdbc(JobRoleJDBC jobRoleJDBC) {	    
+	    jobRoleJDBC.setModifiedDate(new Date());
+	    
+	    jobRoleDao.update(jobRoleJDBC);
+	}
+	
+	@Override
+	public JobRoleJDBC getJobRoleById(Long id) {
+	    return jobRoleDao.findById(id);
+	}
 
 	@Override
 	public void deleteJobRole(JobRole job) {
@@ -78,9 +86,9 @@ public class JobRoleImpl implements JobRoleService {
 	}
 	
 	@Override
-    public void deleteJobRoleJdbc(Long id) {
-        jobRoleDao.delete(id);
-    }
+	public void deleteJobRoleJdbc(JobRoleJDBC jobRoleJdbc) {
+	    jobRoleDao.delete(jobRoleJdbc.getId());
+	}
 
 	@Override
 	public Page<JobRole> getAllJobRole(Pageable pageable) {

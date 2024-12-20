@@ -129,8 +129,8 @@ public class SignController extends BaseController {
         }
         return code.toString();
     }
-    // Process registration
-    @PostMapping("/register")
+    
+	/* @PostMapping("/register") */
     public ModelAndView processRegistration(@ModelAttribute UserDTO userDTO, 
             BindingResult result, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
@@ -160,7 +160,67 @@ public class SignController extends BaseController {
                 
                 String combinedPhone = "(" + userDTO.getDialCode() + ") " + userDTO.getPhone();
                 // Tạo người dùng mới
-                UserJDBC user = userService.createUser(userDTO.getFullName(), userDTO.getEmail(), 
+                User user = userService.createUser(userDTO.getFullName(), userDTO.getEmail(), 
+                        passwordEncoder.encode(userDTO.getPassword()), combinedPhone);
+                
+                // Gửi email xác nhận
+                if (registerUserConfirm) {
+                    // Nếu cần gửi email xác nhận
+                    String verificationCode = generateVerificationCode();
+                    emailService.sendEmail(user.getEmail(), "Xác nhận email", 
+                            "Vui lòng xác nhận tài khoản của bạn bằng mã sau: " + verificationCode);
+
+                    // Lưu mã xác nhận vào cơ sở dữ liệu
+                    emailVerificationRepository.save(new EmailVerification(user.getEmail(), verificationCode));
+
+                    redirectAttributes.addFlashAttribute("success", "Đăng ký thành công! Vui lòng kiểm tra email của bạn để xác nhận tài khoản.");
+                    mav.setViewName("redirect:/verify");
+                } else {
+                    // Không cần xác nhận qua email
+                    redirectAttributes.addFlashAttribute("successMessage", "Đăng ký thành công! Vui lòng đăng nhập.");
+                    mav.setViewName("redirect:/login");
+                }
+            }
+        } catch (Exception e) {
+            mav.addObject("error", e.getMessage());
+            mav.setViewName("/signInOut/signup");
+        }
+
+        return mav;
+    }
+    
+  //Dùng JDBC
+    @PostMapping("/register")
+    public ModelAndView processRegistrationJdbc(@ModelAttribute UserDTO userDTO, 
+            BindingResult result, RedirectAttributes redirectAttributes) {
+        ModelAndView mav = new ModelAndView();
+
+        try {
+            if (userRegister == 1) {
+                // Nếu `user.register = 1`, sử dụng phương thức đăng ký vào Sakai
+                String encodedPassword = passwordEncoder1.encode(userDTO.getPassword());
+                String prefixedPassword = "PBKDF2:" + encodedPassword;
+
+                userService.registerUserInSakai(userDTO.getFullName(), userDTO.getEmail(), prefixedPassword, userDTO.getPhone());
+                redirectAttributes.addFlashAttribute("successMessage", "Đăng ký thành công! Vui lòng đăng nhập.");
+                mav.setViewName("redirect:/login");
+            } else {
+                // Nếu không có key `user.register = 1`, sử dụng phương thức đăng ký mặc định
+                if (userService.isEmailExists(userDTO.getEmail())) {
+                    mav.addObject("error", "Email đã tồn tại trong hệ thống");
+                    mav.setViewName("/signInOut/signup");
+                    return mav;
+                }
+
+                if (!userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
+                    mav.addObject("error", "Mật khẩu xác nhận không khớp");
+                    mav.setViewName("/signInOut/signup");
+                    return mav;
+                }
+                
+                String combinedPhone = "(" + userDTO.getDialCode() + ") " + userDTO.getPhone();
+                // Tạo người dùng mới
+                UserJDBC user = userService.createUserJdbc(userDTO.getFullName(), userDTO.getEmail(), 
                         passwordEncoder.encode(userDTO.getPassword()), combinedPhone);
                 
                 // Gửi email xác nhận

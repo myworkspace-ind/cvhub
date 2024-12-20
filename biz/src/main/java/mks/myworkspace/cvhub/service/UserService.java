@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public interface UserService {
 	UserRepository getRepo();
-	UserJDBC createUser(String fullName, String email, String password, String phone) throws Exception;
+	User createUser(String fullName, String email, String password, String phone) throws Exception;
 	boolean isEmailExists(String email);
 	User findUserByEmail(String email);
 	User getUser(Long id);
@@ -22,4 +22,7 @@ public interface UserService {
 	Long getUserCountPerMonth(int month, int year);
 
     List<Long> getUserCountsPerYear(int year);
+	UserJDBC createUserJdbc(String fullName, String email, String password, String phone) throws Exception;
+	void deleteUserByIdJdbc(Long id);
+	String getFullNameById(long id);
 }

@@ -20,8 +20,8 @@ public class UserJDBC {
     private String password;
     private String phone;
     private String role;
-    private Organization organization;  // Chỉ lưu reference
-    private List<CV> cvList;           // Chỉ lưu reference
+    private OrganizationJDBC organization;
+    //private List<CV> cvList;
     private Date createdDate;
     private Date modifiedDate;
     private String status;

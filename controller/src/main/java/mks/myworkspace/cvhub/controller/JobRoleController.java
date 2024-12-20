@@ -65,22 +65,23 @@ public class JobRoleController {
 
 	}
 
-	/*
-	 * @PostMapping("/add") public String addJobRole(@ModelAttribute JobRoleDTO
-	 * jobDTO, RedirectAttributes re) { if
-	 * (jobRoleService.existsByTitle(jobDTO.getTitle())) {
-	 * re.addFlashAttribute("mess", "Title already exists"); return
-	 * "redirect:/jobroles/add"; }
-	 * 
-	 * JobRole job = jobRoleService.createJobRole(jobDTO.getTitle(),
-	 * jobDTO.getDescription()); job = jobRoleService.getRepo().save(job);
-	 * re.addFlashAttribute("mess", "Add jobrole thành công");
-	 * 
-	 * return "redirect:/jobroles"; }
-	 */
-	
+	//@PostMapping("/add")
+	public String addJobRole(@ModelAttribute JobRoleDTO jobDTO, RedirectAttributes re) {
+		if (jobRoleService.existsByTitle(jobDTO.getTitle())) {
+		    re.addFlashAttribute("mess", "Title already exists");
+		    return "redirect:/jobroles/add";
+		}
+
+		JobRole job = jobRoleService.createJobRole(jobDTO.getTitle(), jobDTO.getDescription());
+		job = jobRoleService.getRepo().save(job);
+		re.addFlashAttribute("mess", "Add jobrole thành công");
+		
+		return "redirect:/jobroles";
+	}
+	 
+	//Dùng JDBC
 	@PostMapping("/add")
-    public String addJobRole(@ModelAttribute JobRoleDTO jobDTO, RedirectAttributes re) {
+    public String addJobRoleJdbc(@ModelAttribute JobRoleDTO jobDTO, RedirectAttributes re) {
         if (jobRoleService.existsByTitle(jobDTO.getTitle())) {
             re.addFlashAttribute("mess", "Title already exists");
             return "redirect:/jobroles/add";
@@ -93,7 +94,7 @@ public class JobRoleController {
         return "redirect:/jobroles";
     }
 
-	@GetMapping("/delete/{id}")
+	/* @GetMapping("/delete/{id}") */
 	public String deleteJobRole(@PathVariable Long id, RedirectAttributes re) {
 		JobRole job = jobRoleService.getRepo().findById(id).orElse(null);
 		if (job != null) {
@@ -109,8 +110,26 @@ public class JobRoleController {
 		    return "redirect:/jobroles";
 		}
 	}
+	
+	//Dùng JDBC
+	@GetMapping("/delete/{id}")
+	public String deleteJobRoleJdbc(@PathVariable Long id, RedirectAttributes re) {
+		JobRoleJDBC job = jobRoleService.getJobRoleById(id);
+	    if (job != null) {
+	        // Delete JobRole using JDBC
+	        jobRoleService.deleteJobRoleJdbc(job);
+	        re.addFlashAttribute("mess", "Xóa jobrole thành công");
+	        
+	        return "redirect:/jobroles";
+	    } else {
+	        // If JobRole not found
+	        re.addFlashAttribute("mess", "Not found jobrole with id: " + id);
+	        
+	        return "redirect:/jobroles";
+	    }
+	}
 
-	@PostMapping("/edit/{id}")
+	/* @PostMapping("/edit/{id}") */
 	public String updateJobRole(@PathVariable Long id, @ModelAttribute JobRoleDTO jobDTO, RedirectAttributes re) {
 
 		JobRole job = jobRoleService.getRepo().findById(id).orElse(null);
@@ -136,5 +155,31 @@ public class JobRoleController {
 			
 			return "redirect:/jobroles";
 		}
+	}
+	
+	//Dùng JDBC
+	@PostMapping("/edit/{id}")
+	public String updateJobRole1(@PathVariable Long id, @ModelAttribute JobRoleDTO jobDTO, RedirectAttributes re) {
+		JobRoleJDBC jobRoleJDBC = jobRoleService.getJobRoleById(id);
+	    if (jobRoleJDBC != null) {
+	        String title = jobDTO.getTitle();
+
+	        if (jobRoleService.canEditByTitle(title)) {
+	            jobRoleJDBC.setTitle(title);
+	            jobRoleJDBC.setDescription(jobDTO.getDescription());
+	            jobRoleService.updateJobRoleJdbc(jobRoleJDBC);
+	            re.addFlashAttribute("mess", "Update jobrole thành công");
+
+	            return "redirect:/jobroles";
+	        } else {
+	            re.addFlashAttribute("mess", "Title already exists or not exists, please try again");
+
+	            return "redirect:/jobroles/edit/" + id;
+	        }
+	    } else {
+	        re.addFlashAttribute("mess", "not found jobrole with id: " + id);
+
+	        return "redirect:/jobroles";
+	    }
 	}
 }

@@ -5,11 +5,14 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.JdbcTemplate;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +34,8 @@ public class UserImpl implements UserService {
 	UserRepository repo;
 	@Autowired
     private SakaiUserRepository sakaiUserRepo;
+	@Autowired
+    private JdbcTemplate jdbcTemplate;
 	
     @Autowired
     private SakaiUserIdMapRepository sakaiUserIdMapRepo;
@@ -38,40 +43,33 @@ public class UserImpl implements UserService {
     private UserDao userDao;
 //	 @Autowired
 //	private PasswordEncoder passwordEncoder;
-	/*
-	 * @Override
-	 * 
-	 * @Transactional public User createUser(String fullName, String email, String
-	 * password, String phone) throws Exception { if (isEmailExists(email)) { throw
-	 * new Exception("Email already exists"); }
-	 * 
-	 * 
-	 * User user = new User(); user.setFullName(fullName); user.setEmail(email);
-	 * 
-	 * user.setPassword(password); user.setPhone(phone); user.setRole("ROLE_USER");
-	 * return repo.save(user); }
-	 */
-    
+	
+    @Override
+	@Transactional
+	public User createUser(String fullName, String email, String password, String phone) throws Exception {
+		if (isEmailExists(email)) {
+            throw new Exception("Email already exists");
+        }
+        
+
+        User user = new User();
+        user.setFullName(fullName);
+        user.setEmail(email);
+
+        user.setPassword(password);
+        user.setPhone(phone);
+        user.setRole("ROLE_USER");
+        return repo.save(user);
+	}
+	   
     @Override
     @Transactional
-    public UserJDBC createUser(String fullName, String email, String password, String phone) throws Exception {
+    public UserJDBC createUserJdbc(String fullName, String email, String password, String phone) throws Exception {
     	if (isEmailExists(email)) { throw
     		  new Exception("Email already exists"); }
-    	
-        // Kiểm tra email tồn tại
-		/*
-		 * if (userDao.existsByEmail(email)) { throw new
-		 * Exception("Email already exists"); }
-		 */
 
-        // Tạo user mới sử dụng constructor có sẵn
         UserJDBC user = new UserJDBC(fullName, email, password, phone);
-        // Constructor này đã tự động set role = "ROLE_USER"
-        
-        // Set các giá trị khác nếu cần
-		/*
-		 * user.setStatus("ACTIVE"); // Nếu cần set status
-		 */        
+   
         user.setCreatedDate(new Date());
         user.setModifiedDate(new Date());
         
@@ -189,11 +187,13 @@ public class UserImpl implements UserService {
         return parts.length > 1 ? parts[parts.length - 1] : "";
     }
 
-	/*
-	 * @Override public void deleteUserById(Long id) { repo.deleteById(id); }
-	 */
+	
+	@Override public void deleteUserById(Long id) { 
+		repo.deleteById(id); 
+		}
+	 
 	@Override
-	public void deleteUserById(Long id) {
+	public void deleteUserByIdJdbc(Long id) {
         boolean deleted = userDao.delete(id);
         if (!deleted) {
             throw new IllegalArgumentException("User not found with id: " + id);
@@ -217,6 +217,16 @@ public class UserImpl implements UserService {
 	            userCounts.set(month - 1, count);  // Cập nhật số lượng cho tháng tương ứng
 	        }
 	        return userCounts;
+	    }
+	    
+	    @Override
+	    public String getFullNameById(long id) {
+	        try {
+	            String query = "SELECT fullName FROM cvhub_user WHERE id = ?";
+	            return jdbcTemplate.queryForObject(query, new Object[]{id}, String.class);
+	        } catch (EmptyResultDataAccessException e) {
+	            return "Unknown User";
+	        }
 	    }
 
 

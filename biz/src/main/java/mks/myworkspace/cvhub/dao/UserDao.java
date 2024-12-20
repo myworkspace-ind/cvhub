@@ -1,22 +1,15 @@
 package mks.myworkspace.cvhub.dao;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
 import java.sql.Statement;
-import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import mks.myworkspace.cvhub.model.CV;
-import mks.myworkspace.cvhub.model.Organization;
 import mks.myworkspace.cvhub.model.UserJDBC;
 
 @Component

@@ -1,6 +1,8 @@
 package mks.myworkspace.cvhub.entity;
 
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,9 +39,9 @@ public class OrganizationReview {
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
     
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", nullable = false)
-//    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(nullable = false)
     private Integer rating;
@@ -49,9 +51,9 @@ public class OrganizationReview {
 
     @CreationTimestamp
     @Column(name = "created_date", updatable = false)
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     @UpdateTimestamp
     @Column(name = "modified_date")
-    private Date modifiedDate;
+    private LocalDateTime modifiedDate;
 }

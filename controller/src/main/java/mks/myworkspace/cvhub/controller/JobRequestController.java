@@ -12,10 +12,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import mks.myworkspace.cvhub.controller.model.JobRequestDTO;
 import mks.myworkspace.cvhub.controller.model.OrganizationDTO;
+import mks.myworkspace.cvhub.dao.JobRequestDao;
 import mks.myworkspace.cvhub.entity.JobRequest;
 import mks.myworkspace.cvhub.entity.JobRole;
 import mks.myworkspace.cvhub.entity.Location;
 import mks.myworkspace.cvhub.entity.Organization;
+import mks.myworkspace.cvhub.model.JobRequestJDBC;
 import mks.myworkspace.cvhub.repository.JobRequestRepository;
 import mks.myworkspace.cvhub.service.JobRequestService;
 import mks.myworkspace.cvhub.service.JobRoleService;
@@ -43,6 +45,8 @@ public class JobRequestController {
 	JobRoleService jobRoleService;
 	@Autowired
 	LocationService locationService;
+	@Autowired
+	private JobRequestDao jobRequestDao;
 
 	@GetMapping("") // http://localhost:8080/cvhub-web/jobrequests?page=0&limit=10
 	public ModelAndView getAllJobRoles(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -84,7 +88,7 @@ public class JobRequestController {
 		mav.addObject("alLJobRole", alLJobRole);
 		return mav;
 	}
-	@RequestMapping(value = { "/registerJob" }, method = RequestMethod.POST)
+	//@RequestMapping(value = { "/registerJob" }, method = RequestMethod.POST)
     public ModelAndView registerJob(@ModelAttribute JobRequestDTO jobRequestDTO) {
 		 System.out.println("Job Description: " + jobRequestDTO.getJobDescription());
         try {
@@ -110,7 +114,37 @@ public class JobRequestController {
             return mav;
         }
     }
-	@RequestMapping(value = "/updateJob/{id}", method = RequestMethod.POST)
+	
+    //Dùng JDBC
+    @RequestMapping(value = "/registerJob", method = RequestMethod.POST)
+    public ModelAndView registerJobJdbc(@ModelAttribute JobRequestDTO jobRequestDTO) {
+        System.out.println("Job Description: " + jobRequestDTO.getJobDescription());
+        try {
+            JobRequestJDBC jobRequest = jobRequestService.createJobRequestJdbc(
+                jobRequestDTO.getTitle(),
+                jobRequestDTO.getLocationCode(), 
+                jobRequestDTO.getJobRoleId(),
+                jobRequestDTO.getExperience(),
+                jobRequestDTO.getSalary(),
+                jobRequestDTO.getOrganizationId(),
+                jobRequestDTO.getJobDescription(),
+                jobRequestDTO.getRequirementsCandidate(),
+                jobRequestDTO.getBenefitCandidate(),
+                jobRequestDTO.getDeadlineApplication()
+            );
+            
+            ModelAndView mav = new ModelAndView();
+            mav.setViewName("redirect:/organization?id=" + jobRequestDTO.getOrganizationId());
+            return mav;
+            
+        } catch (Exception e) {
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMessage", "Có lỗi xảy ra khi đăng ký công việc: " + e.getMessage());
+            return mav;
+        }
+    }
+	
+	//@RequestMapping(value = "/updateJob/{id}", method = RequestMethod.POST)
 	public ModelAndView updateJob(@PathVariable Long id,@ModelAttribute JobRequestDTO jobRequestDTO) {
 	    try {
 	    	JobRequest jobRequest = jobRequestService.getRepo().findById(id).orElse(null);
@@ -137,7 +171,42 @@ public class JobRequestController {
 	        return mav;
 	    }
 	}
-	@RequestMapping(value = "/deleteJob/{id}", method = RequestMethod.POST)
+	
+	@RequestMapping(value = "/updateJob/{id}", method = RequestMethod.POST)
+	public ModelAndView updateJobJdbc(@PathVariable Long id, @ModelAttribute JobRequestDTO jobRequestDTO) {
+	   try {
+	       // Tìm job request bằng JDBC
+	       JobRequestJDBC jobRequest = jobRequestDao.findById(id);
+	       if (jobRequest == null) {
+	           throw new IllegalArgumentException("Không tìm thấy job request với id: " + id);
+	       }
+
+	       // Cập nhật job request sử dụng JDBC
+	       JobRequestJDBC updatedJobRequest = jobRequestService.updateJobRequestJdbc(
+	           jobRequest,
+	           jobRequestDTO.getTitle(),
+	           jobRequestDTO.getLocationCode(), 
+	           jobRequestDTO.getJobRoleId(),
+	           jobRequestDTO.getExperience(),
+	           jobRequestDTO.getSalary(),
+	           jobRequestDTO.getJobDescription(),
+	           jobRequestDTO.getRequirementsCandidate(),
+	           jobRequestDTO.getBenefitCandidate(),
+	           jobRequestDTO.getDeadlineApplication()
+	       );
+
+	       ModelAndView mav = new ModelAndView();
+	       mav.setViewName("redirect:/organization?id=" + updatedJobRequest.getOrganizationId());
+	       return mav;
+	       
+	   } catch (Exception e) {
+	       ModelAndView mav = new ModelAndView("error");
+	       mav.addObject("errorMessage", "Có lỗi xảy ra khi cập nhật thông tin công việc: " + e.getMessage());
+	       return mav;
+	   }
+	}
+	
+	//@RequestMapping(value = "/deleteJob/{id}", method = RequestMethod.POST)
 	public ModelAndView deleteJob(@PathVariable Long id) {
 	    ModelAndView mav = new ModelAndView();
 	    try {
@@ -159,5 +228,33 @@ public class JobRequestController {
 	        mav.addObject("errorMessage", "Có lỗi xảy ra khi xóa thông tin công việc: " + e.getMessage());
 	    }
 	    return mav;
+	}
+	
+	@RequestMapping(value = "/deleteJob/{id}", method = RequestMethod.POST)
+	public ModelAndView deleteJobJdbc(@PathVariable Long id) {
+	   ModelAndView mav = new ModelAndView();
+	   try {
+	       // Tìm kiếm JobRequest theo id sử dụng JDBC
+	       JobRequestJDBC jobRequest = jobRequestDao.findById(id);
+
+	       if (jobRequest != null) {
+	           // Lưu organizationId trước khi xóa để redirect
+	           Long organizationId = jobRequest.getOrganizationId();
+	           
+	           // Xóa JobRequest
+	           jobRequestService.deleteJobRequestJdbc(jobRequest);
+	           
+	           mav.setViewName("redirect:/organization?id=" + organizationId);
+	       } else {
+	           // Nếu không tìm thấy JobRequest
+	           mav.setViewName("error");
+	           mav.addObject("errorMessage", "Không tìm thấy thông tin công việc để xóa.");
+	       }
+	   } catch (Exception e) {
+	       // Xử lý lỗi
+	       mav.setViewName("error");
+	       mav.addObject("errorMessage", "Có lỗi xảy ra khi xóa thông tin công việc: " + e.getMessage());
+	   }
+	   return mav;
 	}
 }

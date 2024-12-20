@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.Getter;
+import mks.myworkspace.cvhub.dao.OrganizationDao;
 import mks.myworkspace.cvhub.entity.Organization;
+import mks.myworkspace.cvhub.model.OrganizationJDBC;
 import mks.myworkspace.cvhub.repository.OrganizationRepository;
 import mks.myworkspace.cvhub.service.OrganizationService;
 
@@ -21,6 +23,8 @@ public class OrganizationImpl implements OrganizationService {
 	@Getter
 	@Autowired
 	OrganizationRepository repo;
+	@Autowired
+	private OrganizationDao organizationDao;
 
 	@Override
 	public Organization createOrganization(String title, MultipartFile logoFile, String website, String summary, String detail, String location) {
@@ -31,6 +35,37 @@ public class OrganizationImpl implements OrganizationService {
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	        return new Organization(title, null, null, website, summary, detail, location); // Trả về tổ chức mà không có logo nếu xảy ra lỗi
+	    }
+	}
+	
+	@Override
+	public OrganizationJDBC createOrganizationJdbc(String title, MultipartFile logoFile, 
+	        String website, String summary, String detail, String location) {
+	    try {
+	        // Xử lý logo file
+	        byte[] logo = null;
+	        UUID logoID = null;
+	        
+	        if (logoFile != null && !logoFile.isEmpty()) {
+	            logo = logoFile.getBytes();
+	            logoID = UUID.randomUUID();
+	        }
+	        
+	        // Tạo đối tượng OrganizationJDBC
+	        OrganizationJDBC organization = new OrganizationJDBC(
+	            title, logoID, logo, website, summary, detail, location, null
+	        );
+	        
+	        // Lưu vào database thông qua DAO
+	        return organizationDao.save(organization);
+	        
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        // Tạo organization không có logo nếu xảy ra lỗi
+	        OrganizationJDBC organization = new OrganizationJDBC(
+	            title, null, null, website, summary, detail, location, null
+	        );
+	        return organizationDao.save(organization);
 	    }
 	}
 
@@ -81,7 +116,7 @@ public class OrganizationImpl implements OrganizationService {
 	public Organization updateOrganization(Organization organization, String title, MultipartFile logoFile, String website, String summary, String detail, String location) {
 	    try {
 	        byte[] logo = downloadImage(logoFile);
-	        UUID logoID = UUID.randomUUID(); // Tạo một UUID ngẫu nhiên
+	        UUID logoID = UUID.randomUUID();
 	        organization.setTitle(title);
 	        organization.setLogoID(logoID);
 	        organization.setLogo(logo);
@@ -99,8 +134,48 @@ public class OrganizationImpl implements OrganizationService {
 	        organization.setSummary(summary);
 	        organization.setDetail(detail);
 	        organization.setLocation(location);
-	        return organization; // Trả về tổ chức mà không có logo nếu xảy ra lỗi
+	        return organization;
 	    }
+	}
+	
+	@Override
+	public OrganizationJDBC updateOrganizationJdbc(OrganizationJDBC organization, String title, 
+	       MultipartFile logoFile, String website, String summary, String detail, String location) {
+	   try {
+	       // Xử lý logo file nếu có
+	       byte[] logo = null;
+	       UUID logoID = null;
+	       if (logoFile != null && !logoFile.isEmpty()) {
+	           logo = downloadImage(logoFile);
+	           logoID = UUID.randomUUID();
+	       }
+
+	       // Cập nhật thông tin cho organization
+	       organization.setTitle(title);
+	       organization.setLogoID(logoID);
+	       organization.setLogo(logo);
+	       organization.setWebsite(website);
+	       organization.setSummary(summary);
+	       organization.setDetail(detail);
+	       organization.setLocation(location);
+
+	       organizationDao.update(organization);
+	       
+	       return organization;
+	       
+	   } catch (IOException e) {
+	       e.printStackTrace();
+	       organization.setTitle(title);
+	       organization.setLogoID(null);
+	       organization.setLogo(null);
+	       organization.setWebsite(website);
+	       organization.setSummary(summary);
+	       organization.setDetail(detail);
+	       organization.setLocation(location);
+	       
+	       organizationDao.update(organization);
+	       return organization;
+	   }
 	}
 	
 	 public List<Organization> searchByLocation(String location) {
