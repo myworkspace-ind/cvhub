@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -56,6 +57,7 @@ import mks.myworkspace.cvhub.service.OrganizationService;
 import mks.myworkspace.cvhub.service.LocationService;
 import mks.myworkspace.cvhub.service.ParsingCVService;
 import mks.myworkspace.cvhub.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 
 @Controller
 public class ResumeController  extends BaseController  {
@@ -97,7 +99,14 @@ public class ResumeController  extends BaseController  {
 	    User currentUser = userService.findUserByEmail(auth.getName());
 
 	    String userId = currentUser.getId().toString();
-	    Path targetLocation = Paths.get(storagePath + userId + "/" + file.getOriginalFilename());
+
+	    // Lấy tên file gốc
+	    String originalFileName = file.getOriginalFilename();
+	    
+	    // Thay thế các ký tự có dấu thành không dấu và các ký tự không hợp lệ thành "_"
+	    String validFileName = convertToValidFileName(originalFileName);
+	    
+	    Path targetLocation = Paths.get(storagePath + userId + "/" + validFileName);
 	    File targetDir = targetLocation.getParent().toFile();
 
 	    // Kiểm tra và tạo thư mục nếu không tồn tại
@@ -127,6 +136,22 @@ public class ResumeController  extends BaseController  {
 
 	    return modelAndView;
 	}
+
+	private String convertToValidFileName(String originalFileName) {
+		// Xử lý đặc biệt cho chữ Đ và đ trước khi loại bỏ dấu
+	    String validFileName = originalFileName.replace("Đ", "D").replace("đ", "d");
+
+	    // Loại bỏ dấu của các ký tự trong tên file
+	    validFileName = StringUtils.stripAccents(validFileName);
+
+	    // Thay thế các ký tự không hợp lệ thành "_"
+	    validFileName = validFileName.replaceAll("[^\\w\\d\\s\\.\\-]", "_");
+
+	    return validFileName;
+	}
+
+
+
 	@RequestMapping(value = { "saveCV" }, method = RequestMethod.POST)
 	public ModelAndView saveCV(@ModelAttribute CvDTO cvDTO) {
 		ModelAndView mav = new ModelAndView("uploadCV/renderCV");
@@ -550,16 +575,23 @@ public class ResumeController  extends BaseController  {
 	}
 	@RequestMapping(value = "/CV/delete/{fileName}", method = RequestMethod.POST)
 	public ModelAndView deleteFile(@PathVariable("fileName") String fileName, RedirectAttributes redirectAttributes) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = userService.findUserByEmail(auth.getName());
-        String userId = currentUser.getId().toString();
-	    String filePath = storagePath + userId + "/" + fileName;
-	    File file = new File(filePath);
+	    try {
+	        // Giải mã tên file để xử lý
+	        String decodedFileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8.toString());
 
-	    if (file.exists() && file.delete()) {
-	        redirectAttributes.addFlashAttribute("message", "Tệp đã được xóa thành công!");
-	    } else {
-	        redirectAttributes.addFlashAttribute("error", "Không thể xóa tệp.");
+	        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	        User currentUser = userService.findUserByEmail(auth.getName());
+	        String userId = currentUser.getId().toString();
+	        String filePath = storagePath + userId + "/" + decodedFileName;  // Sử dụng tên file đã giải mã
+	        File file = new File(filePath);
+
+	        if (file.exists() && file.delete()) {
+	            redirectAttributes.addFlashAttribute("message", "Tệp đã được xóa thành công!");
+	        } else {
+	            redirectAttributes.addFlashAttribute("error", "Không thể xóa tệp.");
+	        }
+	    } catch (Exception e) {
+	        redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
 	    }
 
 	    return new ModelAndView("redirect:/profile/cv/manage");

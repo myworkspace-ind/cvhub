@@ -25,6 +25,11 @@
 			<artifactId>cvhub-common</artifactId>
 			<version>${module.version}</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.12.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>mks.myworkspace.cvhub</groupId>
@@ -75,6 +80,7 @@
 			<artifactId>poi</artifactId>
 			<version>5.2.3</version> <!-- Kiểm tra phiên bản mới nhất -->
 		</dependency>
+		
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
