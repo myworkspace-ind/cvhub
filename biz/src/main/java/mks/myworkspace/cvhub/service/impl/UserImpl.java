@@ -15,9 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Getter;
+import mks.myworkspace.cvhub.dao.UserDao;
 import mks.myworkspace.cvhub.entity.SakaiUser;
 import mks.myworkspace.cvhub.entity.SakaiUserIdMap;
 import mks.myworkspace.cvhub.entity.User;
+import mks.myworkspace.cvhub.model.UserJDBC;
 import mks.myworkspace.cvhub.repository.SakaiUserIdMapRepository;
 import mks.myworkspace.cvhub.repository.SakaiUserRepository;
 import mks.myworkspace.cvhub.repository.UserRepository;
@@ -29,28 +31,53 @@ public class UserImpl implements UserService {
 	UserRepository repo;
 	@Autowired
     private SakaiUserRepository sakaiUserRepo;
-
+	
     @Autowired
     private SakaiUserIdMapRepository sakaiUserIdMapRepo;
+    @Autowired
+    private UserDao userDao;
 //	 @Autowired
 //	private PasswordEncoder passwordEncoder;
-	@Override
-	@Transactional
-	public User createUser(String fullName, String email, String password, String phone) throws Exception {
-		if (isEmailExists(email)) {
-            throw new Exception("Email already exists");
-        }
+	/*
+	 * @Override
+	 * 
+	 * @Transactional public User createUser(String fullName, String email, String
+	 * password, String phone) throws Exception { if (isEmailExists(email)) { throw
+	 * new Exception("Email already exists"); }
+	 * 
+	 * 
+	 * User user = new User(); user.setFullName(fullName); user.setEmail(email);
+	 * 
+	 * user.setPassword(password); user.setPhone(phone); user.setRole("ROLE_USER");
+	 * return repo.save(user); }
+	 */
+    
+    @Override
+    @Transactional
+    public UserJDBC createUser(String fullName, String email, String password, String phone) throws Exception {
+    	if (isEmailExists(email)) { throw
+    		  new Exception("Email already exists"); }
+    	
+        // Kiểm tra email tồn tại
+		/*
+		 * if (userDao.existsByEmail(email)) { throw new
+		 * Exception("Email already exists"); }
+		 */
+
+        // Tạo user mới sử dụng constructor có sẵn
+        UserJDBC user = new UserJDBC(fullName, email, password, phone);
+        // Constructor này đã tự động set role = "ROLE_USER"
         
-
-        User user = new User();
-        user.setFullName(fullName);
-        user.setEmail(email);
-
-        user.setPassword(password);
-        user.setPhone(phone);
-        user.setRole("ROLE_USER");
-        return repo.save(user);
-	}
+        // Set các giá trị khác nếu cần
+		/*
+		 * user.setStatus("ACTIVE"); // Nếu cần set status
+		 */        
+        user.setCreatedDate(new Date());
+        user.setModifiedDate(new Date());
+        
+        // Lưu user và trả về
+        return userDao.save(user);
+    }
 
 	@Override
 	public boolean isEmailExists(String email) {
@@ -162,10 +189,16 @@ public class UserImpl implements UserService {
         return parts.length > 1 ? parts[parts.length - 1] : "";
     }
 
+	/*
+	 * @Override public void deleteUserById(Long id) { repo.deleteById(id); }
+	 */
 	@Override
 	public void deleteUserById(Long id) {
-		repo.deleteById(id);
-	}
+        boolean deleted = userDao.delete(id);
+        if (!deleted) {
+            throw new IllegalArgumentException("User not found with id: " + id);
+        }
+    }
 	 @Override
 	    public Long getUserCountPerMonth(int month, int year) {
 	        // Đảm bảo rằng bạn gọi 'repo.getUserCountPerMonth()' thay vì 'userRepository.getUserCountPerMonth()'

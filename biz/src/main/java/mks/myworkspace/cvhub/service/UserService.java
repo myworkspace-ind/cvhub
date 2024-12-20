@@ -5,13 +5,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import mks.myworkspace.cvhub.entity.User;
+import mks.myworkspace.cvhub.model.UserJDBC;
 import mks.myworkspace.cvhub.repository.UserRepository;
 import java.util.List;
 
 @Service
 public interface UserService {
 	UserRepository getRepo();
-	User createUser(String fullName, String email, String password, String phone) throws Exception;
+	UserJDBC createUser(String fullName, String email, String password, String phone) throws Exception;
 	boolean isEmailExists(String email);
 	User findUserByEmail(String email);
 	User getUser(Long id);

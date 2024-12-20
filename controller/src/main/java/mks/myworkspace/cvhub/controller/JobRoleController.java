@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import mks.myworkspace.cvhub.controller.model.JobRoleDTO;
 import mks.myworkspace.cvhub.entity.JobRole;
+import mks.myworkspace.cvhub.model.JobRoleJDBC;
 import mks.myworkspace.cvhub.service.JobRoleService;
 
 @Controller
@@ -64,19 +65,33 @@ public class JobRoleController {
 
 	}
 
+	/*
+	 * @PostMapping("/add") public String addJobRole(@ModelAttribute JobRoleDTO
+	 * jobDTO, RedirectAttributes re) { if
+	 * (jobRoleService.existsByTitle(jobDTO.getTitle())) {
+	 * re.addFlashAttribute("mess", "Title already exists"); return
+	 * "redirect:/jobroles/add"; }
+	 * 
+	 * JobRole job = jobRoleService.createJobRole(jobDTO.getTitle(),
+	 * jobDTO.getDescription()); job = jobRoleService.getRepo().save(job);
+	 * re.addFlashAttribute("mess", "Add jobrole thành công");
+	 * 
+	 * return "redirect:/jobroles"; }
+	 */
+	
 	@PostMapping("/add")
-	public String addJobRole(@ModelAttribute JobRoleDTO jobDTO, RedirectAttributes re) {
-		if (jobRoleService.existsByTitle(jobDTO.getTitle())) {
-		    re.addFlashAttribute("mess", "Title already exists");
-		    return "redirect:/jobroles/add";
-		}
+    public String addJobRole(@ModelAttribute JobRoleDTO jobDTO, RedirectAttributes re) {
+        if (jobRoleService.existsByTitle(jobDTO.getTitle())) {
+            re.addFlashAttribute("mess", "Title already exists");
+            return "redirect:/jobroles/add";
+        }
 
-		JobRole job = jobRoleService.createJobRole(jobDTO.getTitle(), jobDTO.getDescription());
-		job = jobRoleService.getRepo().save(job);
-		re.addFlashAttribute("mess", "Add jobrole thành công");
-		
-		return "redirect:/jobroles";
-	}
+        JobRoleJDBC jobRoleJDBC = new JobRoleJDBC(jobDTO.getTitle(), jobDTO.getDescription());
+        jobRoleJDBC = jobRoleService.createJobRoleJdbc(jobRoleJDBC);
+        re.addFlashAttribute("mess", "Add jobrole thành công");
+
+        return "redirect:/jobroles";
+    }
 
 	@GetMapping("/delete/{id}")
 	public String deleteJobRole(@PathVariable Long id, RedirectAttributes re) {

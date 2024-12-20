@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import mks.myworkspace.cvhub.entity.EmailVerification;
 import mks.myworkspace.cvhub.entity.User;
+import mks.myworkspace.cvhub.model.UserJDBC;
 import mks.myworkspace.cvhub.repository.EmailVerificationRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,7 +160,7 @@ public class SignController extends BaseController {
                 
                 String combinedPhone = "(" + userDTO.getDialCode() + ") " + userDTO.getPhone();
                 // Tạo người dùng mới
-                User user = userService.createUser(userDTO.getFullName(), userDTO.getEmail(), 
+                UserJDBC user = userService.createUser(userDTO.getFullName(), userDTO.getEmail(), 
                         passwordEncoder.encode(userDTO.getPassword()), combinedPhone);
                 
                 // Gửi email xác nhận
