@@ -385,3 +385,41 @@ body {
     }
 }
 
+
+.pagination-container {
+    display: flex;
+    justify-content: center; /* Căn giữa nội dung */
+    margin-top: 20px;
+}
+
+.pagination {
+    display: flex; /* Hiển thị các mục theo chiều ngang */
+    list-style: none;
+    padding: 0;
+    gap: 5px; /* Khoảng cách giữa các nút */
+}
+
+.page-item {
+    display: inline-block;
+}
+
+.page-link {
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #28a745; /* Màu xanh lá cây */
+    border: 1px solid #28a745;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.page-item.active .page-link {
+    background-color: #28a745; /* Màu xanh lá cây */
+    color: white;
+    border-color: #28a745;
+}
+
+.page-link:hover {
+    background-color: #218838; /* Màu xanh lá cây đậm hơn khi hover */
+    color: white;
+}
+

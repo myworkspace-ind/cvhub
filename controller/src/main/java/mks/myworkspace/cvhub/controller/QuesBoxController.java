@@ -3,8 +3,6 @@
  */
 package mks.myworkspace.cvhub.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
@@ -21,7 +19,6 @@ import mks.myworkspace.cvhub.entity.User;
 import mks.myworkspace.cvhub.entity.UsuallyQuestion;
 import mks.myworkspace.cvhub.service.QuesBoxService;
 import mks.myworkspace.cvhub.service.UserService;
-
 /**
  * 
  */
@@ -81,12 +78,9 @@ public class QuesBoxController {
             model.addAttribute("errorMessage", e.getMessage());
         }
 
-        // Trả về trang hiện tại
-        List<UsuallyQuestion> questions = quesBoxService.getAllQuestions_SortTimeDesc();
-        model.addAttribute("questions", questions);
-        return "quesBox/quesBox"; // Tên view
+        // Redirect về trang đầu tiên của danh sách câu hỏi
+        return "redirect:/quesBox";
     }
-
 
 }
 

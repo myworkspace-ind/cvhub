@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
-import mks.myworkspace.cvhub.entity.Question;
 import mks.myworkspace.cvhub.entity.User;
 import mks.myworkspace.cvhub.entity.UsuallyQuestion;
 
