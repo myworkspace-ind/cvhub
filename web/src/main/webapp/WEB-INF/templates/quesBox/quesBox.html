@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/resources/quesBox/quesBox.css}" />
+    <link rel="stylesheet" th:href="@{/resources/home/style.css}"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Diễn đàn</title>
+</head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+    
+    <main class="forum-container">
+        <div class="forum-content">
+            <div class="forum-header">
+                <h1><i class="fas fa-comments"></i> Diễn đàn</h1>
+            </div>
+
+            <!-- Hiển thị thông báo -->
+            <div>
+                <div th:if="${errorMessage}" class="alert alert-danger">
+                    <span th:text="${errorMessage}"></span>
+                </div>
+                <div th:if="${successMessage}" class="alert alert-success">
+                    <span th:text="${successMessage}"></span>
+                </div>
+            </div>
+
+            <!-- Form đăng câu hỏi -->
+            <div class="question-form-container">
+                <form th:action="@{/quesBox/postQuestion}" method="post" class="question-form">
+                    <div class="form-group">
+                        <input type="text" 
+                               name="title" 
+                               placeholder="Nội dung câu hỏi" 
+                               required 
+                               class="form-input" />
+                    </div>
+                    <div class="form-group">
+                        <textarea name="content" 
+                                 placeholder="Nội dung câu trả lời" 
+                                 required 
+                                 class="form-textarea"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Đăng câu hỏi
+                    </button>
+                </form>
+            </div>
+
+            <!-- Danh sách các câu hỏi -->
+            <div class="questions-container">
+                <ul class="questions-list">
+                    <li th:each="question : ${questions}" class="question-card">
+                        <div class="question-content">
+                            <div class="question-header">
+                                <h3 th:text="${question.question}" class="question-title"></h3>
+								<p th:text="${question.answer}" class="question-text"></p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

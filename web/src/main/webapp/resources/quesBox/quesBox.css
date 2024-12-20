@@ -1,0 +1,387 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 30px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    overflow: hidden; /* Thêm overflow để tránh tràn nội dung */
+    max-height: full;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+textarea {
+    resize: none;
+    height: 80px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.question {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #fdfdfd;
+}
+
+.question h3 {
+    margin: 0;
+    color: #444;
+}
+
+.question p {
+    color: #555;
+    margin: 10px 0;
+}
+
+.question small {
+    font-size: 12px;
+    color: #888;
+}
+
+.comments {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.comments form textarea {
+    height: 60px;
+}
+
+.comments div {
+    margin-top: 10px;
+}
+
+.comments div p {
+    margin: 0;
+}
+
+.comments div small {
+    color: #666;
+    font-size: 12px;
+}
+
+.comments div form button {
+    margin-top: 5px;
+    background-color: #007BFF;
+}
+
+.comments div form button:hover {
+    background-color: #0056b3;
+}
+
+ul.questions {
+    list-style: none; /* Xóa dấu chấm đầu dòng */
+    padding: 0;
+    margin: 0;
+}
+
+li.question {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fdfdfd;
+}
+
+
+/* Đặt container chính của câu hỏi theo flex */
+.question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Phần chứa nội dung câu hỏi */
+.question-content {
+    flex-grow: 1; /* Chiếm toàn bộ không gian còn lại */
+    margin-right: 20px; /* Khoảng cách với nút */
+}
+
+/* Nút "Xem câu trả lời" */
+button.apply-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button.apply-btn:hover {
+    background-color: #45a049;
+}
+
+.delete-btn {
+    background-color: #FF4C4C;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background-color: #FF0000;
+}
+
+.edit-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit-btn:hover {
+    background-color: #45a049;
+}
+
+:root {
+    --primary-color: #4CAF50; /* Màu xanh lá nhạt */
+    --primary-dark: #45a049; /* Màu xanh lá đậm */
+    --secondary-color: #333333; /* Màu chữ đậm */
+    --background-color: #f9f9f9; /* Màu nền */
+    --card-background: #ffffff; /* Màu nền của card */
+    --text-color: #333333; /* Màu chữ chính */
+    --border-color: #e0e0e0; /* Màu viền */
+    --shadow-color: rgba(0, 0, 0, 0.1); /* Màu bóng */
+}
+
+/* Reset và style chung */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+/* Container chính */
+.forum-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.forum-content {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    padding: 2rem;
+}
+
+/* Header */
+.forum-header {
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 1rem;
+}
+
+.forum-header h1 {
+    color: var(--primary-color);
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Form đăng câu hỏi */
+.question-form-container {
+    margin-bottom: 2rem;
+}
+
+.question-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-input,
+.form-textarea {
+    padding: 0.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+.form-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Nút submit */
+.submit-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.3s ease;
+    align-self: flex-start;
+}
+
+.submit-btn:hover {
+    background-color: var(--primary-dark);
+}
+
+/* Danh sách câu hỏi */
+.questions-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.question-card {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.question-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px var(--shadow-color);
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.question-title {
+    font-size: 1.25rem;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.author-info {
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.question-text {
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+.question-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.comment-btn {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.comment-btn:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .forum-container {
+        margin: 1rem auto;
+    }
+
+    .forum-content {
+        padding: 1rem;
+    }
+
+    .question-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .submit-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
