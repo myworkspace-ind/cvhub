@@ -2,11 +2,15 @@ package mks.myworkspace.cvhub.controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -195,10 +199,14 @@ public class ResumeController  extends BaseController  {
         File[] listOfFiles = folder.listFiles();
         
         List<String> fileNames = new ArrayList<>();
+        Map<String, String> encodedFileNames = new HashMap<>();
         if (listOfFiles != null) {
             for (File file : listOfFiles) {
                 if (file.isFile()) {
-                    fileNames.add(file.getName());
+                	String fileName = file.getName();
+                    String encodedFileName = Base64.getEncoder().encodeToString(fileName.getBytes(StandardCharsets.UTF_8));
+                    fileNames.add(fileName);  // Tên gốc
+                    encodedFileNames.put(fileName, encodedFileName); 
                 }
             }
         }
@@ -223,6 +231,7 @@ public class ResumeController  extends BaseController  {
 
         mav.addObject("defaultFileName", defaultFileName);
         mav.addObject("fileNames", fileNames);
+        mav.addObject("encodedFileNames", encodedFileNames);
         mav.addObject("user", currentUser);
         mav.addObject("cvList", userCVs);
         mav.addObject("selectedCvCount", selectedCount);
@@ -482,10 +491,12 @@ public class ResumeController  extends BaseController  {
         	return new ModelAndView("error", "errorMessage", "User not found");
         }
         String userId = currentUser.getId().toString(); // Thay bằng cách lấy ID thực tế của người dùng
+        
+        String decodedFileName = new String(Base64.getDecoder().decode(fileName), StandardCharsets.UTF_8);
 
         // Định nghĩa đường dẫn thư mục lưu trữ CV và thư mục main
         String userCVPath = storagePath + userId;
-        File sourceFile = new File(userCVPath + "/" + fileName);
+        File sourceFile = new File(userCVPath + "/" + decodedFileName);
         File targetDir = new File(userCVPath + "/main");
 
         // Kiểm tra nếu tệp tồn tại và di chuyển tệp vào thư mục main
@@ -504,7 +515,7 @@ public class ResumeController  extends BaseController  {
                 }
 
                 // Sao chép tệp vào thư mục main
-                File targetFile = new File(targetDir, fileName);
+                File targetFile = new File(targetDir, decodedFileName);
                 Files.copy(sourceFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
                 redirectAttributes.addFlashAttribute("message", "Tệp CV đã được đặt làm mặc định!");
@@ -522,7 +533,9 @@ public class ResumeController  extends BaseController  {
         User currentUser = userService.findUserByEmail(auth.getName());
         String userId = currentUser.getId().toString(); // Thay bằng cách lấy ID thực tế của người dùng
 
-	    String filePath = storagePath + userId + "/" + fileName;
+        String decodedFileName = new String(Base64.getDecoder().decode(fileName), StandardCharsets.UTF_8);
+        
+        String filePath = storagePath + userId + "/" + decodedFileName;
 	    File file = new File(filePath);
 	    
 	    // Kiểm tra nếu tệp không tồn tại
@@ -535,11 +548,11 @@ public class ResumeController  extends BaseController  {
 	    ByteArrayResource resource = new ByteArrayResource(fileContent);
 	    
 	    // Thiết lập content disposition cho phép tải tệp
-	    String contentDisposition = "attachment; filename=\"" + fileName + "\"";
+	    String encodedFileName = "attachment; filename*=UTF-8''" + URLEncoder.encode(decodedFileName, "UTF-8").replace("+", "%20");
 	    
 	    // Trả về ResponseEntity với các header cần thiết
 	    return ResponseEntity.ok()
-	            .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+	            .header(HttpHeaders.CONTENT_DISPOSITION, encodedFileName)
 	            .contentType(MediaType.APPLICATION_OCTET_STREAM)
 	            .body(resource);
 	}
@@ -548,7 +561,10 @@ public class ResumeController  extends BaseController  {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = userService.findUserByEmail(auth.getName());
         String userId = currentUser.getId().toString();
-	    String filePath = storagePath + userId + "/" + fileName;
+        
+        String decodedFileName = new String(Base64.getDecoder().decode(fileName), StandardCharsets.UTF_8);
+        
+	    String filePath = storagePath + userId + "/" + decodedFileName;
 	    File file = new File(filePath);
 
 	    if (file.exists() && file.delete()) {

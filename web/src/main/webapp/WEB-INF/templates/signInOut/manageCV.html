@@ -41,13 +41,13 @@
 		        <div class="cv-file-item">
 		            <span th:text="${fileName}"></span> 
 		            <!-- Nút tải xuống -->
-		            <form th:action="@{'/CV/download/' + ${fileName}}" method="get" style="display: inline;">
+		            <form th:action="@{'/CV/download/' + ${encodedFileNames.get(fileName)}}" method="get" style="display: inline;">
 		                <button type="submit" class="download-btn">Tải xuống</button>
 		            </form>
-		            <form th:action="@{'/CV/delete/' + ${fileName}}" method="post" style="display: inline;">
+		            <form th:action="@{'/CV/delete/' + ${encodedFileNames.get(fileName)}}" method="post" style="display: inline;">
 					    <button type="submit" class="delete-btn">Xóa tệp</button>
 					</form>
-		            <form th:action="@{'/setDefaultCV/' + ${fileName}}" method="post" style="display: inline;">
+		            <form th:action="@{'/setDefaultCV/' + ${encodedFileNames.get(fileName)}}" method="post" style="display: inline;">
 		                <button type="submit" class="action-btn">Chọn làm tệp mặc định</button>
 		            </form> <br>
 		        </div>
