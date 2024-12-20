@@ -46,34 +46,46 @@ public class JobController extends BaseController {
     @Autowired
     private JobApplicationRepository jobApplicationRepository;
     @GetMapping
-    public ModelAndView displayHome(HttpServletRequest request,
+    public ModelAndView displayHome(
+            HttpServletRequest request,
             HttpSession httpSession,
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value ="limit", defaultValue = "10") int limit) {
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "location", required = false) String location) {
+        
         ModelAndView mav = new ModelAndView("job_thanh_22110420");
-        
         initSession(request, httpSession);
+        
         PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("createdDate").descending());
-        Page<JobRequest> jobRequestPage = jobRequestRepository.findAll(pageRequest);
+        Page<JobRequest> jobRequestPage;
         
-        int totalPages = jobRequestPage.getTotalPages();
-        List<JobRequest> jobRequests = jobRequestPage.getContent();
-        
+        // Xử lý tìm kiếm
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            jobRequestPage = jobRequestRepository.searchByKeyword(keyword.trim(), pageRequest);
+        } 
+        // Xử lý lọc
+        else if (location != null && !location.trim().isEmpty()) {
+            jobRequestPage = jobRequestRepository.findByLocationName(location.trim(), pageRequest);
+        } 
+        // Không có điều kiện
+        else {
+            jobRequestPage = jobRequestRepository.findAll(pageRequest);
+        }
+
         Map<Long, Long> applicationCounts = new HashMap<>();
-        for (JobRequest job : jobRequests) {
+        for (JobRequest job : jobRequestPage.getContent()) {
             Long count = jobApplicationRepository.countByJobRequestId(job.getId());
             applicationCounts.put(job.getId(), count);
         }
-        
-        mav.addObject("jobrequests", jobRequests);
+
+        mav.addObject("jobrequests", jobRequestPage.getContent());
         mav.addObject("applicationCounts", applicationCounts);
-        mav.addObject("totalPages", totalPages);
+        mav.addObject("totalPages", jobRequestPage.getTotalPages());
         mav.addObject("currentPage", page);
-        mav.addObject("currentSiteId", getCurrentSiteId());
-        mav.addObject("userDisplayName", getCurrentUserDisplayName());
-        
-        List<Location> locations = locationService.getRepo().findAll();
-        mav.addObject("locations", locations);
+        mav.addObject("keyword", keyword);
+        mav.addObject("selectedLocation", location);
+        mav.addObject("locations", locationService.getRepo().findAll());
         
         return mav;
     }
