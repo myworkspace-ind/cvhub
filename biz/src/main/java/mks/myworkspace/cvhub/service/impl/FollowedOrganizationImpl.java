@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -39,9 +40,10 @@ public class FollowedOrganizationImpl implements FollowedOrganizationService{
 		return repo.findByUser(currentUser);
 	}
 	@Override
-	public boolean hasFollowedOrganization(User user, Long organization) {
-		List<FollowedOrganization> follow = getFollowedOrganizationByUser(user);
-	    return follow.stream().anyMatch(app -> app.getOrganization().getId().equals(organization));
+	public boolean hasFollowedOrganization(User user, Organization organization) {
+//		List<FollowedOrganization> follow = getFollowedOrganizationByUser(user);
+//	    return follow.stream().anyMatch(app -> app.getOrganization().getId().equals(organization));
+		return repo.existsByUserAndOrganization(user, organization);
 	}
 	@Override
 	public List<FollowedOrganization> getFollowedOrganizationByOrganization(Organization organization) {
@@ -77,6 +79,12 @@ public class FollowedOrganizationImpl implements FollowedOrganizationService{
 	public FollowedOrganization getFollowedOrganizationByFollowedOrganizationId(Long id) {
 		// TODO Auto-generated method stub
 		return repo.findByFollowedOrganizationId(id).get();
+	}
+	
+	@Transactional(readOnly = false)
+	@Override
+	public void deleteByUserAndOrganization(User user, Organization organization) {
+		repo.deleteByUserAndOrganization(user, organization);
 	}
 }
 

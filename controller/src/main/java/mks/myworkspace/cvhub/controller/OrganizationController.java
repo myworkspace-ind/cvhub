@@ -1,9 +1,12 @@
 package mks.myworkspace.cvhub.controller;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -20,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.RequiredArgsConstructor;
@@ -440,5 +445,27 @@ public class OrganizationController extends BaseController {
 			}
 			return mav;
 		}
+	
+	
+	@RequestMapping(value = { "/organizations/createReview" }, method = RequestMethod.POST)
+	@ResponseBody
+    public ResponseEntity<Map<String, String>> submitReview(@RequestParam("rating") int rating,
+            @RequestParam("comment") String comment,
+            @RequestParam("organizationId") Long organizationId, HttpServletRequest request, HttpSession httpSession) {
+		OrganizationReview newReview = new OrganizationReview();
+		newReview.setOrganization(organizationRepo.findById(organizationId).get());
+		newReview.setRating(rating);
+		newReview.setReviewText(comment);
+		newReview.setCreatedDate(new Date(System.currentTimeMillis()));
+		newReview.setModifiedDate(new Date(System.currentTimeMillis()));
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+ 	    User currentUser = userService.findUserByEmail(auth.getName());
+		newReview.setUser(currentUser);
+		reviewService.createReview(newReview);
+		Map<String, String> response = new HashMap<>();
+        response.put("message", "Review submitted successfully!");
+        return ResponseEntity.ok(response); // Trả về thông báo thành công
+	}
 }
 

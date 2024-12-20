@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -57,6 +58,9 @@ import lombok.Setter;
 		this.detail = detail;
 		this.location = location;
 	}
+	
+	@OneToMany(mappedBy = "user")
+    private List<OrganizationReview> organizationReviews;
 
 	@CreationTimestamp
 	@Column(name = "created_dte", updatable = false)

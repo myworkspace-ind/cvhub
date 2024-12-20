@@ -37,4 +37,7 @@ public interface FollowedOrganizationRepository extends JpaRepository<FollowedOr
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate,
             @Param("pageRequest") org.springframework.data.domain.Pageable pageable);
+
+	void deleteByUserAndOrganization(User user, Organization organization);
+	boolean existsByUserAndOrganization(User user, Organization organization);
 }
