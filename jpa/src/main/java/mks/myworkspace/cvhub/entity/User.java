@@ -45,6 +45,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<CV> cvList;
     
+    @OneToMany(mappedBy = "user")
+    private List<OrganizationReview> organizationReviews;
+    
     @CreationTimestamp
     @Column(name = "created_date", updatable = false)
     private Date createdDate;

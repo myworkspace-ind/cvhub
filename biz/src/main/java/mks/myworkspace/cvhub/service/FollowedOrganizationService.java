@@ -14,7 +14,7 @@ public interface FollowedOrganizationService {
 	void AddFollowedOrganization(User user, Organization organization);
 
 	List<FollowedOrganization> getFollowedOrganizationByUser(User currentUser);
-	boolean hasFollowedOrganization(User user, Long organization);
+	boolean hasFollowedOrganization(User user, Organization organization);
 	List<FollowedOrganization> getFollowedOrganizationByOrganization(Organization organization);
 	List<FollowedOrganization> findAll();
 	Page<FollowedOrganization> findAll(PageRequest pageRequest);
@@ -22,4 +22,5 @@ public interface FollowedOrganizationService {
 	List<FollowedOrganization> findByCreatedDateBetween(Date start, Date end);
 	void deleteFollowedOrganizationById(Long id);
 	FollowedOrganization getFollowedOrganizationByFollowedOrganizationId(Long id);
+	void deleteByUserAndOrganization(User user, Organization organization);
 }
