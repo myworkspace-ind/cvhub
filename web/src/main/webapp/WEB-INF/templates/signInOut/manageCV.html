@@ -30,7 +30,26 @@
 			</a>
 		</div>
 
-
+		<div>
+		    <h3>Tệp CV mặc định:</h3>
+		    <p th:text="${defaultFileName}"></p>
+		</div>
+		
+		<div class="cv-files">
+		    <h3>Danh sách tệp CV:</h3>
+		    <div th:each="fileName : ${fileNames}">
+		        <div class="cv-file-item">
+		            <span th:text="${fileName}"></span> 
+		            <!-- Nút tải xuống -->
+		            <form th:action="@{'/CV/download/' + ${fileName}}" method="get" style="display: inline;">
+		                <button type="submit" class="download-btn">Tải xuống</button>
+		            </form>
+		            <form th:action="@{'/setDefaultCV/' + ${fileName}}" method="post" style="display: inline;">
+		                <button type="submit" class="action-btn">Chọn làm tệp mặc định</button>
+		            </form> <br>
+		        </div>
+		    </div>
+		</div>
 
 		<div class="cv-grid">
 			<div th:each="cv : ${cvList}" class="cv-card">
