@@ -171,6 +171,8 @@ public class MainController extends BaseController {
 		mav.addObject("alLJobRole", alLJobRole);
 		mav.addObject("organization", organization);
 		mav.addObject("jobByOrganization", jobByOrganization);
+		
+		mav.addObject("apiKey", "AIzaSyCyQTyy-yRNd_slMdJFhfxKoqcgJXj4SzA"); // Đảm bảo không công khai API key này
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User currentUser = userService.findUserByEmail(auth.getName());
