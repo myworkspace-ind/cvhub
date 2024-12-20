@@ -109,6 +109,7 @@
         <artifactId>javax.mail</artifactId>
         <version>1.6.2</version> <!-- JavaMail phiên bản mới -->
     </dependency>
+   
 	</dependencies>
 	<build>
 		<!-- configure the build to use the standard maven structure -->

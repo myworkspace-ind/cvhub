@@ -28,6 +28,9 @@ import mks.myworkspace.cvhub.controller.model.UserDTO;
 import mks.myworkspace.cvhub.service.EmailService;
 import mks.myworkspace.cvhub.service.UserService;
 import mks.myworkspace.cvhub.service.impl.Pbkdf2PasswordEncoder;
+
+import mks.myworkspace.cvhub.config.CustomPasswordEncoder;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +51,7 @@ public class SignController extends BaseController {
    
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     Pbkdf2PasswordEncoder passwordEncoder1 = new Pbkdf2PasswordEncoder();
+    CustomPasswordEncoder customePasswordEncoder = new CustomPasswordEncoder();
    
    /*
     // Login page
