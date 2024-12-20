@@ -514,7 +514,7 @@ public class ResumeController  extends BaseController  {
         } else {
             redirectAttributes.addFlashAttribute("message", "Tệp không tồn tại.");
         }
-        return new ModelAndView("redirect:/profile/cv/manage"); // Điều hướng về trang uploadCV hoặc trang phù hợp
+        return new ModelAndView("redirect:/profile/cv/manage");
     }
 	@RequestMapping(value = "/CV/download/{fileName}", method = RequestMethod.GET)
 	public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable("fileName") String fileName) throws IOException {
@@ -542,5 +542,21 @@ public class ResumeController  extends BaseController  {
 	            .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
 	            .contentType(MediaType.APPLICATION_OCTET_STREAM)
 	            .body(resource);
+	}
+	@RequestMapping(value = "/CV/delete/{fileName}", method = RequestMethod.POST)
+	public ModelAndView deleteFile(@PathVariable("fileName") String fileName, RedirectAttributes redirectAttributes) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = userService.findUserByEmail(auth.getName());
+        String userId = currentUser.getId().toString();
+	    String filePath = storagePath + userId + "/" + fileName;
+	    File file = new File(filePath);
+
+	    if (file.exists() && file.delete()) {
+	        redirectAttributes.addFlashAttribute("message", "Tệp đã được xóa thành công!");
+	    } else {
+	        redirectAttributes.addFlashAttribute("error", "Không thể xóa tệp.");
+	    }
+
+	    return new ModelAndView("redirect:/profile/cv/manage");
 	}
 }
