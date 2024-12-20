@@ -429,15 +429,16 @@ public class ResumeController  extends BaseController  {
 	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	    User currentUser = userService.findUserByEmail(auth.getName());
 	    ModelAndView mav = new ModelAndView("redirect:/organization/" + orgId);
+	    Organization organization = organizationService.getRepo().findById(orgId).orElse(null);
 
 	    // Kiểm tra xem người dùng đã lưu công việc chưa
-	    boolean hasSaved = followedOrganizationService.hasFollowedOrganization(currentUser, orgId);
+	    boolean hasSaved = followedOrganizationService.hasFollowedOrganization(currentUser, organization);
 	    if (hasSaved) {
 	        redirectAttributes.addFlashAttribute("errorMessage", "Bạn đã theo dõi công ty này.");
 	        return mav;
 	    }
 
-	    Organization organization = organizationService.getRepo().findById(orgId).orElse(null);
+	    
 	    if (organization != null) {
 	    	followedOrganizationService.AddFollowedOrganization(currentUser, organization);
 	        redirectAttributes.addFlashAttribute("successMessage", "Đã theo dõi công ty thành công.");
