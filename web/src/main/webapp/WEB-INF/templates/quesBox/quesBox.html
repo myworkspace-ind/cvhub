@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/resources/quesBox/quesBox.css}" />
     <link rel="stylesheet" th:href="@{/resources/home/style.css}"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Chỉ load TinyMCE khi là ADMIN -->
-    <script sec:authorize="hasRole('ROLE_ADMIN')" src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js"></script>
     <title>Diễn đàn</title>
 </head>
 <body>
@@ -45,38 +43,46 @@
                 </form>
             </div>
 
-            <!-- Form đăng câu hỏi - chỉ hiển thị cho ADMIN -->
-            <div sec:authorize="hasRole('ROLE_ADMIN')">
-                <div class="question-form-container">
-                    <form th:action="@{/quesBox/postQuestion}" method="post" class="question-form">
-                        <div class="form-group">
-                            <input type="text" name="title" class="form-input" required placeholder="Nội dung câu hỏi"/>
-                        </div>
-                        <div class="form-group">
-                            <textarea id="content" name="content" class="rich-editor" required></textarea>
-                        </div>
-                        <button type="submit" class="submit-btn">
-                            <i class="fas fa-paper-plane"></i> Đăng câu hỏi
-                        </button>
-                    </form>
-                </div>
+            <!-- Form đăng câu hỏi -->
+            <div class="question-form-container">
+                <form th:action="@{/quesBox/postQuestion}" method="post" class="question-form">
+                    <div class="form-group">
+                        <input type="text" 
+                               name="title" 
+                               placeholder="Nội dung câu hỏi" 
+                               required 
+                               class="form-input" />
+                    </div>
+                    <div class="form-group">
+                        <textarea name="content" 
+                                 placeholder="Nội dung câu trả lời" 
+                                 required 
+                                 class="form-textarea"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Đăng câu hỏi
+                    </button>
+                </form>
             </div>
-            
+
             <!-- Danh sách các câu hỏi -->
             <div class="questions-container">
                 <ul class="questions-list">
                     <li th:each="question : ${questions}" class="question-card">
                         <div class="question-content">
+                            <!-- Tiêu đề câu hỏi -->
                             <div class="question-header">
                                 <h3 th:text="${question.question}" class="question-title"></h3>
                             </div>
                             
-                            <div th:utext="${question.answer}" class="question-text"></div>
+                            <!-- Nội dung câu trả lời -->
+                            <p th:text="${question.answer}" class="question-text"></p>
                             
+                            <!-- Thông tin thêm -->
                             <div class="question-meta">
                                 <span class="meta-item">
-                                    <i class="fas fa-clock"></i> Ngày đăng: 
-                                    <span th:text="${question.createdAt}"></span>
+                                    <i class="fas fa-clock"></i> Ngày đăng: <span th:text="${question.createdAt}"></span>
                                 </span>
                             </div>
                         </div>
@@ -87,12 +93,17 @@
             <!-- Phân trang -->
             <div class="pagination-container">
                 <ul class="pagination">
+                    <!-- Nút "Đầu" -->
                     <li th:if="${pageNumber > 0}" class="page-item">
                         <a th:href="@{/quesBox(page=0, keyword=${keyword})}" class="page-link">Đầu</a>
                     </li>
+
+                    <!-- Nút "Trước" -->
                     <li th:if="${pageNumber > 0}" class="page-item">
                         <a th:href="@{/quesBox(page=${pageNumber - 1}, keyword=${keyword})}" class="page-link">Trước</a>
                     </li>
+
+                    <!-- Hiển thị số trang -->
                     <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
                         class="page-item"
                         th:classappend="${i == pageNumber} ? 'active'">
@@ -100,9 +111,13 @@
                            th:text="${i + 1}" 
                            class="page-link"></a>
                     </li>
+
+                    <!-- Nút "Tiếp theo" -->
                     <li th:if="${pageNumber < totalPages - 1}" class="page-item">
                         <a th:href="@{/quesBox(page=${pageNumber + 1}, keyword=${keyword})}" class="page-link">Tiếp</a>
                     </li>
+
+                    <!-- Nút "Cuối" -->
                     <li th:if="${pageNumber < totalPages - 1}" class="page-item">
                         <a th:href="@{/quesBox(page=${totalPages - 1}, keyword=${keyword})}" class="page-link">Cuối</a>
                     </li>
@@ -110,18 +125,5 @@
             </div>
         </div>
     </main>
-
-    <!-- Script khởi tạo TinyMCE - Chỉ load khi user là ADMIN -->
-    <th:block sec:authorize="hasRole('ROLE_ADMIN')">
-        <script>
-            tinymce.init({
-                selector: '.rich-editor',
-                plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-                height: 300,
-                menubar: false
-            });
-        </script>
-    </th:block>
 </body>
 </html>
