@@ -1,5 +1,12 @@
 package mks.myworkspace.cvhub.controller;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -9,7 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -71,6 +80,10 @@ public class ResumeController  extends BaseController  {
 	  UserService userService;
 	 @Autowired
 		JobRequestService jobRequestService;
+	 
+	 @Value("${file.storage.pathCV}") 
+	 private String storagePath;
+	 
 	@RequestMapping(value = { "uploadCV" }, method = RequestMethod.GET)
 	public ModelAndView returnUploadCV() {
 		ModelAndView mav = new ModelAndView("uploadCV/uploadCV");
@@ -79,22 +92,35 @@ public class ResumeController  extends BaseController  {
 
 	@RequestMapping(value = { "completeCV" }, method = RequestMethod.POST)
 	public ModelAndView  handleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
-		 ModelAndView modelAndView = new ModelAndView("uploadCV/completeCV");
-		 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	        User currentUser = userService.findUserByEmail(auth.getName());
-		    try {
-		        String content = parsingCVService.extractTextFromPdfOrWord(file);
-		        Map<String, String> parsedInfo = parsingCVService.parseContent(content, currentUser);
+		ModelAndView modelAndView = new ModelAndView("uploadCV/completeCV");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = userService.findUserByEmail(auth.getName());
 
-		        modelAndView.addObject("cvData", parsedInfo);
-		    } catch (IOException e) {
-		        modelAndView.addObject("error", "Không thể xử lý file: " + e.getMessage());
-		    }
-		    List<JobRole> jobRoles = jobRoleService.getRepo().findAll();
-		    modelAndView.addObject("jobRoles", jobRoles);
-			List<Location> locations = locationService.getRepo().findAll();
-			modelAndView.addObject("locations", locations);
-		    return modelAndView;
+        String userId = currentUser.getId().toString();
+        Path targetLocation = Paths.get(storagePath + userId + "/" + file.getOriginalFilename());
+        File targetDir = targetLocation.getParent().toFile();
+
+        if (!targetDir.exists()) {
+            targetDir.mkdirs();
+        }
+
+	    try {
+	        String content = parsingCVService.extractTextFromPdfOrWord(file);
+	        Map<String, String> parsedInfo = parsingCVService.parseContent(content, currentUser);
+
+	        modelAndView.addObject("cvData", parsedInfo);
+	    } catch (IOException e) {
+	        modelAndView.addObject("error", "Không thể xử lý file: " + e.getMessage());
+	    }
+
+	    file.transferTo(targetLocation.toFile());
+
+	    List<JobRole> jobRoles = jobRoleService.getRepo().findAll();
+	    modelAndView.addObject("jobRoles", jobRoles);
+		List<Location> locations = locationService.getRepo().findAll();
+		modelAndView.addObject("locations", locations);
+
+	    return modelAndView;
 	}
 	@RequestMapping(value = { "saveCV" }, method = RequestMethod.POST)
 	public ModelAndView saveCV(@ModelAttribute CvDTO cvDTO) {
@@ -161,6 +187,42 @@ public class ResumeController  extends BaseController  {
         List<CV> userCVs = cvService.findCVsByUserId(currentUser.getId());
         Long selectedCount = cvService.getSelectedCVCount(currentUser.getId());
         
+        String userId = currentUser.getId().toString();
+        String userCVPath = storagePath + userId;
+
+        // Lấy danh sách các tệp trong thư mục của người dùng
+        File folder = new File(userCVPath);
+        File[] listOfFiles = folder.listFiles();
+        
+        List<String> fileNames = new ArrayList<>();
+        if (listOfFiles != null) {
+            for (File file : listOfFiles) {
+                if (file.isFile()) {
+                    fileNames.add(file.getName());
+                }
+            }
+        }
+
+        String userDefaultCVPath = storagePath + userId + "/main"; // Thư mục main của người dùng
+
+        // Lấy danh sách các tệp trong thư mục main
+        File folderMain = new File(userDefaultCVPath);
+        File[] listOfDefaultFile = folderMain.listFiles();
+
+        String defaultFileName = null; // Tên tệp mặc định
+        if (listOfDefaultFile != null && listOfDefaultFile.length == 1) {
+            File file = listOfDefaultFile[0];
+            if (file.isFile()) {
+                defaultFileName = file.getName();
+            }
+        } else if (listOfDefaultFile == null || listOfDefaultFile.length == 0) {
+            mav.addObject("message", "Không tìm thấy tệp trong thư mục main.");
+        } else {
+            mav.addObject("message", "Thư mục main chứa nhiều hơn một tệp. Vui lòng kiểm tra.");
+        }
+
+        mav.addObject("defaultFileName", defaultFileName);
+        mav.addObject("fileNames", fileNames);
         mav.addObject("user", currentUser);
         mav.addObject("cvList", userCVs);
         mav.addObject("selectedCvCount", selectedCount);
@@ -406,5 +468,95 @@ public class ResumeController  extends BaseController  {
 	        redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi bỏ theo dõi: " + e.getMessage());
 	    }
 	    return mav;
+	}
+	@PostMapping("/setDefaultCV/{fileName}")
+    public ModelAndView setDefaultCV(@PathVariable("fileName") String fileName, RedirectAttributes redirectAttributes) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        
+        if (auth == null || !auth.isAuthenticated()) {
+            return new ModelAndView("redirect:/login");
+        }
+        
+        User currentUser = userService.findUserByEmail(auth.getName());
+        if (currentUser == null) {
+        	return new ModelAndView("error", "errorMessage", "User not found");
+        }
+        String userId = currentUser.getId().toString(); // Thay bằng cách lấy ID thực tế của người dùng
+
+        // Định nghĩa đường dẫn thư mục lưu trữ CV và thư mục main
+        String userCVPath = storagePath + userId;
+        File sourceFile = new File(userCVPath + "/" + fileName);
+        File targetDir = new File(userCVPath + "/main");
+
+        // Kiểm tra nếu tệp tồn tại và di chuyển tệp vào thư mục main
+        if (sourceFile.exists()) {
+            try {
+                // Xóa tất cả tệp trong thư mục main trước khi sao chép
+                if (targetDir.exists() && targetDir.isDirectory()) {
+                    for (File file : targetDir.listFiles()) {
+                        if (!file.delete()) {
+                            throw new IOException("Không thể xóa tệp: " + file.getName());
+                        }
+                    }
+                } else {
+                    // Tạo thư mục main nếu chưa tồn tại
+                    targetDir.mkdirs();
+                }
+
+                // Sao chép tệp vào thư mục main
+                File targetFile = new File(targetDir, fileName);
+                Files.copy(sourceFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                redirectAttributes.addFlashAttribute("message", "Tệp CV đã được đặt làm mặc định!");
+            } catch (IOException e) {
+                redirectAttributes.addFlashAttribute("message", "Lỗi khi xử lý tệp CV: " + e.getMessage());
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("message", "Tệp không tồn tại.");
+        }
+        return new ModelAndView("redirect:/profile/cv/manage");
+    }
+	@RequestMapping(value = "/CV/download/{fileName}", method = RequestMethod.GET)
+	public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable("fileName") String fileName) throws IOException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = userService.findUserByEmail(auth.getName());
+        String userId = currentUser.getId().toString(); // Thay bằng cách lấy ID thực tế của người dùng
+
+	    String filePath = storagePath + userId + "/" + fileName;
+	    File file = new File(filePath);
+	    
+	    // Kiểm tra nếu tệp không tồn tại
+	    if (!file.exists()) {
+	        throw new FileNotFoundException("Tệp không tồn tại");
+	    }
+
+	    // Đọc tệp vào mảng byte
+	    byte[] fileContent = Files.readAllBytes(file.toPath());
+	    ByteArrayResource resource = new ByteArrayResource(fileContent);
+	    
+	    // Thiết lập content disposition cho phép tải tệp
+	    String contentDisposition = "attachment; filename=\"" + fileName + "\"";
+	    
+	    // Trả về ResponseEntity với các header cần thiết
+	    return ResponseEntity.ok()
+	            .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+	            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+	            .body(resource);
+	}
+	@RequestMapping(value = "/CV/delete/{fileName}", method = RequestMethod.POST)
+	public ModelAndView deleteFile(@PathVariable("fileName") String fileName, RedirectAttributes redirectAttributes) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = userService.findUserByEmail(auth.getName());
+        String userId = currentUser.getId().toString();
+	    String filePath = storagePath + userId + "/" + fileName;
+	    File file = new File(filePath);
+
+	    if (file.exists() && file.delete()) {
+	        redirectAttributes.addFlashAttribute("message", "Tệp đã được xóa thành công!");
+	    } else {
+	        redirectAttributes.addFlashAttribute("error", "Không thể xóa tệp.");
+	    }
+
+	    return new ModelAndView("redirect:/profile/cv/manage");
 	}
 }
