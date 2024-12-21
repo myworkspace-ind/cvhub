@@ -86,7 +86,7 @@ public class MainController extends BaseController {
 	@Autowired
 	JobRoleService jobRoleService;
 	
-	@Value("${api.key}")
+	@Value("${api.googleMapsKey}")
     private String apiKey;
 
 	@GetMapping("/main")
