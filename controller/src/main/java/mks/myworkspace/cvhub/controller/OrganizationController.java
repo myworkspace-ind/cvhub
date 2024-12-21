@@ -18,6 +18,7 @@ import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -85,6 +86,9 @@ public class OrganizationController extends BaseController {
 	
 	private final OrganizationReviewService reviewService;
 	private final OrganizationRepository organizationRepo;
+	
+	@Value("${api.googleMapsKey}")
+    private String apiKey;
 
 	public final Logger logger = LoggerFactory.getLogger(this.getClass());;
 
@@ -287,6 +291,7 @@ public class OrganizationController extends BaseController {
             mav.addObject("userName", currentUser.getFullName());
             mav.addObject("jobRoles", jobRoles);
             mav.addObject("locations", locations);
+            mav.addObject("apiKey", apiKey); // Đảm bảo không công khai API key này
             mav.addObject("reg", reg);
             return mav;
         }
@@ -397,6 +402,7 @@ public class OrganizationController extends BaseController {
 		mav.addObject("org", organization);
 		mav.addObject("jobByOrganization", jobByOrganization);
 		mav.addObject("update", "update");
+		mav.addObject("apiKey", apiKey); // Đảm bảo không công khai API key này
 		return mav;
 	}
 	
