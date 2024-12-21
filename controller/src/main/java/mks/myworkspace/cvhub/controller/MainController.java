@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -84,6 +85,9 @@ public class MainController extends BaseController {
 	LocationService locationService;
 	@Autowired
 	JobRoleService jobRoleService;
+	
+	@Value("${api.key}")
+    private String apiKey;
 
 	@GetMapping("/main")
 	public ModelAndView displayMain(HttpServletRequest request, HttpSession httpSession) {
@@ -172,7 +176,7 @@ public class MainController extends BaseController {
 		mav.addObject("organization", organization);
 		mav.addObject("jobByOrganization", jobByOrganization);
 		
-		mav.addObject("apiKey", "AIzaSyCyQTyy-yRNd_slMdJFhfxKoqcgJXj4SzA"); // Đảm bảo không công khai API key này
+		mav.addObject("apiKey", apiKey); // Đảm bảo không công khai API key này
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User currentUser = userService.findUserByEmail(auth.getName());

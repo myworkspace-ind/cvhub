@@ -12,55 +12,14 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <script type="text/javascript"
 	th:src="@{/resources/organizationDetails/organizationDetails.js}"></script>
-
-<script
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyQTyy-yRNd_slMdJFhfxKoqcgJXj4SzA&callback=initMap"
-	async defer></script>
 </head>
 
 <body>
 	<!-- Tạo input ẩn chứa giá trị ${organization.location} -->
 	<input type="hidden" id="locationInput"
 		th:value="${organization.location}">
-	<script>
-		let map;
 
-		function initMap() {
-			const geocoder = new google.maps.Geocoder(); // Khởi tạo Geocoder
-
-			// Lấy giá trị địa chỉ từ input ẩn
-			const address = document.getElementById('locationInput').value; // Truy xuất giá trị từ input ẩn
-
-			// Dịch địa chỉ thành tọa độ
-			geocoder
-					.geocode(
-							{
-								'address' : address
-							},
-							function(results, status) {
-								if (status === google.maps.GeocoderStatus.OK) {
-									const location = results[0].geometry.location; // Lấy tọa độ từ kết quả
-
-									map = new google.maps.Map(document
-											.getElementById("map"), {
-										center : location,
-										zoom : 12,
-									});
-
-									// Tạo marker tại vị trí location
-									const marker = new google.maps.Marker({
-										position : location,
-										map : map,
-										title : "Company Location",
-									});
-								} else {
-									console
-											.error("Geocode was not successful for the following reason: "
-													+ status);
-								}
-							});
-		}
-	</script>
+	<input type="hidden" id="apiKey" th:value="${apiKey}">
 	<th:block th:include="fragments/hmenu"></th:block>
 
 	<div class="container">
@@ -400,6 +359,56 @@
 													});
 										});
 					});
+</script>
+
+<script>
+	// Lấy giá trị từ input ẩn
+	const apiKey = document.getElementById('apiKey').value;
+
+	// Nếu bạn muốn thay đổi thuộc tính src của một phần tử cụ thể
+	const scriptElement = document.createElement('script');
+	scriptElement.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap`;
+	document.body.appendChild(scriptElement);
+</script>
+
+<script>
+	let map;
+
+	function initMap() {
+		const geocoder = new google.maps.Geocoder(); // Khởi tạo Geocoder
+
+		// Lấy giá trị địa chỉ từ input ẩn
+		const address = document.getElementById('locationInput').value; // Truy xuất giá trị từ input ẩn
+
+		// Dịch địa chỉ thành tọa độ
+		geocoder
+				.geocode(
+						{
+							'address' : address
+						},
+						function(results, status) {
+							if (status === google.maps.GeocoderStatus.OK) {
+								const location = results[0].geometry.location; // Lấy tọa độ từ kết quả
+
+								map = new google.maps.Map(document
+										.getElementById("map"), {
+									center : location,
+									zoom : 12,
+								});
+
+								// Tạo marker tại vị trí location
+								const marker = new google.maps.Marker({
+									position : location,
+									map : map,
+									title : "Company Location",
+								});
+							} else {
+								console
+										.error("Geocode was not successful for the following reason: "
+												+ status);
+							}
+						});
+	}
 </script>
 
 </html>
